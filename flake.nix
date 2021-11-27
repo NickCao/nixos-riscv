@@ -39,6 +39,9 @@
                     patches = map (patch: "${self.meta-sifive}/recipes-bsp/opensbi/files/${patch}") [
                       "0001-Makefile-Don-t-specify-mabi-or-march.patch"
                     ];
+                    makeFlags = [
+                      "I=$(out)"
+                    ];
                   };
                 })
               ];
