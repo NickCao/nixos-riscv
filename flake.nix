@@ -34,7 +34,14 @@
               "0004-riscv-sifive-unmatched-add-gpio-poweroff-node.patch"
               "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
-            ];
+            ] ++ [{
+              name = "sifive";
+              patch = null;
+              extraConfig = ''
+                SOC_SIFIVE y
+                PCIE_FU740 y
+              '';
+            }];
             fileSystems."/".device = "fake";
             services.udisks2.enable = false;
             security.polkit.enable = false;
