@@ -5,7 +5,7 @@
   outputs = { self, nixpkgs }: {
     nixosConfigurations = {
       unmatched = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
+        system = "x86_64-linux";
         modules = [
           ({ config, pkgs, lib, modulesPath, ... }: {
             imports = [ "${modulesPath}/installer/sd-card/sd-image.nix" ];
@@ -75,7 +75,7 @@
               grub.enable = false;
               generic-extlinux-compatible.enable = true;
             };
-            boot.initrd.kernelModules = [ "nvme" "mmc_block" "mmc_spi" "spi_sifive" "spi_nor" ];
+            boot.initrd.kernelModules = [ "nvme" "mmc_block" "mmc_spi" "spi_sifive" "spi_nor" "uas" "sdhci_pci" ];
             boot.kernelParams = [ "console=ttySIF1" ];
             boot.kernelPackages = pkgs.linuxPackages_latest;
             boot.kernelPatches = map (patch: { name = patch; patch = "${pkgs.meta-sifive}/recipes-kernel/linux/files/${patch}"; }) [
