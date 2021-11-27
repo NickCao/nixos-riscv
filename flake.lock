@@ -18,24 +18,7 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "unmatched": "unmatched"
-      }
-    },
-    "unmatched": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1624322127,
-        "narHash": "sha256-lpYFgbC3RSk5pNQ/GF85pQvbm7ylaMF9Cc0/k1BoptY=",
-        "owner": "zhaofengli",
-        "repo": "unmatched-nixos",
-        "rev": "dbde0fbe631c481f6c0a7b5535c3ca54ac4b18eb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "zhaofengli",
-        "repo": "unmatched-nixos",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
