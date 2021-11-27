@@ -61,6 +61,7 @@
             }];
             services.udisks2.enable = false;
             security.polkit.enable = false;
+            services.getty.autologinUser = "root";
           })
         ];
       };
