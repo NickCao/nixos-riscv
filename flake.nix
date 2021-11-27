@@ -9,6 +9,7 @@
         modules = [
           ({ config, pkgs, lib, modulesPath, ... }: {
             imports = [ "${modulesPath}/installer/sd-card/sd-image.nix" ];
+            disabledModules = [ "profiles/all-hardware.nix" ];
             sdImage = {
               populateRootCommands = ''
                 mkdir -p ./files/boot
