@@ -59,6 +59,9 @@
                       "0015-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
                       "0016-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
                     ];
+                    extraMakeFlags = [
+                      "OPENSBI=${self.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
+                    ];
                     filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
                   };
                 })
