@@ -27,9 +27,23 @@
                     rev = "2021.10.00";
                     sha256 = "sha256-TDlrAOOoK+3k/J1gDT1CkbxlfGfhSayZEzIjG1L3iPY=";
                   };
+                  opensbi = super.stdenv.mkDerivation rec {
+                    pname = "opensbi";
+                    version = "0.9";
+                    src = super.fetchFromGitHub {
+                      owner = "riscv";
+                      repo = "opensbi";
+                      rev = "v${version}";
+                      sha256 = "sha256-W39R1RHsIM3yNwW/eukO+mPd9joPZLw+/XIJoH8agN8=";
+                    };
+                    patches = map (patch: "${self.meta-sifive}/recipes-bsp/opensbi/files/${patch}") [
+                      "0001-Makefile-Don-t-specify-mabi-or-march.patch"
+                    ];
+                  };
                 })
               ];
             };
+            environment.systemPackages = with pkgs;[ opensbi ];
             boot.loader = {
               grub.enable = false;
               generic-extlinux-compatible.enable = true;
