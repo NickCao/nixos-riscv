@@ -62,6 +62,10 @@
                     extraMakeFlags = [
                       "OPENSBI=${self.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
                     ];
+                    extraConfig = ''
+                      CONFIG_FS_EXT4=y
+                      CONFIG_CMD_EXT4=y
+                    '';
                     filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
                   };
                 })
