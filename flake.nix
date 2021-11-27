@@ -16,7 +16,7 @@
               generic-extlinux-compatible.enable = true;
             };
             fileSystems."/".device = "fake";
-            environment.noXlibs = true;
+            services.udisks2.enable = false;
             security.polkit.enable = false;
           })
         ];
