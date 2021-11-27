@@ -7,7 +7,15 @@
       unmatched = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
         modules = [
-          ({ pkgs, lib, ... }: {
+          ({ config, pkgs, lib, modulesPath, ... }: {
+            imports = [ "${modulesPath}/installer/sd-card/sd-image.nix" ];
+            sdImage = {
+              populateRootCommands = ''
+                mkdir -p ./files/boot
+                ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
+              '';
+              populateFirmwareCommands = "";
+            };
             nixpkgs = {
               crossSystem.config = "riscv64-unknown-linux-gnu";
               overlays = [
@@ -49,7 +57,6 @@
                 ERRATA_SIFIVE_CIP_1200 y
               '';
             }];
-            fileSystems."/".device = "fake";
             services.udisks2.enable = false;
             security.polkit.enable = false;
           })
