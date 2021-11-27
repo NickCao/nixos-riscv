@@ -35,6 +35,7 @@
               generic-extlinux-compatible.enable = true;
             };
             boot.initrd.kernelModules = [ "nvme" "mmc_block" "mmc_spi" "spi_sifive" "spi_nor" ];
+            boot.kernelParams = [ "console=ttySIF0" ];
             boot.kernelPackages = pkgs.linuxPackages_latest;
             boot.kernelPatches = map (patch: { name = patch; patch = "${pkgs.meta-sifive}/recipes-kernel/linux/files/${patch}"; }) [
               "0001-riscv-sifive-fu740-cpu-1-2-3-4-set-compatible-to-sif.patch"
