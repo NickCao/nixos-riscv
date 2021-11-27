@@ -53,7 +53,7 @@
                       rev = "v${version}";
                       sha256 = "sha256-74jHYazqHguPnaYisr9qfafMukIU+5+jCoZ+jXvXEUg=";
                     };
-                    defconfig = "sifive_hifive_unmatched_fu740_defconfig";
+                    defconfig = "sifive_unmatched_defconfig";
                     extraPatches = map (patch: "${self.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
                       "0001-riscv-sifive-unleashed-support-compressed-images.patch"
                       "0015-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
