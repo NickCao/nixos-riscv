@@ -10,7 +10,6 @@
           ({ pkgs, lib, ... }: {
             nixpkgs = {
               crossSystem.config = "riscv64-unknown-linux-gnu";
-              config.allowUnsupportedSystem = true;
             };
             boot.loader = {
               grub.enable = false;
