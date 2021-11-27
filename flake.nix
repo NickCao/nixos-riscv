@@ -16,6 +16,7 @@
               generic-extlinux-compatible.enable = true;
             };
             fileSystems."/".device = "fake";
+            security.polkit.enable = false;
           })
         ];
       };
