@@ -103,6 +103,8 @@
             services.udisks2.enable = false;
             security.polkit.enable = false;
             services.getty.autologinUser = "root";
+            services.openssh.enable = true;
+            users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLQwaWXeJipSuAB+lV202yJOtAgJSNzuldH7JAf2jji" ];
           })
         ];
       };
