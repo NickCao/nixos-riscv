@@ -3,6 +3,9 @@
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
   };
   outputs = { self, nixpkgs }: {
+    hydraJobs = {
+      unmatched = self.nixosConfigurations.unmatched.config.system.build.toplevel;
+    };
     nixosConfigurations = {
       unmatched = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
