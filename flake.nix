@@ -27,7 +27,7 @@
                     rev = "2021.10.00";
                     sha256 = "sha256-TDlrAOOoK+3k/J1gDT1CkbxlfGfhSayZEzIjG1L3iPY=";
                   };
-                  opensbi = super.stdenv.mkDerivation rec {
+                  opensbi-unmatched = super.stdenv.mkDerivation rec {
                     pname = "opensbi";
                     version = "0.9";
                     src = super.fetchFromGitHub {
@@ -45,7 +45,7 @@
                       "I=$(out)"
                     ];
                   };
-                  uboot = super.buildUBoot rec {
+                  uboot-unmatched = super.buildUBoot rec {
                     version = "2022.01-rc2";
                     src = super.fetchFromGitHub {
                       owner = "u-boot";
@@ -60,7 +60,7 @@
                       "0016-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
                     ] ++ [ ./u-boot-spi.patch ];
                     extraMakeFlags = [
-                      "OPENSBI=${self.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
+                      "OPENSBI=${self.opensbi-unmatched}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
                     ];
                     extraConfig = ''
                       CONFIG_FS_EXT4=y
@@ -74,6 +74,20 @@
                     '';
                     filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
                   };
+                  bootrom-unmatched = super.runCommand "bootrom.bin"
+                    {
+                      nativeBuildInputs = with super.buildPackages; [ gptfdisk ];
+                    } ''
+                    set +o pipefail
+                    tr '\0' '\377' < /dev/zero | dd of="$out" iflag=fullblock bs=1M count=32
+                    sgdisk -g --clear -a 1 \
+                      --new=1:40:2087     --change-name=1:spl   --typecode=1:5B193300-FC78-40CD-8002-E86C45580B47 \
+                      --new=2:2088:10279  --change-name=2:uboot --typecode=2:2E54B353-1271-4842-806F-E436D6AF6985 \
+                      --new=3:10280:10535 --change-name=3:env   --typecode=3:0FC63DAF-8483-4772-8E79-3D69D8477DE4 \
+                      "$out"
+                    dd if=${self.uboot-unmatched}/u-boot-spl.bin of="$out" bs=4096 seek=5 conv=sync
+                    dd if=${self.uboot-unmatched}/u-boot.itb  of="$out" bs=4096 seek=261 conv=sync
+                  '';
                 })
               ];
             };
