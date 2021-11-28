@@ -3,7 +3,10 @@
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
   };
   outputs = { self, nixpkgs }: {
-    hydraJobs = self.nixosConfigurations.unmatched.pkgs;
+    hydraJobs = with self.nixosConfigurations.unmatched; {
+      unmatched = config.system.build.toplevel;
+      inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched;
+    };
     nixosConfigurations = {
       unmatched = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
