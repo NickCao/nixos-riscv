@@ -58,13 +58,19 @@
                       "0001-riscv-sifive-unleashed-support-compressed-images.patch"
                       "0015-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
                       "0016-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
-                    ];
+                    ] ++ [ ./u-boot-spi.patch ];
                     extraMakeFlags = [
                       "OPENSBI=${self.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
                     ];
                     extraConfig = ''
                       CONFIG_FS_EXT4=y
                       CONFIG_CMD_EXT4=y
+                      CONFIG_SPL_SPI_FLASH_SUPPORT=y
+                      CONFIG_SPL_MTD_SUPPORT=y
+                      CONFIG_SPL_SPI_LOAD=y
+                      CONFIG_SYS_SPI_U_BOOT_OFFS=0x104400
+                      CONFIG_SF_DEFAULT_MODE=0
+                      CONFIG_SPI_FLASH_ISSI=y
                     '';
                     filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
                   };
@@ -105,6 +111,10 @@
             services.getty.autologinUser = "root";
             services.openssh.enable = true;
             users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLQwaWXeJipSuAB+lV202yJOtAgJSNzuldH7JAf2jji" ];
+            environment.systemPackages = with pkgs; [
+              neofetch
+              mtdutils
+            ];
           })
         ];
       };
