@@ -66,10 +66,10 @@
                       CONFIG_FS_EXT4=y
                       CONFIG_CMD_EXT4=y
                       CONFIG_SPL_SPI_FLASH_SUPPORT=y
-                      CONFIG_SPL_MTD_SUPPORT=y
+                      CONFIG_SPL_DM_SPI_FLASH=y
                       CONFIG_SPL_SPI_LOAD=y
-                      CONFIG_SYS_SPI_U_BOOT_OFFS=0x104400
-                      CONFIG_SF_DEFAULT_MODE=0
+                      CONFIG_USE_ENV_SPI_BUS=y
+                      CONFIG_ENV_SPI_BUS=1
                       CONFIG_SPI_FLASH_ISSI=y
                     '';
                     filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
