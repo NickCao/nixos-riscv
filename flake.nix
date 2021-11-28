@@ -128,6 +128,7 @@
             environment.systemPackages = with pkgs; [
               neofetch
               mtdutils
+              lm_sensors
             ];
           })
         ];
