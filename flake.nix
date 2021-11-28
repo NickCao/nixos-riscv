@@ -21,6 +21,7 @@
               crossSystem.config = "riscv64-unknown-linux-gnu";
               overlays = [
                 (self: super: {
+                  qemu = super.qemu.override { gtkSupport = false; };
                   meta-sifive = super.fetchFromGitHub {
                     owner = "sifive";
                     repo = "meta-sifive";
@@ -129,6 +130,7 @@
               neofetch
               mtdutils
               lm_sensors
+              qemu
             ];
           })
         ];
