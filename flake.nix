@@ -7,6 +7,7 @@
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched
         apacheHttpd emacs firefox imagemagick jdk mysql nginx nodejs-17_x pandoc php postgresql subversion vim;
+      inherit (pkgs.nodejs-17_x.pkgs) yarn vercel rollup;
     };
     nixosConfigurations = {
       unmatched = nixpkgs.lib.nixosSystem {
