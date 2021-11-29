@@ -27,6 +27,9 @@
               crossSystem.config = "riscv64-unknown-linux-gnu";
               overlays = [
                 (self: super: {
+                  boost = super.boost17x;
+                  git = super.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
+                  xdg-utils = super.coreutils; # also relies on perl
                   qemu = super.qemu.override { gtkSupport = false; };
                   meta-sifive = super.fetchFromGitHub {
                     owner = "sifive";
