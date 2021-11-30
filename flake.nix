@@ -10,7 +10,7 @@
       firefox-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.firefox;
       firefox-lto-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.firefox-lto;
     };
-    overlay = final: prev: {
+    overlay = final: prev: rec {
       boost = prev.boost17x;
       gtk3 = prev.gtk3.override { trackerSupport = false; };
       git = prev.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
@@ -18,8 +18,8 @@
       qemu = prev.qemu.override { gtkSupport = false; };
       firefox-unwrapped = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = false; };
       firefox-unwrapped-lto = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = true; };
-      firefox = prev.wrapFirefox final.firefox-unwrapped { };
-      firefox-lto = prev.wrapFirefox final.firefox-unwrapped-lto { };
+      firefox = prev.wrapFirefox firefox-unwrapped { };
+      firefox-lto = prev.wrapFirefox firefox-unwrapped-lto { };
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
