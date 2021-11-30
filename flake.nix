@@ -6,7 +6,7 @@
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched
-        apacheHttpd emacs firefox imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
+        apacheHttpd emacs firefox imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3 firefox-unwrapped-lto;
     };
     overlay = final: prev: {
       boost = prev.boost17x;
@@ -14,7 +14,8 @@
       git = prev.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
       xdg-utils = prev.coreutils; # also relies on perl
       qemu = prev.qemu.override { gtkSupport = false; };
-      firefox-unwrapped = prev.firefox-unwrapped.override { webrtcSupport = false; };
+      firefox-unwrapped = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = false; };
+      firefox-unwrapped-lto = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = true; };
       firefox = prev.wrapFirefox prev.firefox-unwrapped { };
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
