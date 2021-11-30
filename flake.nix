@@ -32,7 +32,7 @@
                   git = super.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
                   xdg-utils = super.coreutils; # also relies on perl
                   qemu = super.qemu.override { gtkSupport = false; };
-                  firefox-unwrapped = super.firefox-unwrapped.override { ltoSupport = false; };
+                  firefox-unwrapped = super.firefox-unwrapped.override { ltoSupport = false; webrtcSupport = false; };
                   meta-sifive = super.fetchFromGitHub {
                     owner = "sifive";
                     repo = "meta-sifive";
