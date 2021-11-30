@@ -14,7 +14,7 @@
       git = prev.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
       xdg-utils = prev.coreutils; # also relies on perl
       qemu = prev.qemu.override { gtkSupport = false; };
-      firefox-unwrapped = prev.firefox-unwrapped.override { ltoSupport = false; webrtcSupport = false; };
+      firefox-unwrapped = prev.firefox-unwrapped.override { webrtcSupport = false; };
       firefox = prev.wrapFirefox prev.firefox-unwrapped { };
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
