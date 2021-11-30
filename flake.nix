@@ -6,7 +6,9 @@
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched
-        apacheHttpd emacs firefox imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3 firefox-unwrapped-lto;
+        apacheHttpd emacs firefox firefox-lto imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
+      firefox-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.firefox;
+      firefox-lto-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.firefox-lto;
     };
     overlay = final: prev: {
       boost = prev.boost17x;
@@ -16,7 +18,8 @@
       qemu = prev.qemu.override { gtkSupport = false; };
       firefox-unwrapped = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = false; };
       firefox-unwrapped-lto = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = true; };
-      firefox = prev.wrapFirefox prev.firefox-unwrapped { };
+      firefox = prev.wrapFirefox final.firefox-unwrapped { };
+      firefox-lto = prev.wrapFirefox final.firefox-unwrapped-lto { };
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
