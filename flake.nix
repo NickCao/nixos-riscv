@@ -6,7 +6,7 @@
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched
-        apacheHttpd emacs firefox-unwrapped imagemagick jdk mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
+        apacheHttpd emacs firefox imagemagick jdk mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
       inherit (pkgs.nodejs-17_x.pkgs) yarn vercel rollup;
     };
     nixosConfigurations = {
@@ -33,6 +33,7 @@
                   xdg-utils = super.coreutils; # also relies on perl
                   qemu = super.qemu.override { gtkSupport = false; };
                   firefox-unwrapped = super.firefox-unwrapped.override { ltoSupport = false; webrtcSupport = false; };
+                  firefox = super.wrapFirefox self.firefox-unwrapped { };
                   meta-sifive = super.fetchFromGitHub {
                     owner = "sifive";
                     repo = "meta-sifive";
@@ -143,7 +144,7 @@
               neofetch
               mtdutils
               lm_sensors
-              qemu
+              waypipe
             ];
           })
         ];
