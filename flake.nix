@@ -6,8 +6,7 @@
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched
-        apacheHttpd emacs firefox imagemagick jdk mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
-      inherit (pkgs.nodejs-17_x.pkgs) yarn vercel rollup;
+        apacheHttpd emacs firefox imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
     };
     nixosConfigurations = {
       unmatched = nixpkgs.lib.nixosSystem {
