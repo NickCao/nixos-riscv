@@ -99,6 +99,7 @@
             disabledModules = [ "profiles/all-hardware.nix" ];
             nixpkgs = {
               crossSystem.config = "riscv64-unknown-linux-gnu";
+              config.allowUnfree = true;
               overlays = [ self.overlay ];
             };
             sdImage = {
@@ -148,6 +149,7 @@
               lm_sensors
               waypipe
             ];
+            hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
           })
         ];
       };
