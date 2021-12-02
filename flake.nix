@@ -150,6 +150,8 @@
               waypipe
               pciutils
               glxinfo
+              firefox
+              iperf3
             ];
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
             hardware.opengl.enable = true;
