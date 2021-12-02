@@ -10,6 +10,7 @@
       inherit (pkgs.libsForQt5) qtbase qtdeclarative qtmultimedia qtsvg qttools qtwebengine qtwebview;
     };
     overlay = final: prev: rec {
+      libmysqlclient = null;
       boost = prev.boost17x;
       gtk3 = prev.gtk3.override { trackerSupport = false; };
       git = prev.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
