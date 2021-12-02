@@ -140,9 +140,8 @@
             }];
             services.udisks2.enable = false;
             security.polkit.enable = false;
-            services.getty.autologinUser = "root";
+            services.getty.autologinUser = "nickcao";
             services.openssh.enable = true;
-            users.users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLQwaWXeJipSuAB+lV202yJOtAgJSNzuldH7JAf2jji" ];
             environment.systemPackages = with pkgs; [
               neofetch
               mtdutils
@@ -152,11 +151,23 @@
               glxinfo
               firefox
               radeontop
-              sway
               iperf3
+              gdb
             ];
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
             hardware.opengl.enable = true;
+            programs.sway.enable = true;
+            fonts.fontconfig.enable = false;
+            users = {
+              mutableUsers = false;
+              users = {
+                root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLQwaWXeJipSuAB+lV202yJOtAgJSNzuldH7JAf2jji" ];
+                nickcao = {
+                  openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLQwaWXeJipSuAB+lV202yJOtAgJSNzuldH7JAf2jji" ];
+                  isNormalUser = true;
+                };
+              };
+            };
           })
         ];
       };
