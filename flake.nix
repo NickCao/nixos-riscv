@@ -7,8 +7,7 @@
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched
         apacheHttpd emacs firefox firefox-lto imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
-      firefox-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.firefox;
-      firefox-lto-aarch64 = pkgs.pkgsCross.aarch64-multiplatform.firefox-lto;
+      inherit (pkgs.libsForQt5) qtbase qtdeclarative qtmultimedia qtsvg qttools qtwebengine qtwebview;
     };
     overlay = final: prev: rec {
       boost = prev.boost17x;
