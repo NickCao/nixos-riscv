@@ -151,6 +151,8 @@
               pciutils
               glxinfo
               firefox
+              radeontop
+              sway
               iperf3
             ];
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
