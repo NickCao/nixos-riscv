@@ -148,8 +148,11 @@
               mtdutils
               lm_sensors
               waypipe
+              pciutils
+              glxinfo
             ];
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
+            hardware.opengl.enable = true;
           })
         ];
       };
