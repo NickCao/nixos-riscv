@@ -127,8 +127,6 @@
               "0004-riscv-sifive-unmatched-add-gpio-poweroff-node.patch"
               "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
-              "0007-riscv-enable-generic-PCI-resource-mapping.patch"
-              "29868ae1478fe18231672da94c4e862a03218a25.patch"
               "riscv-sbi-srst-support.patch"
             ] ++ [{
               name = "sifive";
