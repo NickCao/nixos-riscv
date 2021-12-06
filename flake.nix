@@ -23,17 +23,17 @@
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
-        rev = "2021.10.00";
-        sha256 = "sha256-TDlrAOOoK+3k/J1gDT1CkbxlfGfhSayZEzIjG1L3iPY=";
+        rev = "2021.11.00";
+        sha256 = "sha256-Toh80cXl+w1QFrbZnCP2Bjg2eN1V8vItACOO7/rWx0k=";
       };
       opensbi-unmatched = prev.stdenv.mkDerivation rec {
         pname = "opensbi";
-        version = "0.9";
+        version = "22d556d26809775e2ac19251e5df9075434ee66e";
         src = prev.fetchFromGitHub {
           owner = "riscv";
           repo = "opensbi";
-          rev = "v${version}";
-          sha256 = "sha256-W39R1RHsIM3yNwW/eukO+mPd9joPZLw+/XIJoH8agN8=";
+          rev = version;
+          sha256 = "sha256-9j/0D4t15TlTHXtkDj0BQ0W7M5Uom7U8b6gnVq8vjrI=";
         };
         patches = map (patch: "${final.meta-sifive}/recipes-bsp/opensbi/files/${patch}") [
           "0001-Makefile-Don-t-specify-mabi-or-march.patch"
@@ -45,18 +45,22 @@
         ];
       };
       uboot-unmatched = prev.buildUBoot rec {
-        version = "2022.01-rc2";
+        version = "2021.10";
         src = prev.fetchFromGitHub {
           owner = "u-boot";
           repo = "u-boot";
           rev = "v${version}";
-          sha256 = "sha256-74jHYazqHguPnaYisr9qfafMukIU+5+jCoZ+jXvXEUg=";
+          sha256 = "sha256-2CcIHGbm0HPmY63Xsjaf/Yy78JbRPNhmvZmRJAyla2U=";
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
           "0001-riscv-sifive-unleashed-support-compressed-images.patch"
-          "0015-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
-          "0016-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
+          "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
+          "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
+          "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
+          "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
+          "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
+          "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
         ] ++ [ ./u-boot-spi.patch ];
         extraMakeFlags = [
           "OPENSBI=${final.opensbi-unmatched}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
@@ -123,6 +127,9 @@
               "0004-riscv-sifive-unmatched-add-gpio-poweroff-node.patch"
               "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
+              "0007-riscv-enable-generic-PCI-resource-mapping.patch"
+              "29868ae1478fe18231672da94c4e862a03218a25.patch"
+              "riscv-sbi-srst-support.patch"
             ] ++ [{
               name = "sifive";
               patch = null;
