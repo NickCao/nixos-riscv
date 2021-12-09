@@ -154,11 +154,11 @@
               waypipe
               pciutils
               glxinfo
-              firefox
               radeontop
               iperf3
               gdb
             ];
+            networking.wireless.iwd.enable = true;
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
             hardware.opengl.enable = true;
             programs.sway.enable = true;
