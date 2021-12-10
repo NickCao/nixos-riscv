@@ -10,7 +10,8 @@
       inherit (pkgs.libsForQt5) qtbase qtdeclarative qtmultimedia qtsvg qttools qtwebengine qtwebview;
     } // pkgs.lib.filterAttrs (_: drv: pkgs.lib.isDerivation (builtins.tryEval drv).value) pkgs.gnome
     // import ./go-packages.nix { inherit pkgs; }
-    // import ./rust-packages.nix { inherit pkgs; };
+    // import ./rust-packages.nix { inherit pkgs; }
+    // pkgs.lib.filterAttrs (_: drv: pkgs.lib.isDerivation (builtins.tryEval drv).value) pkgs.python3Packages;
     overlay = final: prev: rec {
       libmysqlclient = null;
       boost = prev.boost17x;
