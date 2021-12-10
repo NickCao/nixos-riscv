@@ -8,10 +8,11 @@
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched chromium
         apacheHttpd emacs firefox firefox-lto imagemagick mysql nginx nodejs-17_x pandoc php postgresql subversion vim gtk3;
       inherit (pkgs.libsForQt5) qtbase qtdeclarative qtmultimedia qtsvg qttools qtwebengine qtwebview;
-    } // pkgs.lib.filterAttrs (_: drv: pkgs.lib.isDerivation (builtins.tryEval drv).value) pkgs.gnome
-    // import ./go-packages.nix { inherit pkgs; }
-    // import ./rust-packages.nix { inherit pkgs; }
-    // pkgs.lib.filterAttrs (_: drv: pkgs.lib.isDerivation (builtins.tryEval drv).value) pkgs.python3Packages;
+      gnomePkgs = pkgs.lib.filterAttrs (_: drv: pkgs.lib.isDerivation (builtins.tryEval drv).value) pkgs.gnome;
+      goPkgs = import ./go-packages.nix { inherit pkgs; };
+      rustPkgs = import ./rust-packages.nix { inherit pkgs; };
+      pythonPkgs = pkgs.lib.filterAttrs (_: drv: pkgs.lib.isDerivation (builtins.tryEval drv).value) pkgs.python3Packages;
+    };
     overlay = final: prev: rec {
       libmysqlclient = null;
       boost = prev.boost17x;
