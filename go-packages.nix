@@ -342,7 +342,6 @@
     github-cli
     github-commenter
     github-release
-    gitin
     gitjacker
     gitlab-pages
     gitlab-runner
@@ -1052,8 +1051,6 @@
     terraform_0_13
     terraform_0_14
     terraform_0_15
-    terraform_1_0
-    terraform_1_0_0
     terraformer
     terragrunt
     terrascan
