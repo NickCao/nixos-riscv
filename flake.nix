@@ -15,7 +15,6 @@
     };
     overlay = final: prev: rec {
       libmysqlclient = null;
-      boost = prev.boost17x;
       gtk3 = prev.gtk3.override { trackerSupport = false; };
       git = prev.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
       xdg-utils = prev.coreutils; # also relies on perl
