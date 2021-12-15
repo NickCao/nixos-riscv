@@ -8,6 +8,7 @@
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched;
     };
     overlay = final: prev: rec {
+      xdg-utils = prev.coreutils;
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
