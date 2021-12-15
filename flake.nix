@@ -8,15 +8,6 @@
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched;
     };
     overlay = final: prev: rec {
-      libmysqlclient = null;
-      gtk3 = prev.gtk3.override { trackerSupport = false; };
-      git = prev.git.override { perlSupport = false; }; # https://github.com/NixOS/nixpkgs/issues/66741
-      xdg-utils = prev.coreutils; # also relies on perl
-      qemu = prev.qemu.override { gtkSupport = false; };
-      firefox-unwrapped = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = false; };
-      firefox-unwrapped-lto = prev.firefox-unwrapped.override { webrtcSupport = false; ltoSupport = true; };
-      firefox = prev.wrapFirefox firefox-unwrapped { };
-      firefox-lto = prev.wrapFirefox firefox-unwrapped-lto { };
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
