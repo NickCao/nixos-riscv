@@ -34,12 +34,12 @@
         ];
       };
       uboot-unmatched = prev.buildUBoot rec {
-        version = "2021.10";
+        version = "c03942ddc9e88d86d919504299905e4e8b0003cd";
         src = prev.fetchFromGitHub {
           owner = "u-boot";
           repo = "u-boot";
-          rev = "v${version}";
-          sha256 = "sha256-2CcIHGbm0HPmY63Xsjaf/Yy78JbRPNhmvZmRJAyla2U=";
+          rev = "${version}";
+          sha256 = "sha256-R6MlXW7YdaqnnAmg2WNZIZTqMzkFH3ULM5giLzpu/1A=";
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
@@ -47,10 +47,10 @@
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
           "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
-          "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
+          # "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
           "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
           "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
-        ] ++ [ ./u-boot-spi.patch ];
+        ];
         extraMakeFlags = [
           "OPENSBI=${final.opensbi-unmatched}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
