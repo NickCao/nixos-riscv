@@ -6,6 +6,7 @@
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched;
+      inherit (pkgs.pkgsCross.aarch64-multiplatform) firefox-unwrapped;
     };
     overlay = final: prev: rec {
       xdg-utils = prev.coreutils;
