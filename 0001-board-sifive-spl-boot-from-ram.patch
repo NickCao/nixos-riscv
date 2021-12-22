@@ -1,0 +1,21 @@
+diff '--color=auto' -Naur u-boot.orig/board/sifive/unmatched/spl.c u-boot/board/sifive/unmatched/spl.c
+--- u-boot.orig/board/sifive/unmatched/spl.c	1970-01-01 08:00:01.000000000 +0800
++++ u-boot/board/sifive/unmatched/spl.c	2021-12-22 19:23:30.131083480 +0800
+@@ -123,6 +123,8 @@
+ 	u32 mode_select = readl((void *)MODE_SELECT_REG);
+ 	u32 boot_device = mode_select & MODE_SELECT_MASK;
+ 
++	return BOOT_DEVICE_RAM;
++
+ 	switch (boot_device) {
+ 	case MODE_SELECT_SPI:
+ 		return BOOT_DEVICE_SPI;
+diff '--color=auto' -Naur u-boot.orig/configs/sifive_unmatched_defconfig u-boot/configs/sifive_unmatched_defconfig
+--- u-boot.orig/configs/sifive_unmatched_defconfig	2021-12-22 17:39:38.325137549 +0800
++++ u-boot/configs/sifive_unmatched_defconfig	2021-12-22 19:59:13.333592412 +0800
+@@ -52,3 +52,5 @@
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_PCI=y
+ CONFIG_BOARD_EARLY_INIT_F=y
++CONFIG_SPL_RAM_SUPPORT=y
++CONFIG_SPL_RAM_DEVICE=y

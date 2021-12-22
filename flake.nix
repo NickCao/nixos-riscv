@@ -5,7 +5,7 @@
   outputs = { self, nixpkgs }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
-      inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched;
+      inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
       inherit (pkgs.pkgsCross.aarch64-multiplatform) firefox-unwrapped;
     };
     overlay = final: prev: rec {
@@ -61,6 +61,7 @@
         '';
         filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
       };
+      uboot-unmatched-ram = uboot-unmatched.overrideAttrs (attrs: { patches = attrs.patches ++ [ ./0001-board-sifive-spl-boot-from-ram.patch ]; });
       bootrom-unmatched = prev.runCommand "bootrom"
         {
           nativeBuildInputs = with prev.buildPackages; [ gptfdisk ];
