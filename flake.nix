@@ -13,8 +13,8 @@
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
-        rev = "2021.11.00";
-        sha256 = "sha256-Toh80cXl+w1QFrbZnCP2Bjg2eN1V8vItACOO7/rWx0k=";
+        rev = "2021.12.00";
+        sha256 = "sha256-zv05wAQ+pVUQGq7GCrU8tLzqGf7PLUOswUoiQ0A6Dd4=";
       };
       opensbi-unmatched = prev.stdenv.mkDerivation rec {
         pname = "opensbi";
@@ -109,7 +109,6 @@
               "0001-riscv-sifive-fu740-cpu-1-2-3-4-set-compatible-to-sif.patch"
               "0002-riscv-sifive-unmatched-update-regulators-values.patch"
               "0003-riscv-sifive-unmatched-define-PWM-LEDs.patch"
-              "0004-riscv-sifive-unmatched-add-gpio-poweroff-node.patch"
               "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
               "riscv-sbi-srst-support.patch"
