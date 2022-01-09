@@ -25,7 +25,6 @@
           rev = "v${version}";
           sha256 = "sha256-OgzcH+RLU680qF3+lUiWFFbif6YtjIknJriGlRqcOGs=";
         };
-        hardeningDisable = [ "all" ];
         makeFlags = [
           "PLATFORM=generic"
           "I=$(out)"
