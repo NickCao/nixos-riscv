@@ -18,16 +18,13 @@
       };
       opensbi-unmatched = prev.stdenv.mkDerivation rec {
         pname = "opensbi";
-        version = "22d556d26809775e2ac19251e5df9075434ee66e";
+        version = "1.0";
         src = prev.fetchFromGitHub {
           owner = "riscv";
           repo = "opensbi";
-          rev = version;
-          sha256 = "sha256-9j/0D4t15TlTHXtkDj0BQ0W7M5Uom7U8b6gnVq8vjrI=";
+          rev = "v${version}";
+          sha256 = "sha256-OgzcH+RLU680qF3+lUiWFFbif6YtjIknJriGlRqcOGs=";
         };
-        patches = map (patch: "${final.meta-sifive}/recipes-bsp/opensbi/files/${patch}") [
-          "0001-Makefile-Don-t-specify-mabi-or-march.patch"
-        ];
         hardeningDisable = [ "all" ];
         makeFlags = [
           "PLATFORM=generic"
