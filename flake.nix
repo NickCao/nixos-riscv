@@ -1,12 +1,19 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    rustsbi = {
+      url = "github:NickCao/rustsbi-hifive-unmatched";
+      flake = false;
+    };
   };
-  outputs = { self, nixpkgs }: {
+  outputs = { self, nixpkgs, rust-overlay, rustsbi }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
-      inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
-      inherit (pkgs.pkgsCross.aarch64-multiplatform) firefox-unwrapped;
+      inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched uboot-unmatched-ram rustsbi-unmatched;
     };
     overlay = final: prev: rec {
       xdg-utils = prev.coreutils;
@@ -15,6 +22,32 @@
         repo = "meta-sifive";
         rev = "2021.12.00";
         sha256 = "sha256-zv05wAQ+pVUQGq7GCrU8tLzqGf7PLUOswUoiQ0A6Dd4=";
+      };
+      rustsbi-unmatched = prev.stdenv.mkDerivation rec {
+        name = "rustsbi-unmatched";
+        src = rustsbi;
+        cargoDeps = prev.rustPlatform.importCargoLock {
+          lockFile = "${src}/Cargo.lock";
+          outputHashes = {
+            "fu740-hal-0.1.0" = "sha256-h5zrJbRMHQntnhCtl4NSNynsaZaHRb+LYULtpO0Fumg=";
+            "fu740-pac-0.1.0" = "sha256-cnUJtFCDDm5cZQSe7+7Izk0japS27M/kMCZiAf9NdrM=";
+          };
+        };
+        nativeBuildInputs = with prev.buildPackages;[
+          rustPlatform.cargoSetupHook
+          (rust-bin.nightly.latest.minimal.override {
+            extensions = [ "llvm-tools-preview" ];
+            targets = [ "riscv64imac-unknown-none-elf" ];
+          })
+          cargo-binutils
+        ];
+        buildPhase = ''
+          cargo make --release
+        '';
+        installPhase = ''
+          install -Dm644 target/riscv64imac-unknown-none-elf/release/rustsbi-hifive-unmatched.bin "$out/rustsbi-hifive-unmatched.bin"
+          install -Dm644 target/riscv64imac-unknown-none-elf/release/rustsbi-hifive-unmatched "$out/rustsbi-hifive-unmatched"
+        '';
       };
       opensbi-unmatched = prev.stdenv.mkDerivation rec {
         pname = "opensbi";
@@ -85,7 +118,7 @@
             nixpkgs = {
               crossSystem.config = "riscv64-unknown-linux-gnu";
               config.allowUnfree = true;
-              overlays = [ self.overlay ];
+              overlays = [ rust-overlay.overlay self.overlay ];
             };
             sdImage = {
               populateRootCommands = ''
