@@ -178,7 +178,6 @@
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
             hardware.opengl.enable = true;
             programs.sway.enable = true;
-            fonts.fontconfig.enable = false;
             users = {
               mutableUsers = false;
               users = {
