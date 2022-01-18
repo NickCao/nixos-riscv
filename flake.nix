@@ -113,11 +113,16 @@
         system = "x86_64-linux";
         modules = [
           ({ config, pkgs, lib, modulesPath, ... }: {
-            imports = [ "${modulesPath}/installer/sd-card/sd-image.nix" ];
-            disabledModules = [ "profiles/all-hardware.nix" ];
+            imports = [
+              "${modulesPath}/profiles/base.nix"
+              "${modulesPath}/installer/sd-card/sd-image.nix"
+            ];
             nixpkgs = {
               crossSystem.config = "riscv64-unknown-linux-gnu";
-              config.allowUnfree = true;
+              config = {
+                allowUnfree = true;
+                allowBroken = true;
+              };
               overlays = [ rust-overlay.overlay self.overlay ];
             };
             sdImage = {
@@ -136,9 +141,9 @@
             boot.kernelPackages = pkgs.linuxPackages_latest;
             boot.kernelPatches = map (patch: { name = patch; patch = "${pkgs.meta-sifive}/recipes-kernel/linux/files/${patch}"; }) [
               "0001-riscv-sifive-fu740-cpu-1-2-3-4-set-compatible-to-sif.patch"
-              "0002-riscv-sifive-unmatched-update-regulators-values.patch"
+              # "0002-riscv-sifive-unmatched-update-regulators-values.patch"
               "0003-riscv-sifive-unmatched-define-PWM-LEDs.patch"
-              "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
+              # "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
               "riscv-sbi-srst-support.patch"
             ] ++ [{
@@ -156,8 +161,6 @@
                 ERRATA_SIFIVE_CIP_1200 y
               '';
             }];
-            services.udisks2.enable = false;
-            security.polkit.enable = false;
             services.getty.autologinUser = "root";
             services.openssh.enable = true;
             environment.systemPackages = with pkgs; [
