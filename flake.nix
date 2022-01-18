@@ -173,6 +173,7 @@
               radeontop
               iperf3
               gdb
+              firefox
             ];
             networking.wireless.iwd.enable = true;
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
