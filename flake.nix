@@ -162,6 +162,7 @@
               '';
             }];
             services.getty.autologinUser = "root";
+            services.xserver.desktopManager.gnome.enable = true;
             services.openssh.enable = true;
             environment.systemPackages = with pkgs; [
               neofetch
