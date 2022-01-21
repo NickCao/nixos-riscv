@@ -64,12 +64,12 @@
         ];
       };
       uboot-unmatched = prev.buildUBoot rec {
-        version = "6ef836accea026a5f87145f890ee47748bc8bfac";
+        version = "2022.01";
         src = prev.fetchFromGitHub {
           owner = "u-boot";
           repo = "u-boot";
-          rev = "${version}";
-          sha256 = "sha256-mR8ooGVQG2yRsRRhiZAqx3gzAQEnWYZ6i5zcB8hJlCU=";
+          rev = "v${version}";
+          sha256 = "sha256-kKxo62/TI0HD8uZaL39FyJc783JsErkfspKsQ6uvEMU=";
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
