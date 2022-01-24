@@ -13,7 +13,7 @@
   outputs = { self, nixpkgs, rust-overlay, rustsbi }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
-      inherit (pkgs) qemu opensbi-unmatched uboot-unmatched bootrom-unmatched uboot-unmatched-ram rustsbi-unmatched;
+      inherit (pkgs) qemu opensbi uboot-unmatched bootrom-unmatched uboot-unmatched-ram rustsbi-unmatched;
     };
     overlay = final: prev: rec {
       xdg-utils = prev.coreutils;
@@ -49,20 +49,6 @@
           install -Dm644 target/riscv64imac-unknown-none-elf/release/rustsbi-hifive-unmatched "$out/rustsbi-hifive-unmatched"
         '';
       };
-      opensbi-unmatched = prev.stdenv.mkDerivation rec {
-        pname = "opensbi";
-        version = "1.0";
-        src = prev.fetchFromGitHub {
-          owner = "riscv";
-          repo = "opensbi";
-          rev = "v${version}";
-          sha256 = "sha256-OgzcH+RLU680qF3+lUiWFFbif6YtjIknJriGlRqcOGs=";
-        };
-        makeFlags = [
-          "PLATFORM=generic"
-          "I=$(out)"
-        ];
-      };
       uboot-unmatched = prev.buildUBoot rec {
         version = "2022.01";
         src = prev.fetchFromGitHub {
@@ -82,7 +68,7 @@
           "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
         ];
         extraMakeFlags = [
-          "OPENSBI=${final.opensbi-unmatched}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
+          "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
         extraConfig = ''
           CONFIG_FS_EXT4=y
