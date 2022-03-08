@@ -20,8 +20,8 @@
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
-        rev = "2021.12.00";
-        sha256 = "sha256-zv05wAQ+pVUQGq7GCrU8tLzqGf7PLUOswUoiQ0A6Dd4=";
+        rev = "7c77151d21d72f99f46c5392c104a17d04f67038";
+        sha256 = "sha256-UpwAJw/OaRYX8VawFjlH9BQwMbM3zpPIjAQsxxS5XXI=";
       };
       rustsbi-unmatched = prev.stdenv.mkDerivation rec {
         name = "rustsbi-unmatched";
@@ -63,9 +63,10 @@
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
           "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
-          # "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
+          "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
           "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
           "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
+          "0008-pci-Work-around-PCIe-link-training-failures.patch"
         ];
         extraMakeFlags = [
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
@@ -129,9 +130,13 @@
               "0001-riscv-sifive-fu740-cpu-1-2-3-4-set-compatible-to-sif.patch"
               # "0002-riscv-sifive-unmatched-update-regulators-values.patch"
               "0003-riscv-sifive-unmatched-define-PWM-LEDs.patch"
+              # "0004-riscv-sifive-unmatched-add-gpio-poweroff-node.patch"
               # "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
+              # "0007-riscv-enable-generic-PCI-resource-mapping.patch"
+              # "29868ae1478fe18231672da94c4e862a03218a25.patch"
               "riscv-sbi-srst-support.patch"
+              # "fa8b369129b0706d400e1dfe150c946e64f56df5.patch"
             ] ++ [{
               name = "sifive";
               patch = null;
@@ -159,7 +164,6 @@
               radeontop
               iperf3
               gdb
-              firefox
             ];
             networking.wireless.iwd.enable = true;
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
