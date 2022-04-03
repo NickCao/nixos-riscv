@@ -1,27 +1,12 @@
 {
   "nodes": {
-    "flake-utils": {
-      "locked": {
-        "lastModified": 1637014545,
-        "narHash": "sha256-26IZAc5yzlD9FlDT54io1oqG/bBoyka+FJk5guaX4x4=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "bba5dcc8e0b20ab664967ad83d24d64cb64ec4f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1646739571,
-        "narHash": "sha256-mMN9gArn0ZFwaw4TZokQj+sncmF3vT4oor6snEQIRPE=",
+        "lastModified": 1648954267,
+        "narHash": "sha256-x/V7t5oXjkOAljxU1Fg0iDofK12iHH3AdChqvkv+V6w=",
         "owner": "NickCao",
         "repo": "nixpkgs",
-        "rev": "c03f81c5c6f4c594f1c6818565b61093b4424777",
+        "rev": "a96bb127d53ee5c0e867f9bb8987512151134a65",
         "type": "github"
       },
       "original": {
@@ -33,46 +18,7 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "rust-overlay": "rust-overlay",
-        "rustsbi": "rustsbi"
-      }
-    },
-    "rust-overlay": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1646706102,
-        "narHash": "sha256-zDAbxoLGzM5mhd9aYjXpeA9i9JU80OOq1FYynoYIugI=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "3950dc50f50fa2767f36281f3e61f06610707735",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rustsbi": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1641791396,
-        "narHash": "sha256-P74/sYqlZhS2zNhAW0+aAXFX1qozsd9nltVzbsk3YzU=",
-        "owner": "NickCao",
-        "repo": "rustsbi-hifive-unmatched",
-        "rev": "0eaed3cbc05f3e809046079cc144ec12d7324758",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NickCao",
-        "repo": "rustsbi-hifive-unmatched",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

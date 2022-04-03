@@ -1,72 +1,38 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    rustsbi = {
-      url = "github:NickCao/rustsbi-hifive-unmatched";
-      flake = false;
-    };
   };
-  outputs = { self, nixpkgs, rust-overlay, rustsbi }: {
+  outputs = { self, nixpkgs }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
-      inherit (pkgs) qemu opensbi uboot-unmatched bootrom-unmatched uboot-unmatched-ram rustsbi-unmatched;
+      inherit (pkgs) qemu opensbi uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
     };
     overlay = final: prev: rec {
       xdg-utils = prev.coreutils;
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
-        rev = "7c77151d21d72f99f46c5392c104a17d04f67038";
-        sha256 = "sha256-UpwAJw/OaRYX8VawFjlH9BQwMbM3zpPIjAQsxxS5XXI=";
-      };
-      rustsbi-unmatched = prev.stdenv.mkDerivation rec {
-        name = "rustsbi-unmatched";
-        src = rustsbi;
-        cargoDeps = prev.rustPlatform.importCargoLock {
-          lockFile = "${src}/Cargo.lock";
-          outputHashes = {
-            "fu740-hal-0.1.0" = "sha256-h5zrJbRMHQntnhCtl4NSNynsaZaHRb+LYULtpO0Fumg=";
-            "fu740-pac-0.1.0" = "sha256-cnUJtFCDDm5cZQSe7+7Izk0japS27M/kMCZiAf9NdrM=";
-          };
-        };
-        nativeBuildInputs = with prev.buildPackages;[
-          rustPlatform.cargoSetupHook
-          (rust-bin.nightly.latest.minimal.override {
-            extensions = [ "llvm-tools-preview" ];
-            targets = [ "riscv64imac-unknown-none-elf" ];
-          })
-          cargo-binutils
-        ];
-        buildPhase = ''
-          cargo make --release
-        '';
-        installPhase = ''
-          install -Dm644 target/riscv64imac-unknown-none-elf/release/rustsbi-hifive-unmatched.bin "$out/rustsbi-hifive-unmatched.bin"
-          install -Dm644 target/riscv64imac-unknown-none-elf/release/rustsbi-hifive-unmatched "$out/rustsbi-hifive-unmatched"
-        '';
+        rev = "2022.03.00";
+        sha256 = "sha256-Z/BZ5p3lb2K6p4zOsmJQjUcs4EpaONAscsjGgQkUe54=";
       };
       uboot-unmatched = prev.buildUBoot rec {
-        version = "2022.01";
+        version = "2022.04-rc5";
         src = prev.fetchFromGitHub {
           owner = "u-boot";
           repo = "u-boot";
           rev = "v${version}";
-          sha256 = "sha256-kKxo62/TI0HD8uZaL39FyJc783JsErkfspKsQ6uvEMU=";
+          sha256 = "sha256-PWcmb57pfSVGVDiEgYvLi+SvCgNOj2WnCeiP7M0sosk=";
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
           "0001-riscv-sifive-unleashed-support-compressed-images.patch"
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
-          "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
+          # "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
           "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
           "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
           "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
-          "0008-pci-Work-around-PCIe-link-training-failures.patch"
+          # "0008-pci-Work-around-PCIe-link-training-failures.patch"
         ];
         extraMakeFlags = [
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
@@ -110,7 +76,7 @@
                 allowUnfree = true;
                 allowBroken = true;
               };
-              overlays = [ rust-overlay.overlay self.overlay ];
+              overlays = [ self.overlay ];
             };
             sdImage = {
               populateRootCommands = ''
@@ -135,7 +101,7 @@
               "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
               # "0007-riscv-enable-generic-PCI-resource-mapping.patch"
               # "29868ae1478fe18231672da94c4e862a03218a25.patch"
-              "riscv-sbi-srst-support.patch"
+              # "riscv-sbi-srst-support.patch"
               # "fa8b369129b0706d400e1dfe150c946e64f56df5.patch"
             ] ++ [{
               name = "sifive";
@@ -158,7 +124,7 @@
               neofetch
               mtdutils
               lm_sensors
-              waypipe
+              # waypipe
               pciutils
               glxinfo
               radeontop
@@ -168,7 +134,7 @@
             networking.wireless.iwd.enable = true;
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
             hardware.opengl.enable = true;
-            programs.sway.enable = true;
+            # programs.sway.enable = true;
             services.udisks2.enable = false;
             users = {
               mutableUsers = false;
