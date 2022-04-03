@@ -135,7 +135,6 @@
             hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
             hardware.opengl.enable = true;
             # programs.sway.enable = true;
-            services.udisks2.enable = false;
             users = {
               mutableUsers = false;
               users = {
