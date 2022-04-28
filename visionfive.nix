@@ -23,7 +23,7 @@
     # https://github.com/starfive-tech/linux/issues/14
     "stmmac.chain_mode=1"
   ];
-  boot.initrd.kernelModules = [ "dw-axi-dmac-platform" "dw_mmc-pltfm" "spi-dw-mmio" ];
+  boot.initrd.kernelModules = [ "dw_mmc-pltfm" "spi-dw-mmio" ];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelPatches = [{
     name = "visionfive";
