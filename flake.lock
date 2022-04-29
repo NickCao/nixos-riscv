@@ -18,7 +18,24 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "u-boot-starfive": "u-boot-starfive"
+      }
+    },
+    "u-boot-starfive": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1651224393,
+        "narHash": "sha256-48ah4mcEqrK9iRAz/QGCZUcz34xAuZyJuPanQ8IssMU=",
+        "owner": "NickCao",
+        "repo": "u-boot-starfive",
+        "rev": "ac75aa54020412a83b61dad46c5ea15e7f9f525c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NickCao",
+        "repo": "u-boot-starfive",
+        "type": "github"
       }
     }
   },

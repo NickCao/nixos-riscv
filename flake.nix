@@ -1,8 +1,12 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
+    u-boot-starfive = {
+      flake = false;
+      url = "github:NickCao/u-boot-starfive";
+    };
   };
-  outputs = { self, nixpkgs }: {
+  outputs = { self, nixpkgs, u-boot-starfive }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
       inherit (pkgs) qemu opensbi uboot-visionfive bootrom-visionfive uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
@@ -16,13 +20,8 @@
         sha256 = "sha256-Z/BZ5p3lb2K6p4zOsmJQjUcs4EpaONAscsjGgQkUe54=";
       };
       uboot-visionfive = prev.buildUBoot rec {
-        version = "d5f53001d7324c9680ab39c8a4c87ac03a4162b8";
-        src = prev.fetchFromGitHub {
-          owner = "NickCao";
-          repo = "u-boot-starfive";
-          rev = version;
-          sha256 = "sha256-eAu8IW83X57+xG0yzl1+/OBWuYV2NT32N4r0elQ+/rQ=";
-        };
+        version = "e068256b4ea2d01562317cd47caab971815ba174";
+        src = u-boot-starfive;
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";
         filesToInstall = [ "u-boot.bin" "u-boot.dtb" ];
       };
