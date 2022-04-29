@@ -8,7 +8,8 @@
   };
   outputs = { self, nixpkgs, u-boot-starfive }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
-      unmatched = config.system.build.toplevel;
+      unmatched = config.system.build.sdImage;
+      visionfive = self.nixosConfigurations.visionfive.config.system.build.sdImage;
       inherit (pkgs) qemu opensbi uboot-visionfive bootrom-visionfive uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
     };
     overlay = final: prev: rec {
@@ -22,6 +23,7 @@
       uboot-visionfive = prev.buildUBoot rec {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;
+        extraPatches = [ ./riscv-Fix-build-against-binutils-2.38.diff ];
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";
         filesToInstall = [ "u-boot.bin" "u-boot.dtb" ];
       };
@@ -80,7 +82,7 @@
           "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
           "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
           # "0008-pci-Work-around-PCIe-link-training-failures.patch"
-        ];
+        ] ++ [ ./riscv-Fix-build-against-binutils-2.38.diff ];
         extraMakeFlags = [
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
@@ -125,7 +127,6 @@
               };
               overlays = [ self.overlay ];
             };
-
           })
           ./unmatched.nix
         ];
