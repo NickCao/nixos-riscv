@@ -36,7 +36,7 @@
         withPayload = "${final.uboot-visionfive}/u-boot.bin";
         withFDT = "${final.uboot-visionfive}/u-boot.dtb";
       };
-      bootrom-visionfive = prev.runCommand "bootrom-visionfive.bin"
+      bootrom-visionfive = prev.runCommand "bootrom-visionfive"
         {
           nativeBuildInputs = with prev.buildPackages; [ xxd ];
         } ''
@@ -58,7 +58,9 @@
           outSize32HexBe=`printf "%08x\n" $outSize`
           echo "outSize: $outSize (0x$outSize32HexBe)"
         }
-        handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out
+        mkdir -p "$out/nix-support"
+        echo "file bin \"$out/bootrom.bin\"" >> "$out/nix-support/hydra-build-products"
+        handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out/bootrom.bin
       '';
       uboot-unmatched = prev.buildUBoot rec {
         version = "2022.04-rc5";
