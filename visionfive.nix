@@ -35,11 +35,16 @@
   };
   hardware.deviceTree.name = "starfive/jh7100-starfive-visionfive-v1.dtb";
   systemd.services."serial-getty@hvc0".enable = false;
-  services.getty.autologinUser = "root";
-  services.openssh.enable = true;
+  services = {
+    getty.autologinUser = "root";
+    openssh = {
+      enable = true;
+      permitRootLogin = "yes";
+    };
+  };
   users = {
     mutableUsers = false;
-    users.root.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLQwaWXeJipSuAB+lV202yJOtAgJSNzuldH7JAf2jji" ];
+    users.root.password = "passwd";
   };
   environment.systemPackages = with pkgs;[ neofetch ];
 }
