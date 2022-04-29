@@ -24,9 +24,9 @@
           sha256 = "sha256-eAu8IW83X57+xG0yzl1+/OBWuYV2NT32N4r0elQ+/rQ=";
         };
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";
-        filesToInstall = [ "u-boot.bin" ];
+        filesToInstall = [ "u-boot.bin" "u-boot.dtb" ];
       };
-      bootrom-visionfive = (prev.opensbi.overrideAttrs (_: {
+      opensbi-visionfive = (prev.opensbi.overrideAttrs (_: {
         src = prev.fetchFromGitHub {
           owner = "riscv-software-src";
           repo = "opensbi";
@@ -35,7 +35,32 @@
         };
       })).override {
         withPayload = "${final.uboot-visionfive}/u-boot.bin";
+        withFDT = "${final.uboot-visionfive}/u-boot.dtb";
       };
+      bootrom-visionfive = prev.runCommand "bootrom-visionfive.bin"
+        {
+          nativeBuildInputs = with prev.buildPackages; [ xxd ];
+        } ''
+        function handle_file {
+          inFile=$1
+          echo inFile: $inFile
+          outFile=$2
+
+          inSize=`stat -c "%s" $inFile`
+          inSize32HexBe=`printf "%08x\n" $inSize`
+          inSize32HexLe=''${inSize32HexBe:6:2}''${inSize32HexBe:4:2}''${inSize32HexBe:2:2}''${inSize32HexBe:0:2}
+          echo "inSize: $inSize (0x$inSize32HexBe, LE:0x$inSize32HexLe)"
+
+          echo $inSize32HexLe | xxd -r -ps > $outFile
+          cat $inFile >> $outFile
+          echo outFile: $outFile
+
+          outSize=`stat -c "%s" $outFile`
+          outSize32HexBe=`printf "%08x\n" $outSize`
+          echo "outSize: $outSize (0x$outSize32HexBe)"
+        }
+        handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out
+      '';
       uboot-unmatched = prev.buildUBoot rec {
         version = "2022.04-rc5";
         src = prev.fetchFromGitHub {
