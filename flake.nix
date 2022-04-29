@@ -16,12 +16,12 @@
         sha256 = "sha256-Z/BZ5p3lb2K6p4zOsmJQjUcs4EpaONAscsjGgQkUe54=";
       };
       uboot-visionfive = prev.buildUBoot rec {
-        version = "bbdc76f0019116d93606b63ab24206ab73edbedb";
+        version = "d5f53001d7324c9680ab39c8a4c87ac03a4162b8";
         src = prev.fetchFromGitHub {
           owner = "NickCao";
           repo = "u-boot-starfive";
           rev = version;
-          sha256 = "sha256-HPt5n3+gKt2epupY3oAOR9YUxLiQYOR3YRNZUcKVof8=";
+          sha256 = "sha256-eAu8IW83X57+xG0yzl1+/OBWuYV2NT32N4r0elQ+/rQ=";
         };
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";
         filesToInstall = [ "u-boot.bin" ];
