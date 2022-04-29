@@ -13,9 +13,11 @@
       ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
     '';
   };
-  boot.loader = {
-    grub.enable = false;
-    generic-extlinux-compatible.enable = true;
+  boot = {
+    loader = {
+      grub.enable = false;
+      generic-extlinux-compatible.enable = true;
+    };
     kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./linux-visionfive.nix {
       kernelPatches = with pkgs.kernelPatches; [
         bridge_stp_helper
