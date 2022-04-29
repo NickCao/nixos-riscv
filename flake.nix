@@ -5,7 +5,7 @@
   outputs = { self, nixpkgs }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.toplevel;
-      inherit (pkgs) qemu opensbi uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
+      inherit (pkgs) qemu opensbi uboot-visionfive bootrom-visionfive uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
     };
     overlay = final: prev: rec {
       xdg-utils = prev.coreutils;
@@ -14,6 +14,27 @@
         repo = "meta-sifive";
         rev = "2022.03.00";
         sha256 = "sha256-Z/BZ5p3lb2K6p4zOsmJQjUcs4EpaONAscsjGgQkUe54=";
+      };
+      uboot-visionfive = prev.buildUBoot rec {
+        version = "bbdc76f0019116d93606b63ab24206ab73edbedb";
+        src = prev.fetchFromGitHub {
+          owner = "NickCao";
+          repo = "u-boot-starfive";
+          rev = version;
+          sha256 = "sha256-HPt5n3+gKt2epupY3oAOR9YUxLiQYOR3YRNZUcKVof8=";
+        };
+        defconfig = "starfive_jh7100_visionfive_smode_defconfig";
+        filesToInstall = [ "u-boot.bin" ];
+      };
+      bootrom-visionfive = (prev.opensbi.overrideAttrs (_: {
+        src = prev.fetchFromGitHub {
+          owner = "riscv-software-src";
+          repo = "opensbi";
+          rev = "474a9d45551ab8c7df511a6620de2427a732351f";
+          sha256 = "sha256-kc6Z3pGSxq7/0NeGuBSidSNr/3LOCR4InaQYfUOwUUg=";
+        };
+      })).override {
+        withPayload = "${final.uboot-visionfive}/u-boot.bin";
       };
       uboot-unmatched = prev.buildUBoot rec {
         version = "2022.04-rc5";

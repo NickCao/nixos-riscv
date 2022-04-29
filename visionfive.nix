@@ -18,8 +18,10 @@
     generic-extlinux-compatible.enable = true;
   };
   hardware.deviceTree.name = "starfive/jh7100-starfive-visionfive-v1.dtb";
-    boot.kernelParams = [
-    "console=tty0" "console=ttyS0,115200" "earlycon=sbi"
+  boot.kernelParams = [
+    "console=tty0"
+    "console=ttyS0,115200"
+    "earlycon=sbi"
     # https://github.com/starfive-tech/linux/issues/14
     "stmmac.chain_mode=1"
   ];
