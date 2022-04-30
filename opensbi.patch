@@ -1,0 +1,17 @@
+diff --git a/lib/sbi/sbi_init.c b/lib/sbi/sbi_init.c
+index 2b9e5ae..d5a7ab6 100644
+--- a/lib/sbi/sbi_init.c
++++ b/lib/sbi/sbi_init.c
+@@ -143,6 +143,12 @@ static void sbi_boot_print_hart(struct sbi_scratch *scratch, u32 hartid)
+ 	sbi_printf("Boot HART ISA             : %s\n", str);
+ 	sbi_hart_get_features_str(scratch, str, sizeof(str));
+ 	sbi_printf("Boot HART Features        : %s\n", str);
++	sbi_printf("Boot HART mvendorid       : 0x%016lx\n",
++			csr_read(CSR_MVENDORID));
++	sbi_printf("Boot HART marchid         : 0x%016lx\n",
++			csr_read(CSR_MARCHID));
++	sbi_printf("Boot HART mimpid          : 0x%016lx\n",
++			csr_read(CSR_MIMPID));
+ 	sbi_printf("Boot HART PMP Count       : %d\n",
+ 		   sbi_hart_pmp_count(scratch));
+ 	sbi_printf("Boot HART PMP Granularity : %lu\n",

@@ -23,7 +23,6 @@
       uboot-visionfive = prev.buildUBoot rec {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;
-        extraPatches = [ ./riscv-Fix-build-against-binutils-2.38.diff ];
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";
         filesToInstall = [ "u-boot.bin" "u-boot.dtb" ];
       };
@@ -34,6 +33,7 @@
           rev = "474a9d45551ab8c7df511a6620de2427a732351f";
           sha256 = "sha256-kc6Z3pGSxq7/0NeGuBSidSNr/3LOCR4InaQYfUOwUUg=";
         };
+        patches = [ ./opensbi.patch ];
       })).override {
         withPayload = "${final.uboot-visionfive}/u-boot.bin";
         withFDT = "${final.uboot-visionfive}/u-boot.dtb";
