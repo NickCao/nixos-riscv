@@ -13,7 +13,6 @@
       inherit (pkgs) qemu opensbi uboot-visionfive bootrom-visionfive uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
     };
     overlay = final: prev: rec {
-      xdg-utils = prev.coreutils;
       meta-sifive = prev.fetchFromGitHub {
         owner = "sifive";
         repo = "meta-sifive";
