@@ -55,6 +55,8 @@
   networking.wireless.iwd.enable = true;
   hardware.firmware = with pkgs; [ firmwareLinuxNonfree ];
   hardware.opengl.enable = true;
+  security.polkit.enable = false;
+  services.udisks2.enable = false;
   # programs.sway.enable = true;
   users = {
     mutableUsers = false;
