@@ -15,15 +15,14 @@
 
   fileSystems."/nix/store" = {
     device = "nix-store";
-    fsType = "9p";
+    fsType = "virtiofs";
     neededForBoot = true;
-    options = [ "defaults" "ro" "trans=virtio" "version=9p2000.L" "msize=1G" ];
+    options = [ "ro" ];
   };
 
   boot.initrd.availableKernelModules = [
+    "virtiofs"
     "virtio_pci"
-    "9p"
-    "9pnet_virtio"
     "pci_host_generic"
   ];
   system.stateVersion = "21.11";
@@ -41,6 +40,7 @@
       closure = config.system.build.toplevel;
     in
     pkgs.writeShellScriptBin "minimal-vm" ''
+      virtiofsd --socket-path /tmp/fs.sock --shared-dir /nix/store/ &
       exec ${qemu-path} -M virt -m 4G -smp 8 \
         -device virtio-rng-pci \
         -kernel ${closure}/kernel \
@@ -48,8 +48,10 @@
         -netdev user,id=net0,net=192.168.2.0/24,dhcpstart=192.168.2.9 \
         -device virtio-net-pci,netdev=net0 \
         -append "$(cat ${closure}/kernel-params) init=${closure}/init" \
-        -fsdev local,security_model=passthrough,id=nix-store,path=/nix/store,readonly=on \
-        -device virtio-9p-pci,id=nix-store,fsdev=nix-store,mount_tag=nix-store,bus=pcie.0 \
+        -chardev socket,id=char0,path=/tmp/fs.sock \
+        -device vhost-user-fs-pci,chardev=char0,tag=nix-store \
+        -object memory-backend-memfd,id=mem,size=4G,share=on \
+        -numa node,memdev=mem \
         -nographic "$@"
     '';
 }
