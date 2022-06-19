@@ -15,15 +15,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelPatches = map (patch: { name = patch; patch = "${pkgs.meta-sifive}/recipes-kernel/linux/files/${patch}"; }) [
     "0001-riscv-sifive-fu740-cpu-1-2-3-4-set-compatible-to-sif.patch"
-    # "0002-riscv-sifive-unmatched-update-regulators-values.patch"
     "0003-riscv-sifive-unmatched-define-PWM-LEDs.patch"
-    # "0004-riscv-sifive-unmatched-add-gpio-poweroff-node.patch"
-    # "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
-    "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
-    # "0007-riscv-enable-generic-PCI-resource-mapping.patch"
-    # "29868ae1478fe18231672da94c4e862a03218a25.patch"
-    # "riscv-sbi-srst-support.patch"
-    # "fa8b369129b0706d400e1dfe150c946e64f56df5.patch"
   ] ++ [{
     name = "sifive";
     patch = null;
