@@ -45,8 +45,7 @@
         -device virtio-rng-pci \
         -kernel ${closure}/kernel \
         -initrd ${closure}/initrd \
-        -netdev user,id=net0,net=192.168.2.0/24,dhcpstart=192.168.2.9 \
-        -device virtio-net-pci,netdev=net0 \
+        -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
         -append "$(cat ${closure}/kernel-params) init=${closure}/init" \
         -chardev socket,id=char0,path=/tmp/fs.sock \
         -device vhost-user-fs-pci,chardev=char0,tag=nix-store \
