@@ -1,30 +1,26 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  boot.loader.grub.enable = false;
-  boot.kernelParams = [ "console=ttyS0" "earlycon" ];
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  networking.hostName = "quicksand";
-
-  fileSystems."/" = {
-    device = "none";
-    fsType = "tmpfs";
-    options = [ "defaults" "size=256M" "mode=755" ];
+  boot = {
+    loader.grub.enable = false;
+    kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [ "console=ttyS0" "earlycon" ];
+    initrd.availableKernelModules = [ "pci_host_generic" "virtio_pci" "9p" "9pnet_virtio" ];
   };
 
-  fileSystems."/nix/store" = {
-    device = "nix-store";
-    fsType = "virtiofs";
-    neededForBoot = true;
-    options = [ "ro" ];
+  fileSystems = {
+    "/" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = [ "defaults" "mode=755" ];
+    };
+    "/nix/store" = {
+      device = "nix-store";
+      fsType = "9p";
+      options = [ "ro" "trans=virtio" "version=9p2000.L" "msize=1G" ];
+    };
   };
 
-  boot.initrd.availableKernelModules = [
-    "virtiofs"
-    "virtio_pci"
-    "pci_host_generic"
-  ];
   system.stateVersion = "21.11";
   networking.firewall.enable = false;
   systemd.services."autotty@hvc0".enable = false;
@@ -40,17 +36,14 @@
       closure = config.system.build.toplevel;
     in
     pkgs.writeShellScriptBin "minimal-vm" ''
-      virtiofsd --socket-path /tmp/fs.sock --shared-dir /nix/store/ &
       exec ${qemu-path} -M virt -m 4G -smp 8 \
         -device virtio-rng-pci \
         -kernel ${closure}/kernel \
         -initrd ${closure}/initrd \
         -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
         -append "$(cat ${closure}/kernel-params) init=${closure}/init" \
-        -chardev socket,id=char0,path=/tmp/fs.sock \
-        -device vhost-user-fs-pci,chardev=char0,tag=nix-store \
-        -object memory-backend-memfd,id=mem,size=4G,share=on \
-        -numa node,memdev=mem \
-        -nographic "$@"
+        -fsdev local,security_model=passthrough,id=nix-store,path=/nix/store,readonly=on \
+        -device virtio-9p-pci,id=nix-store,fsdev=nix-store,mount_tag=nix-store \
+        -nographic
     '';
 }
