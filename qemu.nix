@@ -17,7 +17,7 @@
     "/nix/store" = {
       device = "nix-store";
       fsType = "9p";
-      options = [ "ro" "trans=virtio" "version=9p2000.L" "msize=1G" ];
+      options = [ "ro" "trans=virtio" "version=9p2000.L" "msize=1M" ];
     };
   };
 
@@ -35,13 +35,14 @@
       qemu-path = "qemu-system-${pkgs.targetPlatform.qemuArch}";
       closure = config.system.build.toplevel;
     in
-    pkgs.writeShellScriptBin "minimal-vm" ''
-      exec ${qemu-path} -M virt -m 4G -smp 8 \
-        -device virtio-rng-pci \
+    pkgs.writeShellScriptBin "vm" ''
+      exec ${qemu-path} -M virt \
+        -m 1G -smp 2 \
         -kernel ${closure}/kernel \
         -initrd ${closure}/initrd \
-        -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
         -append "$(cat ${closure}/kernel-params) init=${closure}/init" \
+        -device virtio-rng-pci \
+        -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
         -fsdev local,security_model=passthrough,id=nix-store,path=/nix/store,readonly=on \
         -device virtio-9p-pci,id=nix-store,fsdev=nix-store,mount_tag=nix-store \
         -nographic
