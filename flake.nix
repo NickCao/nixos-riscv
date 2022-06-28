@@ -64,21 +64,21 @@
         handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out/bootrom.bin
       '';
       uboot-unmatched = prev.buildUBoot rec {
-        version = "2022.04-rc5";
+        version = "2022.07-rc5";
         src = prev.fetchFromGitHub {
           owner = "u-boot";
           repo = "u-boot";
           rev = "v${version}";
-          sha256 = "sha256-PWcmb57pfSVGVDiEgYvLi+SvCgNOj2WnCeiP7M0sosk=";
+          sha256 = "sha256-onsLviauS2tdOZXit3y8OLlHCfwWMstMGu7VwUXFgOg=";
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
-          "0001-riscv-sifive-unleashed-support-compressed-images.patch"
+          # "0001-riscv-sifive-unleashed-support-compressed-images.patch"
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
           # "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
           "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
-          "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
+          # "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
           "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
           # "0008-pci-Work-around-PCIe-link-training-failures.patch"
         ];
