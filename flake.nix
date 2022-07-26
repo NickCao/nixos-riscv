@@ -63,12 +63,12 @@
         handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out/bootrom.bin
       '';
       uboot-unmatched = prev.buildUBoot rec {
-        version = "2022.07-rc5";
+        version = "2022.10-rc1";
         src = prev.fetchFromGitHub {
           owner = "u-boot";
           repo = "u-boot";
           rev = "v${version}";
-          sha256 = "sha256-onsLviauS2tdOZXit3y8OLlHCfwWMstMGu7VwUXFgOg=";
+          sha256 = "sha256-0WGX49I6dQYjPZ59C/p4Hc9gSvfpm6HVb9VUclB8fzg=";
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
