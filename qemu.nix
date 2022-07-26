@@ -25,8 +25,6 @@
   networking.firewall.enable = false;
   systemd.services."autotty@hvc0".enable = false;
   services.getty.autologinUser = "root";
-  security.polkit.enable = false;
-  services.udisks2.enable = false;
   systemd.services.mount-pstore.enable = false;
   virtualisation.docker.enable = true;
 

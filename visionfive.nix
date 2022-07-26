@@ -33,8 +33,6 @@
     ];
     initrd.kernelModules = [ "dw-axi-dmac-platform" "dw_mmc-pltfm" "spi-dw-mmio" ];
   };
-  security.polkit.enable = false;
-  services.udisks2.enable = false;
   hardware.deviceTree.name = "starfive/jh7100-starfive-visionfive-v1.dtb";
   systemd.services."serial-getty@hvc0".enable = false;
   services = {
