@@ -5,20 +5,19 @@
       flake = false;
       url = "github:NickCao/u-boot-starfive";
     };
+    meta-sifive = {
+      flake = false;
+      url = "github:sifive/meta-sifive/master";
+    };
   };
-  outputs = { self, nixpkgs, u-boot-starfive }: {
+  outputs = { self, nixpkgs, u-boot-starfive, meta-sifive }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive = self.nixosConfigurations.visionfive.config.system.build.sdImage;
       inherit (pkgs) qemu opensbi uboot-visionfive bootrom-visionfive uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
     };
     overlay = final: prev: rec {
-      meta-sifive = prev.fetchFromGitHub {
-        owner = "sifive";
-        repo = "meta-sifive";
-        rev = "2022.03.00";
-        sha256 = "sha256-Z/BZ5p3lb2K6p4zOsmJQjUcs4EpaONAscsjGgQkUe54=";
-      };
+      inherit meta-sifive;
       uboot-visionfive = prev.buildUBoot rec {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;

@@ -1,12 +1,29 @@
 {
   "nodes": {
+    "meta-sifive": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1656071476,
+        "narHash": "sha256-Q+tqyryVL+dNgDlLQ0XaQoOeyiumFZ/Y+S5RKR5vFFE=",
+        "owner": "sifive",
+        "repo": "meta-sifive",
+        "rev": "6d1a522b9b6e0705a9aa89f83975172f147b14fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sifive",
+        "ref": "master",
+        "repo": "meta-sifive",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1657187321,
-        "narHash": "sha256-15XaCSyZEV4XSxf1ajQEbaht1+kluPj+2d4+8MD+Av0=",
+        "lastModified": 1658544454,
+        "narHash": "sha256-TFH8t8HijJjy2BrkcJqGSLTzQ9IOqduiezE97DcMlEo=",
         "owner": "NickCao",
         "repo": "nixpkgs",
-        "rev": "6f4f8a63a8fce6e897e66e0000cd9025f64f711d",
+        "rev": "7457418a15de20b9ec77f95f6e1c6538f159100a",
         "type": "github"
       },
       "original": {
@@ -18,6 +35,7 @@
     },
     "root": {
       "inputs": {
+        "meta-sifive": "meta-sifive",
         "nixpkgs": "nixpkgs",
         "u-boot-starfive": "u-boot-starfive"
       }
