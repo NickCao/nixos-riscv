@@ -18,7 +18,6 @@
     "0003-riscv-sifive-unmatched-define-PWM-LEDs.patch"
     "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
     "Revert-riscv-dts-sifive-unmatched-Link-the-tmp451-wi.patch"
-    # "0006-riscv-sifive-unleashed-define-opp-table-cpufreq.patch"
   ] ++ [{
     name = "sifive";
     patch = null;
@@ -28,10 +27,6 @@
       PWM_SIFIVE y
       EDAC_SIFIVE y
       SIFIVE_L2 y
-      RISCV_ERRATA_ALTERNATIVE y
-      ERRATA_SIFIVE y
-      ERRATA_SIFIVE_CIP_453 y
-      ERRATA_SIFIVE_CIP_1200 y
     '';
   }];
   services.getty.autologinUser = "root";

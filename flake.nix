@@ -72,14 +72,11 @@
         };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
-          # "0001-riscv-sifive-unleashed-support-compressed-images.patch"
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
           # "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
           "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
-          # "0006-riscv-sifive-unmatched-leave-128MiB-for-ramdisk.patch"
-          "0007-riscv-sifive-unmatched-disable-FDT-and-initrd-reloca.patch"
-          # "0008-pci-Work-around-PCIe-link-training-failures.patch"
+          "0008-riscv-dts-Add-few-PMU-events.patch"
         ];
         extraMakeFlags = [
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
