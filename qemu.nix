@@ -30,7 +30,7 @@
 
   system.build.vm =
     let
-      qemu-path = "qemu-system-${pkgs.targetPlatform.qemuArch}";
+      qemu-path = "${pkgs.pkgsBuildBuild.qemu}/bin/qemu-system-${pkgs.targetPlatform.qemuArch}";
       closure = config.system.build.toplevel;
     in
     pkgs.writeShellScriptBin "vm" ''
