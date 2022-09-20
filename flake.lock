@@ -3,11 +3,11 @@
     "meta-sifive": {
       "flake": false,
       "locked": {
-        "lastModified": 1659538189,
-        "narHash": "sha256-IQ3y6hqvO9btNptf6gstCE16XDxAb1Kxt1JoPdi0xnI=",
+        "lastModified": 1663594127,
+        "narHash": "sha256-lRkFMmr+XjvViSeLAuAY4bZrbs/U/pVRS+4B8ra4b+Y=",
         "owner": "sifive",
         "repo": "meta-sifive",
-        "rev": "facce3c8cd8eeaad80c00365bbac09460f7ea266",
+        "rev": "46d07c34a22ece621326f9c52a2f5d966955ef13",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1662278806,
-        "narHash": "sha256-+OTdugifwpKXJnn5PLojDXsZYkmipxjJpFV8iQEGyrI=",
+        "lastModified": 1663654678,
+        "narHash": "sha256-EnSJtfzomKWScLsvZ2NbfbmLj3kgwp2AsxYL6mphEAs=",
         "owner": "NickCao",
         "repo": "nixpkgs",
-        "rev": "1750dcc4e103c4a16852163edef8bb053a2a6c36",
+        "rev": "92926790bdd8cf7b6ed0df7fb5edf8108459ef5b",
         "type": "github"
       },
       "original": {
