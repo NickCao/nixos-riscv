@@ -14,6 +14,7 @@
     '';
   };
   boot = {
+    supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "f2fs" "xfs" ];
     loader = {
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
