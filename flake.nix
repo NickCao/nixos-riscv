@@ -62,19 +62,12 @@
         echo "file bin \"$out/bootrom.bin\"" >> "$out/nix-support/hydra-build-products"
         handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out/bootrom.bin
       '';
-      uboot-unmatched = prev.buildUBoot rec {
-        version = "2023.01-rc1";
-        src = prev.fetchFromGitHub {
-          owner = "u-boot";
-          repo = "u-boot";
-          rev = "v${version}";
-          sha256 = "sha256-Kb3XZfz+4HHVUE02pScADeaJrhyDecQa2UoxV8MC5mE=";
-        };
+      uboot-unmatched = prev.buildUBoot {
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
-          # "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
+          "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
           "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
           "0008-riscv-dts-Add-few-PMU-events.patch"
         ];
