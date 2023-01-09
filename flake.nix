@@ -21,6 +21,7 @@
       inherit (pkgs)
         qemu opensbi
         uboot-vf2
+        opensbi-vf2
         uboot-visionfive
         bootrom-visionfive
         uboot-unmatched
@@ -28,7 +29,7 @@
         uboot-unmatched-ram
         ;
     };
-    overlay = final: prev: rec {
+    overlay = final: prev: {
       inherit meta-sifive;
       uboot-vf2 = prev.buildUBoot {
         version = uboot-vf2-src.shortRev;
@@ -39,6 +40,10 @@
           "spl/u-boot-spl.bin"
           "arch/riscv/dts/starfive_visionfive2.dtb"
         ];
+      };
+      opensbi-vf2 = prev.opensbi.override {
+        withPayload = "${final.uboot-vf2}/u-boot.bin";
+        withFDT = "${final.uboot-vf2}/starfive_visionfive2.dtb";
       };
       uboot-visionfive = prev.buildUBoot {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
@@ -102,7 +107,7 @@
         '';
         filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
       };
-      uboot-unmatched-ram = uboot-unmatched.overrideAttrs (attrs: { patches = attrs.patches ++ [ ./0001-board-sifive-spl-boot-from-ram.patch ]; });
+      uboot-unmatched-ram = final.uboot-unmatched.overrideAttrs (attrs: { patches = attrs.patches ++ [ ./0001-board-sifive-spl-boot-from-ram.patch ]; });
       bootrom-unmatched = prev.runCommand "bootrom"
         {
           nativeBuildInputs = with prev.buildPackages; [ gptfdisk ];
