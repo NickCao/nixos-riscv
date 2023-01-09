@@ -9,16 +9,34 @@
       flake = false;
       url = "github:sifive/meta-sifive/master";
     };
+    uboot-vf2-src = {
+      flake = false;
+      url = "github:starfive-tech/u-boot/JH7110_VisionFive2_devel";
+    };
   };
-  outputs = { self, nixpkgs, u-boot-starfive, meta-sifive }: {
+  outputs = { self, nixpkgs, u-boot-starfive, meta-sifive, uboot-vf2-src }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive = self.nixosConfigurations.visionfive.config.system.build.sdImage;
-      inherit (pkgs) qemu opensbi uboot-visionfive bootrom-visionfive uboot-unmatched bootrom-unmatched uboot-unmatched-ram;
+      inherit (pkgs)
+        qemu opensbi
+        uboot-vf2
+        uboot-visionfive
+        bootrom-visionfive
+        uboot-unmatched
+        bootrom-unmatched
+        uboot-unmatched-ram
+        ;
     };
     overlay = final: prev: rec {
       inherit meta-sifive;
-      uboot-visionfive = prev.buildUBoot rec {
+      uboot-vf2 = prev.buildUBoot {
+        version = uboot-vf2-src.shortRev;
+        src = uboot-vf2-src;
+        defconfig = "starfive_visionfive2_defconfig";
+        filesToInstall = [ "u-boot.bin" ];
+      };
+      uboot-visionfive = prev.buildUBoot {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";

@@ -37,7 +37,8 @@
       "inputs": {
         "meta-sifive": "meta-sifive",
         "nixpkgs": "nixpkgs",
-        "u-boot-starfive": "u-boot-starfive"
+        "u-boot-starfive": "u-boot-starfive",
+        "uboot-vf2-src": "uboot-vf2-src"
       }
     },
     "u-boot-starfive": {
@@ -53,6 +54,23 @@
       "original": {
         "owner": "NickCao",
         "repo": "u-boot-starfive",
+        "type": "github"
+      }
+    },
+    "uboot-vf2-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1672399218,
+        "narHash": "sha256-8UD84ePr+UMcQeHV2hW5b4eBcjMidbOCJOVuSA4B+uk=",
+        "owner": "starfive-tech",
+        "repo": "u-boot",
+        "rev": "66a72185a813c36b8975fd7ded9d74d6a5525db7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "starfive-tech",
+        "ref": "JH7110_VisionFive2_devel",
+        "repo": "u-boot",
         "type": "github"
       }
     }
