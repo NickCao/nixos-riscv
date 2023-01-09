@@ -55,11 +55,18 @@
       firmware-vf2 = final.stdenv.mkDerivation {
         name = "firmware-vf2";
         dontUnpack = true;
-        nativeBuildInputs = [ final.buildPackages.python3 ];
+        nativeBuildInputs = [
+          final.buildPackages.python3
+          final.buildPackages.ubootTools
+          final.buildPackages.dtc
+        ];
         installPhase = ''
           runHook preInstall
           mkdir -p $out
           python3 ${starfive-tools}/spl_tool/create_sbl ${final.uboot-vf2}/u-boot-spl.bin $out/u-boot-spl.bin.normal.out
+          substitute ${starfive-tools}/uboot_its/visionfive2-uboot-fit-image.its visionfive2-uboot-fit-image.its \
+            --replace fw_payload.bin ${final.opensbi-vf2}/share/opensbi/lp64/generic/firmware/fw_payload.bin
+          mkimage -f visionfive2-uboot-fit-image.its -A riscv -O u-boot -T firmware $out/visionfive2_fw_payload.img
           runHook postInstall
         '';
       };
