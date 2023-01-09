@@ -41,10 +41,12 @@
           "arch/riscv/dts/starfive_visionfive2.dtb"
         ];
       };
-      opensbi-vf2 = prev.opensbi.override {
+      opensbi-vf2 = (prev.opensbi.override {
         withPayload = "${final.uboot-vf2}/u-boot.bin";
         withFDT = "${final.uboot-vf2}/starfive_visionfive2.dtb";
-      };
+      }).overrideAttrs (attrs: {
+        makeFlags = attrs.makeFlags ++ [ "FW_TEXT_START=0x40000000" ];
+      });
       uboot-visionfive = prev.buildUBoot {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;
