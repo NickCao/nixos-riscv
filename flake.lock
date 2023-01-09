@@ -37,24 +37,24 @@
       "inputs": {
         "meta-sifive": "meta-sifive",
         "nixpkgs": "nixpkgs",
-        "tools-vf2-src": "tools-vf2-src",
+        "starfive-tools": "starfive-tools",
         "u-boot-starfive": "u-boot-starfive",
         "uboot-vf2-src": "uboot-vf2-src"
       }
     },
-    "tools-vf2-src": {
+    "starfive-tools": {
       "flake": false,
       "locked": {
-        "lastModified": 1670842128,
-        "narHash": "sha256-SfClasyjCBSNHFu1VDUC8bNKxqzE51R09+J/wcIruEg=",
-        "owner": "starfive-tech",
-        "repo": "Tools",
-        "rev": "c08728e9fc4bb34da198ea02cb265ebc7b6f47d5",
+        "lastModified": 1673256732,
+        "narHash": "sha256-+D0Rv/hETbApoychoSS4TiKQt0939JWyHRsaYY3BdwU=",
+        "owner": "NickCao",
+        "repo": "starfive-tools",
+        "rev": "263da5d1fb0384979fb757bc83e43f5bc24e2be4",
         "type": "github"
       },
       "original": {
-        "owner": "starfive-tech",
-        "repo": "Tools",
+        "owner": "NickCao",
+        "repo": "starfive-tools",
         "type": "github"
       }
     },

@@ -13,12 +13,12 @@
       flake = false;
       url = "github:starfive-tech/u-boot/JH7110_VisionFive2_devel";
     };
-    tools-vf2-src = {
+    starfive-tools = {
       flake = false;
-      url = "github:starfive-tech/Tools";
+      url = "github:NickCao/starfive-tools";
     };
   };
-  outputs = { self, nixpkgs, u-boot-starfive, meta-sifive, uboot-vf2-src, tools-vf2-src }: {
+  outputs = { self, nixpkgs, u-boot-starfive, meta-sifive, uboot-vf2-src, starfive-tools }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive = self.nixosConfigurations.visionfive.config.system.build.sdImage;
@@ -26,31 +26,16 @@
         qemu opensbi
         uboot-vf2
         opensbi-vf2
+        firmware-vf2
         uboot-visionfive
         bootrom-visionfive
         uboot-unmatched
         bootrom-unmatched
         uboot-unmatched-ram
         ;
-      inherit (pkgs.buildPackages)
-        tools-vf2
-        ;
     };
     overlay = final: prev: {
       inherit meta-sifive;
-      tools-vf2 = prev.stdenv.mkDerivation {
-        pname = "tools";
-        version = tools-vf2-src.shortRev;
-        src = tools-vf2-src;
-        nativeBuildInputs = [ final.autoPatchelfHook ];
-        buildInputs = [ final.openssl_1_1 ];
-        installPhase = ''
-          runHook preInstall
-          install -Dm755 spl_tool/create_sbl $out/bin/create_sbl
-          install -Dm755 spl_tool/create_hdr $out/bin/create_hdr
-          runHook postInstall
-        '';
-      };
       uboot-vf2 = prev.buildUBoot {
         version = uboot-vf2-src.shortRev;
         src = uboot-vf2-src;
@@ -67,6 +52,17 @@
       }).overrideAttrs (attrs: {
         makeFlags = attrs.makeFlags ++ [ "FW_TEXT_START=0x40000000" ];
       });
+      firmware-vf2 = final.stdenv.mkDerivation {
+        name = "firmware-vf2";
+        dontUnpack = true;
+        nativeBuildInputs = [ final.buildPackages.python3 ];
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out
+          python3 ${starfive-tools}/spl_tool/create_sbl ${final.uboot-vf2}/u-boot-spl.bin $out/u-boot-spl.bin.normal.out
+          runHook postInstall
+        '';
+      };
       uboot-visionfive = prev.buildUBoot {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;
