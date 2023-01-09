@@ -34,7 +34,11 @@
         version = uboot-vf2-src.shortRev;
         src = uboot-vf2-src;
         defconfig = "starfive_visionfive2_defconfig";
-        filesToInstall = [ "u-boot.bin" ];
+        filesToInstall = [
+          "u-boot.bin"
+          "spl/u-boot-spl.bin"
+          "arch/riscv/dts/starfive_visionfive2.dtb"
+        ];
       };
       uboot-visionfive = prev.buildUBoot {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
