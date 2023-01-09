@@ -37,8 +37,25 @@
       "inputs": {
         "meta-sifive": "meta-sifive",
         "nixpkgs": "nixpkgs",
+        "tools-vf2-src": "tools-vf2-src",
         "u-boot-starfive": "u-boot-starfive",
         "uboot-vf2-src": "uboot-vf2-src"
+      }
+    },
+    "tools-vf2-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1670842128,
+        "narHash": "sha256-SfClasyjCBSNHFu1VDUC8bNKxqzE51R09+J/wcIruEg=",
+        "owner": "starfive-tech",
+        "repo": "Tools",
+        "rev": "c08728e9fc4bb34da198ea02cb265ebc7b6f47d5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "starfive-tech",
+        "repo": "Tools",
+        "type": "github"
       }
     },
     "u-boot-starfive": {
