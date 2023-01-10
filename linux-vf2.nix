@@ -5,26 +5,32 @@
 } @ args:
 
 let
-  modDirVersion = "5.15.0";
+  modDirVersion = "6.1.0";
 in
 buildLinux (args // {
   inherit modDirVersion;
   version = "${modDirVersion}-vf2";
 
   src = fetchFromGitHub {
-    owner = "starfive-tech";
-    repo = "linux";
-    rev = "162a9afb0b009393f4f21ee8c20d773131fd6b1e";
-    sha256 = "sha256-zh1tonlqEY1KE2wHz1Rq8wGXZoC7Dw5U4sDYnQM3JUA=";
+    owner = "NickCao";
+    repo = "starfive-linux";
+    rev = "fa007931cc813b39146c7635ad2a1ade93b14f03";
+    sha256 = "sha256-P0fJkmh9OsN59diRbOFTbqTj13wAcVnddInmgCBIGuA=";
   };
 
-  defconfig = "starfive_visionfive2_defconfig";
+  structuredExtraConfig = with lib.kernel; {
+    SOC_STARFIVE = yes;
+    CLK_STARFIVE_JH7110_SYS = yes;
+    RESET_STARFIVE_JH7110 = yes;
+    PINCTRL_STARFIVE_JH7110 = yes;
+    SERIAL_8250_DW = yes;
+    MMC_DW_STARFIVE = module;
+  };
 
   extraMeta = {
-    branch = "JH7110_VisionFive2_devel";
+    branch = "visionfive2";
     maintainers = with lib.maintainers; [ nickcao ];
     description = "Linux kernel for StarFive's VisionFive2";
     platforms = [ "riscv64-linux" ];
-    hydraPlatforms = [ ];
   };
 } // (args.argsOverride or { }))
