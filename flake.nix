@@ -27,6 +27,7 @@
         uboot-vf2
         opensbi-vf2
         firmware-vf2
+        linux-vf2
         uboot-visionfive
         bootrom-visionfive
         uboot-unmatched
@@ -76,6 +77,7 @@
           runHook postInstall
         '';
       };
+      linux-vf2 = final.callPackage ./linux-vf2.nix { kernelPatches = [ ]; };
       uboot-visionfive = prev.buildUBoot {
         version = "e068256b4ea2d01562317cd47caab971815ba174";
         src = u-boot-starfive;
