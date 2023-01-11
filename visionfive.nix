@@ -1,11 +1,5 @@
 { config, pkgs, lib, modulesPath, ... }: {
-  nixpkgs = {
-    crossSystem.config = "riscv64-unknown-linux-gnu";
-    config = {
-      allowUnfree = true;
-      allowBroken = true;
-    };
-  };
+
   sdImage = {
     populateFirmwareCommands = "";
     populateRootCommands = ''

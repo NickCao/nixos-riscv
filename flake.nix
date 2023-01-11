@@ -160,77 +160,10 @@
       '';
     };
     nixosConfigurations = {
-      qemu = nixpkgs.lib.nixosSystem {
-        modules = [
-          {
-            imports = [
-            ];
-            nixpkgs = {
-              localSystem.config = "x86_64-unknown-linux-gnu";
-              crossSystem.config = "riscv64-unknown-linux-gnu";
-            };
-          }
-          ./qemu.nix
-        ];
-      };
-      unmatched = nixpkgs.lib.nixosSystem {
-        modules = [
-          ({ config, pkgs, lib, modulesPath, ... }: {
-            imports = [
-              "${modulesPath}/profiles/base.nix"
-              "${modulesPath}/installer/sd-card/sd-image.nix"
-            ];
-            nixpkgs = {
-              localSystem.config = "x86_64-unknown-linux-gnu";
-              crossSystem.config = "riscv64-unknown-linux-gnu";
-              config = {
-                allowUnfree = true;
-                allowBroken = true;
-              };
-              overlays = [ self.overlay ];
-            };
-          })
-          ./unmatched.nix
-        ];
-      };
-      visionfive = nixpkgs.lib.nixosSystem {
-        modules = [
-          ({ config, pkgs, lib, modulesPath, ... }: {
-            imports = [
-              "${modulesPath}/profiles/base.nix"
-              "${modulesPath}/installer/sd-card/sd-image.nix"
-            ];
-            nixpkgs = {
-              localSystem.config = "x86_64-unknown-linux-gnu";
-              crossSystem.config = "riscv64-unknown-linux-gnu";
-              config = {
-                allowUnfree = true;
-                allowBroken = true;
-              };
-            };
-          })
-          ./visionfive.nix
-        ];
-      };
-      visionfive2 = nixpkgs.lib.nixosSystem {
-        modules = [
-          ({ config, pkgs, lib, modulesPath, ... }: {
-            imports = [
-              "${modulesPath}/profiles/base.nix"
-              "${modulesPath}/installer/sd-card/sd-image.nix"
-            ];
-            nixpkgs = {
-              localSystem.config = "x86_64-unknown-linux-gnu";
-              crossSystem.config = "riscv64-unknown-linux-gnu";
-              config = {
-                allowUnfree = true;
-                allowBroken = true;
-              };
-            };
-          })
-          ./visionfive2.nix
-        ];
-      };
+      qemu = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./qemu.nix ]; };
+      unmatched = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./unmatched.nix ({ nixpkgs.overlays = [ self.overlay ]; }) ]; };
+      visionfive = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive.nix ]; };
+      visionfive2 = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive2.nix ]; };
     };
   };
 }
