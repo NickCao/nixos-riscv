@@ -1,16 +1,4 @@
 { config, pkgs, lib, modulesPath, ... }: {
-  sdImage = {
-    populateRootCommands = ''
-      mkdir -p ./files/boot
-      ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
-    '';
-    populateFirmwareCommands = "";
-  };
-  boot.loader = {
-    grub.enable = false;
-    generic-extlinux-compatible.enable = true;
-  };
-
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "f2fs" "xfs" ];
   boot.initrd.kernelModules = [ "nvme" "mmc_block" "mmc_spi" "spi_sifive" "spi_nor" "uas" "sdhci_pci" ];
   boot.kernelParams = [ "console=ttySIF1" ];
