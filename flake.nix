@@ -22,6 +22,7 @@
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive = self.nixosConfigurations.visionfive.config.system.build.sdImage;
+      visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
       inherit (pkgs)
         qemu opensbi
         uboot-vf2
@@ -209,6 +210,25 @@
             };
           })
           ./visionfive.nix
+        ];
+      };
+      visionfive2 = nixpkgs.lib.nixosSystem {
+        modules = [
+          ({ config, pkgs, lib, modulesPath, ... }: {
+            imports = [
+              "${modulesPath}/profiles/base.nix"
+              "${modulesPath}/installer/sd-card/sd-image.nix"
+            ];
+            nixpkgs = {
+              localSystem.config = "x86_64-unknown-linux-gnu";
+              crossSystem.config = "riscv64-unknown-linux-gnu";
+              config = {
+                allowUnfree = true;
+                allowBroken = true;
+              };
+            };
+          })
+          ./visionfive2.nix
         ];
       };
     };
