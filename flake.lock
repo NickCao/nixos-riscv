@@ -19,11 +19,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1673229899,
-        "narHash": "sha256-nRyduLV67E/idM5ZKWJl80J2xNYwz5y/fDc33+D6250=",
+        "lastModified": 1674006418,
+        "narHash": "sha256-ffqOe1mnPmxgZGG1neKprPTEnPZ7B+pXN30ruTx9NSk=",
         "owner": "NickCao",
         "repo": "nixpkgs",
-        "rev": "4c147d679d79fc630c4747006e61f35e0d956e12",
+        "rev": "550d70c78cf05f7062b7ad38c1b328511714ab13",
         "type": "github"
       },
       "original": {
@@ -45,11 +45,11 @@
     "starfive-tools": {
       "flake": false,
       "locked": {
-        "lastModified": 1673256732,
-        "narHash": "sha256-+D0Rv/hETbApoychoSS4TiKQt0939JWyHRsaYY3BdwU=",
+        "lastModified": 1673354803,
+        "narHash": "sha256-asOpMIXCqfXOjW3mQw/OJSVmuI9XIlwe+E4qMW2kIoM=",
         "owner": "NickCao",
         "repo": "starfive-tools",
-        "rev": "263da5d1fb0384979fb757bc83e43f5bc24e2be4",
+        "rev": "6e154fb9771d16f462a85d776e0733f679fd50b3",
         "type": "github"
       },
       "original": {
