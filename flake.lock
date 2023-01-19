@@ -45,11 +45,11 @@
     "starfive-tools": {
       "flake": false,
       "locked": {
-        "lastModified": 1674121671,
-        "narHash": "sha256-+qw6MtRSQm75WY4fwZ0zFeDSey/YzurY9Hhxi3eNnIo=",
+        "lastModified": 1674126575,
+        "narHash": "sha256-dKRHFWLJrXIEpsuXOO3zpiIplPFG5ghVLYR8GvBat8M=",
         "owner": "NickCao",
         "repo": "starfive-tools",
-        "rev": "72e6f1f134f6951d22a81782576007abb49f0a94",
+        "rev": "7038f61fcd684fc60d2abc4fd95909782480c66b",
         "type": "github"
       },
       "original": {
