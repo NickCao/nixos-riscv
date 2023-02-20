@@ -21,7 +21,6 @@
   outputs = { self, nixpkgs, u-boot-starfive, meta-sifive, uboot-vf2-src, starfive-tools }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
-      visionfive = self.nixosConfigurations.visionfive.config.system.build.sdImage;
       visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
       inherit (pkgs)
         qemu opensbi
@@ -29,8 +28,6 @@
         opensbi-vf2
         firmware-vf2
         linux-vf2
-        uboot-visionfive
-        bootrom-visionfive
         uboot-unmatched
         bootrom-unmatched
         uboot-unmatched-ram
@@ -79,42 +76,6 @@
         '';
       };
       linux-vf2 = final.callPackage ./linux-vf2.nix { kernelPatches = [ ]; };
-      uboot-visionfive = prev.buildUBoot {
-        version = "e068256b4ea2d01562317cd47caab971815ba174";
-        src = u-boot-starfive;
-        defconfig = "starfive_jh7100_visionfive_smode_defconfig";
-        filesToInstall = [ "u-boot.bin" "u-boot.dtb" ];
-      };
-      opensbi-visionfive = prev.opensbi.override {
-        withPayload = "${final.uboot-visionfive}/u-boot.bin";
-        withFDT = "${final.uboot-visionfive}/u-boot.dtb";
-      };
-      bootrom-visionfive = prev.runCommand "bootrom-visionfive"
-        {
-          nativeBuildInputs = with prev.buildPackages; [ xxd ];
-        } ''
-        function handle_file {
-          inFile=$1
-          echo inFile: $inFile
-          outFile=$2
-
-          inSize=`stat -c "%s" $inFile`
-          inSize32HexBe=`printf "%08x\n" $inSize`
-          inSize32HexLe=''${inSize32HexBe:6:2}''${inSize32HexBe:4:2}''${inSize32HexBe:2:2}''${inSize32HexBe:0:2}
-          echo "inSize: $inSize (0x$inSize32HexBe, LE:0x$inSize32HexLe)"
-
-          echo $inSize32HexLe | xxd -r -ps > $outFile
-          cat $inFile >> $outFile
-          echo outFile: $outFile
-
-          outSize=`stat -c "%s" $outFile`
-          outSize32HexBe=`printf "%08x\n" $outSize`
-          echo "outSize: $outSize (0x$outSize32HexBe)"
-        }
-        mkdir -p "$out/nix-support"
-        echo "file bin \"$out/bootrom.bin\"" >> "$out/nix-support/hydra-build-products"
-        handle_file ${final.opensbi-visionfive}/share/opensbi/lp64/generic/firmware/fw_payload.bin $out/bootrom.bin
-      '';
       uboot-unmatched = prev.buildUBoot {
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
@@ -154,7 +115,6 @@
     nixosConfigurations = {
       qemu = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./qemu.nix ]; };
       unmatched = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./unmatched.nix ({ nixpkgs.overlays = [ self.overlay ]; }) ]; };
-      visionfive = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive.nix ]; };
       visionfive2 = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive2.nix ]; };
     };
   };
