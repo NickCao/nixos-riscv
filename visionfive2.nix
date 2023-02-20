@@ -1,7 +1,6 @@
 { config, pkgs, lib, modulesPath, ... }: {
 
   boot = {
-    supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "f2fs" "xfs" ];
     kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./linux-vf2.nix { kernelPatches = [ ]; });
     kernelParams = [
       "console=tty0"
