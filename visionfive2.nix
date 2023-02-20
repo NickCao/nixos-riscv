@@ -17,7 +17,7 @@
     getty.autologinUser = "root";
     openssh = {
       enable = true;
-      permitRootLogin = "yes";
+      settings.PermitRootLogin = "yes";
     };
   };
 
