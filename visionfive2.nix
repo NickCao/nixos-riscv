@@ -25,6 +25,8 @@
     users.root.password = "passwd";
   };
 
+  virtualisation.docker.enable = true;
+
   environment.systemPackages = with pkgs;[ neofetch iperf3 ];
 
 }
