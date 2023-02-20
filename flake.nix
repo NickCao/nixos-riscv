@@ -85,14 +85,7 @@
         defconfig = "starfive_jh7100_visionfive_smode_defconfig";
         filesToInstall = [ "u-boot.bin" "u-boot.dtb" ];
       };
-      opensbi-visionfive = (prev.opensbi.overrideAttrs (_: {
-        src = prev.fetchFromGitHub {
-          owner = "riscv-software-src";
-          repo = "opensbi";
-          rev = "474a9d45551ab8c7df511a6620de2427a732351f";
-          sha256 = "sha256-kc6Z3pGSxq7/0NeGuBSidSNr/3LOCR4InaQYfUOwUUg=";
-        };
-      })).override {
+      opensbi-visionfive = prev.opensbi.override {
         withPayload = "${final.uboot-visionfive}/u-boot.bin";
         withFDT = "${final.uboot-visionfive}/u-boot.dtb";
       };
