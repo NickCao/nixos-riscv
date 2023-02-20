@@ -14,8 +14,8 @@ buildLinux (args // {
   src = fetchFromGitHub {
     owner = "NickCao";
     repo = "starfive-linux";
-    rev = "0714114a7fad57e4647b31a9a080e92a3ebf7cbc";
-    sha256 = "sha256-1xTLAPwgQ2qx4F39nVCxJSOCvYxh8xU0G9dihPfH22s=";
+    rev = "bffbafbf52cc052621daaaa43a378eb5d73a018b";
+    sha256 = "sha256-ZQoBJzbylctH2tewfYoKKkjgES6d5xrqEvv3TTpOQgA=";
   };
 
   structuredExtraConfig = with lib.kernel; {

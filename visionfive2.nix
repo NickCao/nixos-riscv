@@ -25,6 +25,6 @@
     users.root.password = "passwd";
   };
 
-  environment.systemPackages = with pkgs;[ neofetch ];
+  environment.systemPackages = with pkgs;[ neofetch iperf3 ];
 
 }
