@@ -5,8 +5,8 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelPatches = map (patch: { name = patch; patch = "${pkgs.meta-sifive}/recipes-kernel/linux/files/${patch}"; }) [
     "0001-riscv-sifive-fu740-cpu-1-2-3-4-set-compatible-to-sif.patch"
-    "0005-SiFive-HiFive-Unleashed-Add-PWM-LEDs-D1-D2-D3-D4.patch"
-    "Revert-riscv-dts-sifive-unmatched-Link-the-tmp451-wi.patch"
+    "0002-riscv-sifive-unmatched-define-PWM-LEDs.patch"
+    "0003-Revert-riscv-dts-sifive-unmatched-Link-the-tmp451-wi.patch"
   ] ++ [{
     name = "sifive";
     patch = null;
