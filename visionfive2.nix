@@ -7,7 +7,7 @@
       "console=ttyS0,115200"
       "earlycon=sbi"
     ];
-    initrd.kernelModules = [ "dw_mmc" ];
+    initrd.kernelModules = [ "dw_mmc-starfive" ];
   };
 
   hardware.deviceTree.name = "starfive/jh7110-starfive-visionfive-v2.dtb";
