@@ -10,6 +10,8 @@
     ];
   };
 
+  hardware.deviceTree.name = "starfive/jh7110-starfive-visionfive-v2.dtb";
+
   services = {
     getty.autologinUser = "root";
     openssh = {
