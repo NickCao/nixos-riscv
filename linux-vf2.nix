@@ -5,7 +5,7 @@
 } @ args:
 
 let
-  modDirVersion = "6.1.0";
+  modDirVersion = "6.1.12";
 in
 buildLinux (args // {
   inherit modDirVersion;
@@ -14,8 +14,8 @@ buildLinux (args // {
   src = fetchFromGitHub {
     owner = "NickCao";
     repo = "starfive-linux";
-    rev = "fa007931cc813b39146c7635ad2a1ade93b14f03";
-    sha256 = "sha256-P0fJkmh9OsN59diRbOFTbqTj13wAcVnddInmgCBIGuA=";
+    rev = "0714114a7fad57e4647b31a9a080e92a3ebf7cbc";
+    sha256 = "sha256-1xTLAPwgQ2qx4F39nVCxJSOCvYxh8xU0G9dihPfH22s=";
   };
 
   structuredExtraConfig = with lib.kernel; {
