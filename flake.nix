@@ -122,7 +122,7 @@
     nixosConfigurations = {
       qemu = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./qemu.nix ]; };
       unmatched = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./unmatched.nix ({ nixpkgs.overlays = [ self.overlay ]; }) ]; };
-      visionfive2 = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive2.nix ]; };
+      visionfive2 = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive2.nix ({ nixpkgs.overlays = [ self.overlay ]; }) ]; };
     };
   };
 }
