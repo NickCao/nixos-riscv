@@ -2,7 +2,7 @@
 
   sdImage.postBuildCommands = ''
     truncate --size=+1M "$img"
-    ${pkgs.buildPackages.gptfdisk}/bin/sgdisk --mbrtogpt \
+    ${pkgs.buildPackages.gptfdisk}/bin/sgdisk --mbrtogpt --attributes=2:set:2 \
       --new=3:4096:8191  --typecode=3:2E54B353-1271-4842-806F-E436D6AF6985 \
       --new=4:8192:16383 --typecode=4:5B193300-FC78-40CD-8002-E86C45580B47 \
       --sort "$img"
