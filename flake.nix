@@ -38,6 +38,13 @@
       uboot-vf2 = prev.buildUBoot {
         version = uboot-vf2-src.shortRev;
         src = uboot-vf2-src;
+        patches = [
+          (final.fetchpatch {
+            name = "riscv-Fix-build-against-binutils-2.38.diff";
+            url = "https://patchwork.ozlabs.org/project/uboot/patch/20220128134713.2322800-1-alexandre.ghiti@canonical.com/raw/";
+            hash = "sha256-V0jDpx6O4bFzuaOQejdrRnLiWb5LBTx47T0TZqNtMXk=";
+          })
+        ];
         defconfig = "starfive_visionfive2_defconfig";
         filesToInstall = [
           "u-boot.bin"
