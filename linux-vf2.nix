@@ -5,17 +5,17 @@
 } @ args:
 
 let
-  modDirVersion = "6.1.12";
+  modDirVersion = "6.2.0";
 in
 buildLinux (args // {
   inherit modDirVersion;
   version = "${modDirVersion}-vf2";
 
   src = fetchFromGitHub {
-    owner = "NickCao";
-    repo = "starfive-linux";
-    rev = "bffbafbf52cc052621daaaa43a378eb5d73a018b";
-    sha256 = "sha256-ZQoBJzbylctH2tewfYoKKkjgES6d5xrqEvv3TTpOQgA=";
+    owner = "esmil";
+    repo = "linux";
+    rev = "6ba2b4f6ff44e2c992ed4fdbce9e9d20b945bba9";
+    sha256 = "sha256-XJPu9GTaXJiy9ZRcvtURQ9wu67uaJruxCIvwPd1e01g=";
   };
 
   structuredExtraConfig = with lib.kernel; {
@@ -28,7 +28,7 @@ buildLinux (args // {
   };
 
   extraMeta = {
-    branch = "visionfive2";
+    branch = "jh7110";
     maintainers = with lib.maintainers; [ nickcao ];
     description = "Linux kernel for StarFive's VisionFive2";
     platforms = [ "riscv64-linux" ];
