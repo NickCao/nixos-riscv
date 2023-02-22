@@ -25,7 +25,6 @@
       inherit (pkgs)
         qemu opensbi
         uboot-vf2
-        opensbi-vf2
         firmware-vf2
         linux-vf2
         uboot-unmatched
@@ -47,12 +46,6 @@
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
       };
-      opensbi-vf2 = (prev.opensbi.override {
-        withPayload = "${final.uboot-vf2}/u-boot.bin";
-        withFDT = "${final.uboot-vf2}/starfive_visionfive2.dtb";
-      }).overrideAttrs (attrs: {
-        makeFlags = attrs.makeFlags ++ [ "FW_TEXT_START=0x40000000" ];
-      });
       firmware-vf2 = final.stdenv.mkDerivation {
         name = "firmware-vf2";
         dontUnpack = true;
