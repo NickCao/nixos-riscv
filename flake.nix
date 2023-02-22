@@ -11,7 +11,7 @@
     };
     uboot-vf2-src = {
       flake = false;
-      url = "github:starfive-tech/u-boot/JH7110_VisionFive2_devel";
+      url = "github:NickCao/u-boot-starfive/visionfive2";
     };
     starfive-tools = {
       flake = false;
@@ -38,18 +38,13 @@
       uboot-vf2 = prev.buildUBoot {
         version = uboot-vf2-src.shortRev;
         src = uboot-vf2-src;
-        patches = [
-          (final.fetchpatch {
-            name = "riscv-Fix-build-against-binutils-2.38.diff";
-            url = "https://patchwork.ozlabs.org/project/uboot/patch/20220128134713.2322800-1-alexandre.ghiti@canonical.com/raw/";
-            hash = "sha256-V0jDpx6O4bFzuaOQejdrRnLiWb5LBTx47T0TZqNtMXk=";
-          })
-        ];
         defconfig = "starfive_visionfive2_defconfig";
         filesToInstall = [
-          "u-boot.bin"
+          "u-boot.itb"
           "spl/u-boot-spl.bin"
-          "arch/riscv/dts/starfive_visionfive2.dtb"
+        ];
+        extraMakeFlags = [
+          "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
       };
       opensbi-vf2 = (prev.opensbi.override {
@@ -63,21 +58,17 @@
         dontUnpack = true;
         nativeBuildInputs = [
           final.buildPackages.python3
-          final.buildPackages.ubootTools
-          final.buildPackages.dtc
         ];
         installPhase = ''
           runHook preInstall
 
           mkdir -p $out
           python3 ${starfive-tools}/spl_tool/create_sbl ${final.uboot-vf2}/u-boot-spl.bin $out/u-boot-spl.bin.normal.out
-          substitute ${starfive-tools}/uboot_its/visionfive2-uboot-fit-image.its visionfive2-uboot-fit-image.its \
-            --replace fw_payload.bin ${final.opensbi-vf2}/share/opensbi/lp64/generic/firmware/fw_payload.bin
-          mkimage -f visionfive2-uboot-fit-image.its -A riscv -O u-boot -T firmware $out/visionfive2_fw_payload.img
+          install -Dm444 ${final.uboot-vf2}/u-boot.itb $out/u-boot.itb
 
           mkdir -p "$out/nix-support"
           echo "file bin \"$out/u-boot-spl.bin.normal.out\"" >> "$out/nix-support/hydra-build-products"
-          echo "file bin \"$out/visionfive2_fw_payload.img\"" >> "$out/nix-support/hydra-build-products"
+          echo "file bin \"$out/u-boot.itb\"" >> "$out/nix-support/hydra-build-products"
 
           runHook postInstall
         '';

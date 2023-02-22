@@ -77,17 +77,17 @@
     "uboot-vf2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1673450158,
-        "narHash": "sha256-BF5CFcldqZqH6p16ycStih6udenyg2pDRp0EvcZHzVk=",
-        "owner": "starfive-tech",
-        "repo": "u-boot",
-        "rev": "f1d959f0b02e16842181a4c1723ba3ea30d2e04a",
+        "lastModified": 1676987202,
+        "narHash": "sha256-cw1dzDsi73U4JY28DJrrLjWlvIU1iUGIeKdotjEZZms=",
+        "owner": "NickCao",
+        "repo": "u-boot-starfive",
+        "rev": "fb8b50349c84cfc0bb6826303dc9cb5e4faf875c",
         "type": "github"
       },
       "original": {
-        "owner": "starfive-tech",
-        "ref": "JH7110_VisionFive2_devel",
-        "repo": "u-boot",
+        "owner": "NickCao",
+        "ref": "visionfive2",
+        "repo": "u-boot-starfive",
         "type": "github"
       }
     }

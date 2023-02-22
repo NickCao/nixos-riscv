@@ -9,7 +9,7 @@
     eval $(partx "$img" -o START --nr 1 --pairs)
     dd conv=notrunc if=${pkgs.firmware-vf2}/u-boot-spl.bin.normal.out of="$img" seek="$START"
     eval $(partx "$img" -o START --nr 2 --pairs)
-    dd conv=notrunc if=${pkgs.firmware-vf2}/visionfive2_fw_payload.img of="$img" seek="$START"
+    dd conv=notrunc if=${pkgs.firmware-vf2}/u-boot.itb of="$img" seek="$START"
   '';
 
   boot = {
