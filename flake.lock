@@ -77,11 +77,11 @@
     "uboot-vf2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1676987202,
-        "narHash": "sha256-cw1dzDsi73U4JY28DJrrLjWlvIU1iUGIeKdotjEZZms=",
+        "lastModified": 1677067422,
+        "narHash": "sha256-zurDQ0tI/GzqIBAQGFylRWQw1qkFAl+RAvKP1flCUFg=",
         "owner": "NickCao",
         "repo": "u-boot-starfive",
-        "rev": "fb8b50349c84cfc0bb6826303dc9cb5e4faf875c",
+        "rev": "7875cc00f865a3e7204f704b4e997d25ec93772d",
         "type": "github"
       },
       "original": {

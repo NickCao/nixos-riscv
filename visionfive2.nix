@@ -23,7 +23,7 @@
     initrd.kernelModules = [ "dw_mmc-starfive" ];
   };
 
-  hardware.deviceTree.name = "starfive/jh7110-starfive-visionfive-v2.dtb";
+  hardware.deviceTree.name = "starfive/jh7110-starfive-visionfive-2-v1.3b.dtb";
 
   services = {
     getty.autologinUser = "root";
