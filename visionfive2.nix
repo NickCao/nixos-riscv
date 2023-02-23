@@ -20,7 +20,6 @@
     ];
     initrd.kernelModules = [
       "dw_mmc-starfive"
-      "starfive-dwmac"
     ];
   };
 
