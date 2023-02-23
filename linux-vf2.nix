@@ -20,9 +20,9 @@ buildLinux (args // {
 
   structuredExtraConfig = with lib.kernel; {
     SOC_STARFIVE = yes;
-    CLK_STARFIVE_JH7110_SYS = yes;
-    RESET_STARFIVE_JH7110 = yes;
-    PINCTRL_STARFIVE_JH7110 = yes;
+    PINCTRL_STARFIVE_JH7110_SYS = yes;
+    PINCTRL_STARFIVE_JH7110_AON = yes;
+    CLK_STARFIVE_JH7110_AON = yes;
     SERIAL_8250_DW = yes;
     MMC_DW_STARFIVE = module;
   };

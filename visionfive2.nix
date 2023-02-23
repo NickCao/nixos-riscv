@@ -16,11 +16,12 @@
     supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "f2fs" "xfs" ];
     kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./linux-vf2.nix { kernelPatches = [ ]; });
     kernelParams = [
-      "console=tty0"
       "console=ttyS0,115200"
-      "earlycon=sbi"
     ];
-    initrd.kernelModules = [ "dw_mmc-starfive" ];
+    initrd.kernelModules = [
+      "dw_mmc-starfive"
+      "starfive-dwmac"
+    ];
   };
 
   hardware.deviceTree.name = "starfive/jh7110-starfive-visionfive-2-v1.3b.dtb";
