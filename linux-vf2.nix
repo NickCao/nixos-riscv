@@ -13,7 +13,7 @@ buildLinux (args // {
 
   src = fetchFromGitHub {
     owner = "NickCao";
-    repo = "starfive-linux";
+    repo = "linux";
     rev = "3356b42a7c04e070ceec5d2163fe18d2bb4a3616";
     sha256 = "sha256-4eymHM3TR3K4+zK7HtokmyiCFSRiMG0IgOv3AMp4kCY=";
   };
