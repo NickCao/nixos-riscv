@@ -12,23 +12,20 @@ buildLinux (args // {
   version = "${modDirVersion}-vf2";
 
   src = fetchFromGitHub {
-    owner = "esmil";
-    repo = "linux";
-    rev = "6ba2b4f6ff44e2c992ed4fdbce9e9d20b945bba9";
-    sha256 = "sha256-XJPu9GTaXJiy9ZRcvtURQ9wu67uaJruxCIvwPd1e01g=";
+    owner = "NickCao";
+    repo = "starfive-linux";
+    rev = "3356b42a7c04e070ceec5d2163fe18d2bb4a3616";
+    sha256 = "sha256-4eymHM3TR3K4+zK7HtokmyiCFSRiMG0IgOv3AMp4kCY=";
   };
 
   structuredExtraConfig = with lib.kernel; {
-    SOC_STARFIVE = yes;
-    PINCTRL_STARFIVE_JH7110_SYS = yes;
-    PINCTRL_STARFIVE_JH7110_AON = yes;
-    CLK_STARFIVE_JH7110_AON = yes;
     SERIAL_8250_DW = yes;
-    MMC_DW_STARFIVE = module;
   };
 
+  preferBuiltin = true;
+
   extraMeta = {
-    branch = "jh7110";
+    branch = "visionfive2";
     maintainers = with lib.maintainers; [ nickcao ];
     description = "Linux kernel for StarFive's VisionFive2";
     platforms = [ "riscv64-linux" ];
