@@ -67,7 +67,12 @@
         '';
       };
       linux-vf2 = final.callPackage ./linux-vf2.nix { kernelPatches = [ ]; };
-      uboot-unmatched = prev.buildUBoot {
+      uboot-unmatched = prev.buildUBoot rec {
+        version = "2023.01";
+        src = final.fetchurl {
+          url = "ftp://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
+          hash = "sha256-aUI7rTgPiaCRZjbonm3L0uRRLVhDCNki0QOdHkMxlQ8=";
+        };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
