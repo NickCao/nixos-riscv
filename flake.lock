@@ -19,11 +19,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1677205075,
-        "narHash": "sha256-b1FdqeCY5nhpfVviBJgucrtnp8qAtqxW3b+x56gR1Mg=",
+        "lastModified": 1677894852,
+        "narHash": "sha256-m9UsYK7Cvj5t8rM4mIcMl/BuYA3nBF8e81hXQEWSOlo=",
         "owner": "NickCao",
         "repo": "nixpkgs",
-        "rev": "9b553c0cc4a946fc47f82c59f8048e0e0daec203",
+        "rev": "871bd791017e1b7471e85ddf24ac47269580fba0",
         "type": "github"
       },
       "original": {
@@ -77,11 +77,11 @@
     "uboot-vf2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1677067422,
-        "narHash": "sha256-zurDQ0tI/GzqIBAQGFylRWQw1qkFAl+RAvKP1flCUFg=",
+        "lastModified": 1678096112,
+        "narHash": "sha256-w6dPaok72sW7Q4ChSWDqds+djWWwigirz9f+s623r/g=",
         "owner": "NickCao",
         "repo": "u-boot-starfive",
-        "rev": "7875cc00f865a3e7204f704b4e997d25ec93772d",
+        "rev": "64fc719a5db536abaec42564689d96bcfdf0dfba",
         "type": "github"
       },
       "original": {
