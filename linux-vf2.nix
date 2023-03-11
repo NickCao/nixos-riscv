@@ -14,8 +14,8 @@ buildLinux (args // {
   src = fetchFromGitHub {
     owner = "NickCao";
     repo = "linux";
-    rev = "f8cec9fc9006e294603b7e9a38c25a04e4c416f4";
-    sha256 = "sha256-HQWhyT7yUa+1Qe+fFGp5m5KdO/9VmIyAjV3JT2BEbmU=";
+    rev = "78db942a89fab514a6358d8ffb6324f6cbf4db44";
+    sha256 = "sha256-cudsQLjjFO3kWFux1Hu47GWnV3vIwaI+dBu08KA0HMA=";
   };
 
   structuredExtraConfig = with lib.kernel; {
