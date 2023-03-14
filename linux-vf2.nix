@@ -5,7 +5,7 @@
 } @ args:
 
 let
-  modDirVersion = "6.3.0-rc1";
+  modDirVersion = "6.3.0-rc2";
 in
 buildLinux (args // {
   inherit modDirVersion;
@@ -14,8 +14,8 @@ buildLinux (args // {
   src = fetchFromGitHub {
     owner = "NickCao";
     repo = "linux";
-    rev = "78db942a89fab514a6358d8ffb6324f6cbf4db44";
-    sha256 = "sha256-cudsQLjjFO3kWFux1Hu47GWnV3vIwaI+dBu08KA0HMA=";
+    rev = "8f774c1ae2a2224b94b55f573d562dc21c3c03aa";
+    sha256 = "sha256-E1CLhBLzz4HBcSbAMyaf+BlDbUO5bf41kSe7qp4fapA=";
   };
 
   structuredExtraConfig = with lib.kernel; {
