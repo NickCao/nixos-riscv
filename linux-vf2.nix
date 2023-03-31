@@ -22,6 +22,13 @@ buildLinux (args // {
     SERIAL_8250_DW = yes;
   };
 
+  kernelPatches = [
+    {
+      name = "purgatory-fix-disabling-debug-info";
+      patch = ./0001-purgatory-fix-disabling-debug-info.patch;
+    }
+  ];
+
   preferBuiltin = true;
 
   extraMeta = {

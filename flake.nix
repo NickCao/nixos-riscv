@@ -66,7 +66,7 @@
           runHook postInstall
         '';
       };
-      linux-vf2 = final.callPackage ./linux-vf2.nix { kernelPatches = [ ]; };
+      linux-vf2 = final.callPackage ./linux-vf2.nix { };
       uboot-unmatched = prev.buildUBoot rec {
         version = "2023.01";
         src = final.fetchurl {

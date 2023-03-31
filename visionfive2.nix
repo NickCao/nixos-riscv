@@ -14,7 +14,7 @@
 
   boot = {
     supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "f2fs" "xfs" ];
-    kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./linux-vf2.nix { kernelPatches = [ ]; });
+    kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./linux-vf2.nix { });
     kernelParams = [ "console=ttyS0,115200" ];
     initrd.kernelModules = [ "dw_mmc-starfive" "motorcomm" "dwmac-starfive" ];
   };
