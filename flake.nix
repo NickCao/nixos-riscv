@@ -34,7 +34,7 @@
     };
     overlay = final: prev: {
       inherit meta-sifive;
-      uboot-vf2 = prev.buildUBoot {
+      uboot-vf2 = (prev.buildUBoot {
         version = uboot-vf2-src.shortRev;
         src = uboot-vf2-src;
         defconfig = "starfive_visionfive2_defconfig";
@@ -45,7 +45,7 @@
         extraMakeFlags = [
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
-      };
+      }).overrideAttrs (_: { patches = [ ]; });
       firmware-vf2 = final.stdenv.mkDerivation {
         name = "firmware-vf2";
         dontUnpack = true;
