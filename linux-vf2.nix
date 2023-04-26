@@ -5,7 +5,7 @@
 } @ args:
 
 let
-  modDirVersion = "6.3.0-rc2";
+  modDirVersion = "6.3.0";
 in
 buildLinux (args // {
   inherit modDirVersion;
@@ -14,20 +14,15 @@ buildLinux (args // {
   src = fetchFromGitHub {
     owner = "NickCao";
     repo = "linux";
-    rev = "8f774c1ae2a2224b94b55f573d562dc21c3c03aa";
-    sha256 = "sha256-E1CLhBLzz4HBcSbAMyaf+BlDbUO5bf41kSe7qp4fapA=";
+    rev = "fc80774f1a7b4c8432952b20da8c30a8ab7f0ac2";
+    sha256 = "sha256-f4euRON+QHNllQnU0cxl9ynOKMobys51g1ZeSKKkSv0=";
   };
 
   structuredExtraConfig = with lib.kernel; {
     SERIAL_8250_DW = yes;
   };
 
-  kernelPatches = [
-    {
-      name = "purgatory-fix-disabling-debug-info";
-      patch = ./0001-purgatory-fix-disabling-debug-info.patch;
-    }
-  ];
+  kernelPatches = [ ];
 
   preferBuiltin = true;
 
