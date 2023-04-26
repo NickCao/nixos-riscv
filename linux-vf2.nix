@@ -20,6 +20,7 @@ buildLinux (args // {
 
   structuredExtraConfig = with lib.kernel; {
     SERIAL_8250_DW = yes;
+    PL330_DMA = no;
   };
 
   kernelPatches = [ ];
