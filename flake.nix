@@ -68,17 +68,12 @@
       };
       linux-vf2 = final.callPackage ./linux-vf2.nix { };
       uboot-unmatched = prev.buildUBoot rec {
-        version = "2023.01";
-        src = final.fetchurl {
-          url = "ftp://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
-          hash = "sha256-aUI7rTgPiaCRZjbonm3L0uRRLVhDCNki0QOdHkMxlQ8=";
-        };
         defconfig = "sifive_unmatched_defconfig";
         extraPatches = map (patch: "${final.meta-sifive}/recipes-bsp/u-boot/files/riscv64/${patch}") [
           "0002-board-sifive-spl-Initialized-the-PWM-setting-in-the-.patch"
           "0003-board-sifive-Set-LED-s-color-to-purple-in-the-U-boot.patch"
           "0004-board-sifive-Set-LED-s-color-to-blue-before-jumping-.patch"
-          "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
+          # "0005-board-sifive-spl-Set-remote-thermal-of-TMP451-to-85-.patch"
           "0008-riscv-dts-Add-few-PMU-events.patch"
         ];
         extraMakeFlags = [
