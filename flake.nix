@@ -1,10 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
-    u-boot-starfive = {
-      flake = false;
-      url = "github:NickCao/u-boot-starfive";
-    };
     meta-sifive = {
       flake = false;
       url = "github:sifive/meta-sifive/master";
@@ -18,7 +14,7 @@
       url = "github:NickCao/starfive-tools";
     };
   };
-  outputs = { self, nixpkgs, u-boot-starfive, meta-sifive, uboot-vf2-src, starfive-tools }: {
+  outputs = { self, nixpkgs, meta-sifive, uboot-vf2-src, starfive-tools }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;

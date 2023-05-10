@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }: {
+{ config, modulesPath, ... }: {
 
   imports = [
     "${modulesPath}/profiles/base.nix"

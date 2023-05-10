@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }: {
+{ pkgs, lib, ... }: {
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "f2fs" "xfs" ];
   boot.initrd.kernelModules = [ "nvme" "mmc_block" "mmc_spi" "spi_sifive" "spi_nor" "uas" "sdhci_pci" ];
   boot.kernelParams = [ "console=ttySIF1" ];

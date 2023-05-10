@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }: {
+{ pkgs, lib, ... }: {
 
   sdImage.postBuildCommands = ''
     truncate --size=+1M "$img"
