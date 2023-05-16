@@ -21,7 +21,6 @@
         linux-vf2
         uboot-unmatched
         bootrom-unmatched
-        uboot-unmatched-ram
         ;
     };
     overlay = final: prev: {
@@ -90,7 +89,6 @@
 
         filesToInstall = [ "u-boot.itb" "spl/u-boot-spl.bin" ];
       }).overrideAttrs (_: { patches = [ ]; });
-      uboot-unmatched-ram = final.uboot-unmatched.overrideAttrs (attrs: { patches = attrs.patches ++ [ ./0001-board-sifive-spl-boot-from-ram.patch ]; });
       bootrom-unmatched = prev.runCommand "bootrom"
         {
           nativeBuildInputs = with prev.buildPackages; [ gptfdisk ];
