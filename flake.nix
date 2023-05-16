@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
+    nixos-hardware.url = "github:NickCao/nixos-hardware/visionfive2";
     meta-sifive = {
       flake = false;
       url = "github:sifive/meta-sifive/master";
@@ -10,61 +11,18 @@
       url = "github:NickCao/starfive-tools";
     };
   };
-  outputs = { self, nixpkgs, meta-sifive, starfive-tools }: {
+  outputs = { self, nixpkgs, nixos-hardware, meta-sifive, starfive-tools }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
       inherit (pkgs)
         qemu opensbi
-        uboot-vf2
-        firmware-vf2
-        linux-vf2
         uboot-unmatched
         bootrom-unmatched
         ;
     };
     overlay = final: prev: {
       inherit meta-sifive;
-      uboot-vf2 = (final.buildUBoot rec {
-        version = "2023.07-rc2";
-
-        src = final.fetchurl {
-          url = "ftp://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
-          hash = "sha256-GE1zRpmAPOdBQX6Q9vuf4hjxzk/OR53CZqNNhp5t+Ms=";
-        };
-
-        defconfig = "starfive_visionfive2_defconfig";
-
-        filesToInstall = [
-          "u-boot.itb"
-          "spl/u-boot-spl.bin"
-        ];
-
-        extraMakeFlags = [
-          "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
-        ];
-      }).overrideAttrs (_: { patches = [ ]; });
-      firmware-vf2 = final.stdenv.mkDerivation {
-        name = "firmware-vf2";
-        dontUnpack = true;
-        nativeBuildInputs = [
-          final.buildPackages.python3
-        ];
-        installPhase = ''
-          runHook preInstall
-
-          mkdir -p $out
-          python3 ${starfive-tools}/spl_tool/create_sbl ${final.uboot-vf2}/u-boot-spl.bin $out/u-boot-spl.bin.normal.out
-          install -Dm444 ${final.uboot-vf2}/u-boot.itb $out/u-boot.itb
-
-          mkdir -p "$out/nix-support"
-          echo "file bin \"$out/u-boot-spl.bin.normal.out\"" >> "$out/nix-support/hydra-build-products"
-          echo "file bin \"$out/u-boot.itb\"" >> "$out/nix-support/hydra-build-products"
-
-          runHook postInstall
-        '';
-      };
-      linux-vf2 = final.callPackage ./linux-vf2.nix { };
       uboot-unmatched = (prev.buildUBoot rec {
         version = "2023.04";
 
@@ -109,7 +67,13 @@
     nixosConfigurations = {
       qemu = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./qemu.nix ]; };
       unmatched = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./unmatched.nix ({ nixpkgs.overlays = [ self.overlay ]; }) ]; };
-      visionfive2 = nixpkgs.lib.nixosSystem { modules = [ ./common.nix ./visionfive2.nix ({ nixpkgs.overlays = [ self.overlay ]; }) ]; };
+      visionfive2 = nixpkgs.lib.nixosSystem {
+        modules = [
+          "${nixos-hardware}/starfive/visionfive/v2/sd-image-installer.nix"
+          ./visionfive2.nix
+          ({ nixpkgs.overlays = [ self.overlay ]; })
+        ];
+      };
     };
   };
 }
