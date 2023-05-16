@@ -37,8 +37,7 @@
       "inputs": {
         "meta-sifive": "meta-sifive",
         "nixpkgs": "nixpkgs",
-        "starfive-tools": "starfive-tools",
-        "uboot-vf2-src": "uboot-vf2-src"
+        "starfive-tools": "starfive-tools"
       }
     },
     "starfive-tools": {
@@ -54,23 +53,6 @@
       "original": {
         "owner": "NickCao",
         "repo": "starfive-tools",
-        "type": "github"
-      }
-    },
-    "uboot-vf2-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1684078038,
-        "narHash": "sha256-UW/aJQPyc2npYTbTClCrXsOhLGrgzE/2BPR/O8HUfK0=",
-        "owner": "NickCao",
-        "repo": "u-boot-starfive",
-        "rev": "177e506952a8ee34011590c4bd578d191fafb1ca",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NickCao",
-        "ref": "visionfive2",
-        "repo": "u-boot-starfive",
         "type": "github"
       }
     }

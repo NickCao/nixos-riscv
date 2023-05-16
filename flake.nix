@@ -5,16 +5,12 @@
       flake = false;
       url = "github:sifive/meta-sifive/master";
     };
-    uboot-vf2-src = {
-      flake = false;
-      url = "github:NickCao/u-boot-starfive/visionfive2";
-    };
     starfive-tools = {
       flake = false;
       url = "github:NickCao/starfive-tools";
     };
   };
-  outputs = { self, nixpkgs, meta-sifive, uboot-vf2-src, starfive-tools }: {
+  outputs = { self, nixpkgs, meta-sifive, starfive-tools }: {
     hydraJobs = with self.nixosConfigurations.unmatched; {
       unmatched = config.system.build.sdImage;
       visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
@@ -30,14 +26,21 @@
     };
     overlay = final: prev: {
       inherit meta-sifive;
-      uboot-vf2 = (prev.buildUBoot {
-        version = uboot-vf2-src.shortRev;
-        src = uboot-vf2-src;
+      uboot-vf2 = (final.buildUBoot rec {
+        version = "2023.07-rc2";
+
+        src = final.fetchurl {
+          url = "ftp://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
+          hash = "sha256-GE1zRpmAPOdBQX6Q9vuf4hjxzk/OR53CZqNNhp5t+Ms=";
+        };
+
         defconfig = "starfive_visionfive2_defconfig";
+
         filesToInstall = [
           "u-boot.itb"
           "spl/u-boot-spl.bin"
         ];
+
         extraMakeFlags = [
           "OPENSBI=${final.opensbi}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin"
         ];
