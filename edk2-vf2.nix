@@ -19,8 +19,8 @@ let
   platforms = fetchFromGitHub {
     owner = "starfive-tech";
     repo = "edk2-platforms";
-    rev = "refs/tags/REL_VF2_APR2023";
-    hash = "sha256-WXW+FxTAe+BeG94U9fKHwWfCh9wuxVkHxCXJEO5NtbE=";
+    rev = "99f10149bf54c68890eb97aaab88a94e2bf734c6";
+    hash = "sha256-3xb8P/kMLpuk3h7HG4/DPNmbHz6z+JX/jvLT4KWUhJk=";
     fetchSubmodules = true;
   };
 
