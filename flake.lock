@@ -53,24 +53,7 @@
       "inputs": {
         "meta-sifive": "meta-sifive",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs",
-        "starfive-tools": "starfive-tools"
-      }
-    },
-    "starfive-tools": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1674126575,
-        "narHash": "sha256-dKRHFWLJrXIEpsuXOO3zpiIplPFG5ghVLYR8GvBat8M=",
-        "owner": "NickCao",
-        "repo": "starfive-tools",
-        "rev": "7038f61fcd684fc60d2abc4fd95909782480c66b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NickCao",
-        "repo": "starfive-tools",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

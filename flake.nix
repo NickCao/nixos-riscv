@@ -6,21 +6,20 @@
       flake = false;
       url = "github:sifive/meta-sifive/master";
     };
-    starfive-tools = {
-      flake = false;
-      url = "github:NickCao/starfive-tools";
-    };
   };
-  outputs = { self, nixpkgs, nixos-hardware, meta-sifive, starfive-tools }: {
-    hydraJobs = with self.nixosConfigurations.unmatched; {
-      unmatched = config.system.build.sdImage;
-      visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
-      inherit (pkgs)
-        qemu opensbi
-        uboot-unmatched
-        bootrom-unmatched
-        ;
-    };
+  outputs = { self, nixpkgs, nixos-hardware, meta-sifive }: {
+    hydraJobs = with self.nixosConfigurations.unmatched;
+      let vf2 = pkgs.callPackage "${nixos-hardware}/starfive/visionfive/v2/firmware.nix" { }; in {
+        unmatched = config.system.build.sdImage;
+        visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
+        inherit (pkgs)
+          qemu opensbi
+          uboot-unmatched
+          bootrom-unmatched
+          ;
+        spl-vf2 = vf2.spl;
+        uboot-fit-image-vf2 = vf2.uboot-fit-image;
+      };
     overlay = final: prev: {
       inherit meta-sifive;
       uboot-unmatched = (prev.buildUBoot rec {
