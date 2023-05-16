@@ -5,6 +5,7 @@
 , acpica-tools
 , dtc
 , buildPackages
+, buildTarget ? "RELEASE"
 }:
 let
   version = "202304";
@@ -43,19 +44,20 @@ stdenv.mkDerivation {
   depsBuildBuild = [ buildPackages.stdenv.cc ];
   nativeBuildInputs = [ python3 nasm acpica-tools dtc ];
 
-  env.PYTHON_COMMAND = "python3";
-  env.GCC5_RISCV64_PREFIX = stdenv.cc.targetPrefix;
-  env.NIX_CFLAGS_COMPILE = toString [ "-Wformat" ];
+  env = {
+    PYTHON_COMMAND = "python3";
+    GCC5_RISCV64_PREFIX = stdenv.cc.targetPrefix;
+  };
 
   buildPhase = ''
     runHook preBuild
-    build --arch=RISCV64 --platform=${platforms}/Platform/StarFive/JH7110SeriesPkg/JH7110Board/JH7110.dsc --tagname=GCC5
+    build --arch=RISCV64 --platform=${platforms}/Platform/StarFive/JH7110SeriesPkg/JH7110Board/JH7110.dsc --tagname=GCC5 --buildtarget=${buildTarget}
     runHook postBuild
   '';
 
   installPhase = ''
     runHook preInstall
-    install -Dm444 Build/JH7110/DEBUG_GCC5/FV/JH7110.fd $out/JH7110.fd
+    install -Dm444 Build/JH7110/${buildTarget}_GCC5/FV/JH7110.fd $out/JH7110.fd
     runHook postInstall
   '';
 }
