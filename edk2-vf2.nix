@@ -1,8 +1,6 @@
 { stdenv
 , fetchFromGitHub
 , python3
-, nasm
-, acpica-tools
 , dtc
 , buildPackages
 , buildTarget ? "RELEASE"
@@ -41,8 +39,8 @@ stdenv.mkDerivation {
     source edksetup.sh BaseTools
   '';
 
-  depsBuildBuild = [ buildPackages.stdenv.cc ];
-  nativeBuildInputs = [ python3 nasm acpica-tools dtc ];
+  depsBuildBuild = [ buildPackages.stdenv.cc ]; # for cpp
+  nativeBuildInputs = [ python3 dtc ];
 
   env = {
     PYTHON_COMMAND = "python3";
