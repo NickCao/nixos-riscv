@@ -19,27 +19,26 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1688205017,
-        "narHash": "sha256-TsBv2ruHd+cZbiFreTOo+xpffwqDOuTbKfyPYtp2OOs=",
-        "owner": "NickCao",
+        "lastModified": 1689320556,
+        "narHash": "sha256-vODUkZLWFVCvo1KPK3dC2CbXjxa9antEn5ozwlcTr48=",
+        "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "ff35653b1493d6ae27acb04bf6851e095b23ffea",
+        "rev": "d4ea64f2063820120c05f6ba93ee02e6d4671d6b",
         "type": "github"
       },
       "original": {
-        "owner": "NickCao",
-        "ref": "visionfive2",
+        "owner": "NixOS",
         "repo": "nixos-hardware",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1688088888,
-        "narHash": "sha256-vQPKckztN0iP7ZU+Rg9u+m52XcJba3TV0hbpapbgJqQ=",
+        "lastModified": 1690159801,
+        "narHash": "sha256-/MU/YQ5S2O6hwRI5qmIeN5JtNAtWBV6qrSM6UvQ+Coo=",
         "owner": "NickCao",
         "repo": "nixpkgs",
-        "rev": "e36a1f8bb21731e4310b7d46e60f9c135aebd15b",
+        "rev": "fa02b5c5b24bff06fdad1592788f1491e12131fb",
         "type": "github"
       },
       "original": {
