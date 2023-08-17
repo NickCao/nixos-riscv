@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    nixos-hardware.url = "github:NickCao/nixos-hardware/visionfive2";
     meta-sifive = {
       flake = false;
       url = "github:sifive/meta-sifive/master";
