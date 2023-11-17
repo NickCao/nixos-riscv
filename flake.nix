@@ -15,8 +15,11 @@
           ;
         qt5 = {
           inherit (pkgs.qt5)
-            qtbase
-            ;
+            qtbase qt3d qtcharts qtconnectivity qtdeclarative qtdoc qtgraphicaleffects
+            qtimageformats qtlocation qtmultimedia qtquickcontrols qtquickcontrols2
+            qtscript qtsensors qtserialport qtsvg qttools qtvirtualkeyboard
+            qtwebchannel qtwebengine qtwebsockets qtwebview qtx11extras qtxmlpatterns
+            qtlottie qtdatavis3d qtwayland;
         };
         spl-vf2 = vf2.spl;
         uboot-fit-image-vf2 = vf2.uboot-fit-image;
