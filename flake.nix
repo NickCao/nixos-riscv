@@ -21,6 +21,7 @@
         spl-vf2 = vf2.spl;
         uboot-fit-image-vf2 = vf2.uboot-fit-image;
         edk2-vf2 = pkgs.pkgsCross.riscv64-embedded.callPackage ./edk2-vf2.nix { };
+        linux-duo = pkgs.pkgsCross.riscv64.callPackage ./linux-duo.nix { };
       };
     nixosConfigurations = {
       qemu = nixpkgs.lib.nixosSystem {
