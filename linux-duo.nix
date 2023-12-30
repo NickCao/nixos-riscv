@@ -12,6 +12,11 @@ let
   };
   extraconfig = writeText "extraconfig" ''
     CONFIG_ARCH_SOPHGO=y
+    CONFIG_SERIAL_8250=y
+    CONFIG_SERIAL_8250_CONSOLE=y
+    CONFIG_SERIAL_8250_NR_UARTS=5
+    CONFIG_SERIAL_8250_RUNTIME_UARTS=5
+    CONFIG_SERIAL_8250_DW=y
   '';
   configfile = runCommand "config" { } ''
     cat ${tinyconfig} ${extraconfig} > "$out"
