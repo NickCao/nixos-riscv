@@ -43,7 +43,7 @@ let
         fdt-1 {
           description = "cvitek device tree - cv1800b_milkv_duo_sd";
           type = "flat_dt";
-          data = /incbin/("${kernel}/dtbs/sophgo/cv1800b-milkv-duo.dtb");
+          data = /incbin/("${./cv1800b_milkv_duo_sd.dtb}");
           arch = "riscv";
           compression = "none";
           hash-1 {
