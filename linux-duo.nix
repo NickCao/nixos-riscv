@@ -18,8 +18,7 @@ let
     substituteInPlace "$out" \
       --replace CONFIG_BLK_DEV_INITRD=y "" \
       --replace CONFIG_DEBUG_FS=y       "" \
-      --replace CONFIG_VECTOR=y         "" \
-      --replace CONFIG_VECTOR_0_7=y     ""
+      --replace CONFIG_VECTOR=y         ""
   '';
 in
 (linuxManualConfig {
