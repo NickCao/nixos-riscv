@@ -1,0 +1,44 @@
+/dts-v1/;
+
+/ {
+  #address-cells = <2>;
+
+  images {
+    kernel-1 {
+      type = "kernel";
+      data = /incbin/("<FIXME>");
+      arch = "riscv";
+      os = "linux";
+      compression = "gzip";
+      load = <0x0 0x80080000>;
+      entry = <0x0 0x80080000>;
+    };
+
+    ramdisk-1 {
+      type = "ramdisk";
+      data = /incbin/("<FIXME>");
+      arch = "riscv";
+      os = "linux";
+      compression = "gzip";
+      load = <00000000>;
+      entry = <00000000>;
+    };
+
+    fdt-1 {
+      type = "flat_dt";
+      data = /incbin/("<FIXME>");
+      arch = "riscv";
+      compression = "none";
+    };
+  };
+
+  configurations {
+    default = "config-1";
+
+    config-1 {
+      kernel = "kernel-1";
+      ramdisk = "ramdisk-1";
+      fdt = "fdt-1";
+    };
+  };
+};
