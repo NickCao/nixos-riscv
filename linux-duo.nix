@@ -1,13 +1,24 @@
-{ lib
+{ runCommand
 , linuxPackages_testing
+, linuxManualConfig
+, linuxConfig
+, writeText
 }:
-
-linuxPackages_testing.kernel.override (args: {
-  kernelPatches = (args.kernelPatches or [ ]) ++ [{
-    name = "milkv-duo";
-    patch = null;
-    extraStructuredConfig = with lib.kernel; {
-      ARCH_SOPHGO = yes;
-    };
-  }];
-})
+let
+  base = linuxPackages_testing.kernel;
+  tinyconfig = linuxConfig {
+    inherit (base) version src;
+    makeTarget = "tinyconfig";
+  };
+  extraconfig = writeText "extraconfig" ''
+    CONFIG_ARCH_SOPHGO=y
+  '';
+  configfile = runCommand "config" { } ''
+    cat ${tinyconfig} ${extraconfig} > "$out"
+  '';
+in
+linuxManualConfig {
+  inherit (base) version src;
+  inherit configfile;
+  allowImportFromDerivation = true;
+}

@@ -53,9 +53,7 @@ let
       };
 
       configurations {
-        default = "config-1";
-
-        config-1 {
+        config-cv1800b_milkv_duo_sd {
           description = "boot cvitek system with board cv1800b_milkv_duo_sd";
           kernel = "kernel-1";
           /*
