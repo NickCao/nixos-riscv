@@ -23,7 +23,8 @@ let
     CONFIG_BLK_DEV_INITRD=y
     CONFIG_BINFMT_ELF=y
     CONFIG_INOTIFY_USER=y
-    CONFIG_CRYPTO_ZSTD=m
+    CONFIG_CRYPTO_ZSTD=y
+    CONFIG_ZSMALLOC=y
     CONFIG_ZRAM=m
   '';
   # hack: drop duplicated entries
@@ -163,6 +164,8 @@ in
   networking.useDHCP = false;
   nix.enable = false;
   system.nssModules = lib.mkForce [ ];
+
+  environment.systemPackages = with pkgs; [ neofetch ];
 
   sdImage = {
     populateFirmwareCommands = ''
