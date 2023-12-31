@@ -25,7 +25,7 @@ let
     CONFIG_INOTIFY_USER=y
     CONFIG_CRYPTO_ZSTD=y
     CONFIG_ZSMALLOC=y
-    CONFIG_ZRAM=m
+    CONFIG_ZRAM=y
   '';
   # hack: drop duplicated entries
   configfile = pkgs.runCommand "config" { } ''
@@ -165,7 +165,7 @@ in
   nix.enable = false;
   system.nssModules = lib.mkForce [ ];
 
-  environment.systemPackages = with pkgs; [ neofetch ];
+  environment.systemPackages = with pkgs; [ pfetch ];
 
   sdImage = {
     populateFirmwareCommands = ''
