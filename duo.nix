@@ -26,6 +26,7 @@ let
     CONFIG_CRYPTO_ZSTD=y
     CONFIG_ZSMALLOC=y
     CONFIG_ZRAM=y
+    CONFIG_MAGIC_SYSRQ=y
   '';
   # hack: drop duplicated entries
   configfile = pkgs.runCommand "config" { } ''
@@ -78,6 +79,14 @@ in
 
   boot.loader = {
     grub.enable = false;
+  };
+
+  boot.kernel.sysctl = {
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+    "vm.page-cluster" = 0;
+    "vm.swappiness" = 180;
+    "kernel.pid_max" = 4096 * 8; # PAGE_SIZE * 8
   };
 
   system.build.its = pkgs.writeText "cv180x.its" ''
