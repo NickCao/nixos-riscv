@@ -127,7 +127,7 @@ in
         fdt-1 {
           description = "flat_dt";
           type = "flat_dt";
-          data = /incbin/("${./cv1800b_milkv_duo_sd.dtb}");
+          data = /incbin/("${./prebuilt/cv1800b_milkv_duo_sd.dtb}");
           arch = "riscv";
           compression = "none";
           hash-1 {
@@ -178,7 +178,7 @@ in
 
   sdImage = {
     populateFirmwareCommands = ''
-      cp ${./fip.bin}                  firmware/fip.bin
+      cp ${./prebuilt/fip.bin}         firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
     '';
     populateRootCommands = ''
