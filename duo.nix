@@ -23,6 +23,7 @@ let
     CONFIG_BLK_DEV_INITRD=y
     CONFIG_BINFMT_ELF=y
     CONFIG_INOTIFY_USER=y
+    CONFIG_CRYPTO_ZSTD=m
     CONFIG_ZRAM=m
   '';
   # hack: drop duplicated entries
@@ -153,7 +154,15 @@ in
     };
   };
 
+  users.users.root.initialHashedPassword = "";
   services.getty.autologinUser = "root";
+
+  services.udev.enable = false;
+  services.nscd.enable = false;
+  networking.firewall.enable = false;
+  networking.useDHCP = false;
+  nix.enable = false;
+  system.nssModules = lib.mkForce [ ];
 
   sdImage = {
     populateFirmwareCommands = ''
