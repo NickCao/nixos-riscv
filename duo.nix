@@ -23,6 +23,7 @@ let
     CONFIG_BLK_DEV_INITRD=y
     CONFIG_BINFMT_ELF=y
     CONFIG_INOTIFY_USER=y
+    CONFIG_ZRAM=m
   '';
   # hack: drop duplicated entries
   configfile = pkgs.runCommand "config" { } ''
@@ -143,6 +144,16 @@ in
     } ''
     mkimage -f ${config.system.build.its} "$out"
   '';
+
+  services.zram-generator = {
+    enable = true;
+    settings.zram0 = {
+      compression-algorithm = "zstd";
+      zram-size = "ram * 2";
+    };
+  };
+
+  services.getty.autologinUser = "root";
 
   sdImage = {
     populateFirmwareCommands = ''
