@@ -31,6 +31,11 @@
           ./qemu.nix
         ];
       };
+      duo = nixpkgs.lib.nixosSystem {
+        modules = [
+          ./duo.nix
+        ];
+      };
       visionfive2 = nixpkgs.lib.nixosSystem {
         modules = [
           "${nixos-hardware}/starfive/visionfive/v2/sd-image-installer.nix"
