@@ -1,28 +1,25 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
-    nixos-hardware.url = "github:NickCao/nixos-hardware";
+    nixos-hardware.url = "github:NickCao/nixos-hardware/visionfive2-uboot";
   };
   outputs = { self, nixpkgs, nixos-hardware }: {
-    hydraJobs = with self.nixosConfigurations.qemu;
-      let vf2 = pkgs.callPackage "${nixos-hardware}/starfive/visionfive/v2/firmware.nix" { }; in {
-        visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
-        duo = self.nixosConfigurations.duo.config.system.build.sdImage;
-        inherit (pkgs)
-          qemu
-          opensbi
-          firefox-unwrapped
-          thunderbird-unwrapped
+    hydraJobs = with self.nixosConfigurations.qemu;{
+      visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
+      duo = self.nixosConfigurations.duo.config.system.build.sdImage;
+      inherit (pkgs)
+        qemu
+        opensbi
+        firefox-unwrapped
+        thunderbird-unwrapped
+        ;
+      qt5 = {
+        inherit (pkgs.qt5)
+          qtbase
           ;
-        qt5 = {
-          inherit (pkgs.qt5)
-            qtbase
-            ;
-        };
-        spl-vf2 = vf2.spl;
-        uboot-fit-image-vf2 = vf2.uboot-fit-image;
-        edk2-vf2 = pkgs.pkgsCross.riscv64-embedded.callPackage ./edk2-vf2.nix { };
       };
+      edk2-vf2 = pkgs.pkgsCross.riscv64-embedded.callPackage ./edk2-vf2.nix { };
+    };
     nixosConfigurations = {
       qemu = nixpkgs.lib.nixosSystem {
         modules = [
