@@ -2,16 +2,15 @@
   "nodes": {
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1704132908,
-        "narHash": "sha256-B8KdUVXfRtwqBt9PRQ3C8FIJJ+3LLFwJQEEodhuEbN0=",
-        "owner": "NickCao",
+        "lastModified": 1704266875,
+        "narHash": "sha256-luA5SGmeIRZlgLfSLUuR3eacS63q2bJ0Yywqak5lj3E=",
+        "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "b121411aa92f264a21384fc466e5268412e4333a",
+        "rev": "8e34f33464d77bea2d5cf7dc1066647b1ad2b324",
         "type": "github"
       },
       "original": {
-        "owner": "NickCao",
-        "ref": "visionfive2-uboot",
+        "owner": "NixOS",
         "repo": "nixos-hardware",
         "type": "github"
       }
