@@ -191,10 +191,6 @@ in
       cp ${./prebuilt/fip.bin}         firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
     '';
-    populateRootCommands = ''
-      mkdir -p files/sbin
-      ln -s ${config.system.build.toplevel}/init files/sbin/init
-    '';
   };
 
 }
