@@ -70,10 +70,10 @@ in
   };
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
-  boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" "loglevel=9" ];
+  boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" ];
+  boot.consoleLogLevel = 9;
 
   boot.initrd.includeDefaultModules = false;
-  # boot.initrd.compressor = "cat";
   boot.initrd.systemd = {
     # enable = true;
     # enableTpm2 = false;
