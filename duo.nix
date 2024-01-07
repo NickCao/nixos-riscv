@@ -70,11 +70,13 @@ in
   };
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
+  boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" "loglevel=9" ];
 
-  boot.initrd = {
-    compressor = "zstd";
-    compressorArgs = [ "-22" "--ultra" ];
-    includeDefaultModules = false;
+  boot.initrd.includeDefaultModules = false;
+  # boot.initrd.compressor = "cat";
+  boot.initrd.systemd = {
+    # enable = true;
+    # enableTpm2 = false;
   };
 
   boot.loader = {
@@ -88,6 +90,17 @@ in
     "vm.swappiness" = 180;
     "kernel.pid_max" = 4096 * 8; # PAGE_SIZE * 8
   };
+
+  system.build.dtb = pkgs.runCommand "duo.dtb" { nativeBuildInputs = [ pkgs.dtc ]; } ''
+    dtc -I dts -O dtb -o "$out" ${pkgs.writeText "duo.dts" ''
+      /include/ "${./prebuilt/cv1800b_milkv_duo_sd.dts}"
+      / {
+        chosen {
+          bootargs = "init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}";
+        };
+      };
+    ''}
+  '';
 
   system.build.its = pkgs.writeText "cv180x.its" ''
     /dts-v1/;
@@ -111,7 +124,6 @@ in
           };
         };
 
-        /*
         ramdisk-1 {
           description = "ramdisk";
           type = "ramdisk";
@@ -122,12 +134,11 @@ in
           load = <00000000>;
           entry = <00000000>;
         };
-        */
 
         fdt-1 {
           description = "flat_dt";
           type = "flat_dt";
-          data = /incbin/("${./prebuilt/cv1800b_milkv_duo_sd.dtb}");
+          data = /incbin/("${config.system.build.dtb}");
           arch = "riscv";
           compression = "none";
           hash-1 {
@@ -140,9 +151,7 @@ in
         config-cv1800b_milkv_duo_sd {
           description = "boot cvitek system with board cv1800b_milkv_duo_sd";
           kernel = "kernel-1";
-          /*
           ramdisk = "ramdisk-1";
-          */
           fdt = "fdt-1";
         };
       };
@@ -177,6 +186,7 @@ in
   environment.systemPackages = with pkgs; [ pfetch ];
 
   sdImage = {
+    firmwareSize = 64;
     populateFirmwareCommands = ''
       cp ${./prebuilt/fip.bin}         firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
