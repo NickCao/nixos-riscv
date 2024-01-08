@@ -187,6 +187,7 @@ in
 
   sdImage = {
     firmwareSize = 64;
+    populateRootCommands = "";
     populateFirmwareCommands = ''
       cp ${./prebuilt/fip.bin}         firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
