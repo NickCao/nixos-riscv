@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    nixos-hardware.url = "github:NickCao/nixos-hardware";
   };
   outputs = { self, nixpkgs, nixos-hardware }: {
     hydraJobs = with self.nixosConfigurations.qemu;{
