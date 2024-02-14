@@ -3,8 +3,8 @@ let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
     owner = "milkv-duo";
     repo = "duo-buildroot-sdk";
-    rev = "bb11c7ccf5bfd90d9acf2dc2d753ab4dfec8341d";
-    hash = "sha256-FNSKTfen/JfWtb7Hng6JjjFbUxV9B4bNAriVL8206CY=";
+    rev = "0e0b8efb59bf8b9664353323abbfdd11751056a4"; # 2024-02-14
+    hash = "sha256-tG4nVVXh1Aq6qeoy+J1LfgsW+J1Yx6KxfB1gjxprlXU=";
   };
   version = "5.10.4";
   src = "${duo-buildroot-sdk}/linux_${lib.versions.majorMinor version}";
@@ -24,7 +24,6 @@ let
     CONFIG_BINFMT_ELF=y
     CONFIG_INOTIFY_USER=y
     CONFIG_CRYPTO_ZSTD=y
-    CONFIG_ZSMALLOC=y
     CONFIG_ZRAM=y
     CONFIG_MAGIC_SYSRQ=y
   '';
@@ -35,6 +34,7 @@ let
       --replace CONFIG_BLK_DEV_INITRD=y "" \
       --replace CONFIG_DEBUG_FS=y       "" \
       --replace CONFIG_VECTOR=y         "" \
+      --replace CONFIG_ZRAM=m           "" \
       --replace CONFIG_SIGNALFD=n       CONFIG_SIGNALFD=y \
       --replace CONFIG_TIMERFD=n        CONFIG_TIMERFD=y \
       --replace CONFIG_EPOLL=n          CONFIG_EPOLL=y
@@ -70,6 +70,9 @@ in
   };
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
+
+  # neither boot.kernelParams nor boot.consoleLogLevel have any effect here
+  # due to the way the duo images work
   boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" ];
   boot.consoleLogLevel = 9;
 
