@@ -71,8 +71,6 @@ in
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
 
-  # neither boot.kernelParams nor boot.consoleLogLevel have any effect here
-  # due to the way the duo images work
   boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" ];
   boot.consoleLogLevel = 9;
 

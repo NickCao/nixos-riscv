@@ -1,15 +1,17 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-# currently this fails to boot automatically, but it can be booted manually.
-# if you do this in the U-Boot CLI:
-
-# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/jcqahkhmd59a260i87gibrfjf7ljm0ca-nixos-system-nixos-24.05.20240215.69c9919/init
-# cv181x_c906# boot
-
-# obviously the /nix/store path might be different, but doing
-# cv181x_c906# setenv othbootargs ${othbootargs} boot.shell_on_fail
-# cv181x_c906# boot
-# will let you drop into a prompt to find it in /mnt-root/nix/store
+# The cv1812cp_milkv_duo256m_sd.dtb and fip-duo256.bin (aka fip.bin) files in
+# the prebuilt/ dir used by this module were generated on Ubuntu via "./build.sh
+# lunch" within a fork of Milk V's duo-buildroot-sdk repo at
+# https://github.com/mcdonc/duo-buildroot-sdk/tree/nixos-riscv . The fork is
+# trivial: two lines were changed to allow dynamic kernel params to be passed
+# down to the kernel and to NixOS.  The cv1812cp_milkv_duo256m_sd.dtc file in
+# the prebuilt/ dir was generated from the cv1812cp_milkv_duo256m_sd.dtb using
+#
+# dtc -I dtb -O dts -o cv1812cp_milkv_duo256m_sd.dts \
+#    -@ linux_5.10/build/cv1812cp_milkv_duo256m_sd/arch/riscv/boot/dts/cvitek/cv1812cp_milkv_duo256m_sd.dtb
+#
+# The fip.bin file was taken from fsbl/build/cv1812cp_milkv_duo256m_sd/fip.bin
 
 let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
@@ -85,8 +87,6 @@ in
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
 
-  # neither boot.kernelParams nor boot.consoleLogLevel have any effect here
-  # due to the way the duo images work
   boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" ];
   boot.consoleLogLevel = 9;
 
@@ -204,9 +204,7 @@ in
 
   sdImage = {
     firmwareSize = 64;
-    populateRootCommands = ''
-      cp ${config.system.build.toplevel}/init files/init
-    '';
+    populateRootCommands = "";
     populateFirmwareCommands = ''
       cp ${./prebuilt/fip-duo256.bin}  firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
