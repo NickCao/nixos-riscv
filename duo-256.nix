@@ -1,9 +1,23 @@
 { config, lib, pkgs, modulesPath, ... }:
+
+# The cv1812cp_milkv_duo256m_sd.dtb and fip-duo256.bin (aka fip.bin) files in
+# the prebuilt/ dir used by this module were generated on Ubuntu via "./build.sh
+# lunch" within a fork of Milk V's duo-buildroot-sdk repo at
+# https://github.com/mcdonc/duo-buildroot-sdk/tree/nixos-riscv . The fork is
+# trivial: two lines were changed to allow dynamic kernel params to be passed
+# down to the kernel and to NixOS.  The cv1812cp_milkv_duo256m_sd.dtc file in
+# the prebuilt/ dir was generated from the cv1812cp_milkv_duo256m_sd.dtb using
+#
+# dtc -I dtb -O dts -o cv1812cp_milkv_duo256m_sd.dts \
+#    -@ linux_5.10/build/cv1812cp_milkv_duo256m_sd/arch/riscv/boot/dts/cvitek/cv1812cp_milkv_duo256m_sd.dtb
+#
+# The fip.bin file was taken from fsbl/build/cv1812cp_milkv_duo256m_sd/fip.bin
+
 let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
     owner = "milkv-duo";
     repo = "duo-buildroot-sdk";
-    rev = "0e0b8efb59bf8b9664353323abbfdd11751056a4"; # 2024-02-14
+    rev = "0e0b8efb59bf8b9664353323abbfdd11751056a4";
     hash = "sha256-tG4nVVXh1Aq6qeoy+J1LfgsW+J1Yx6KxfB1gjxprlXU=";
   };
   version = "5.10.4";
@@ -29,11 +43,13 @@ let
   '';
   # hack: drop duplicated entries
   configfile = pkgs.runCommand "config" { } ''
-    cp "${duo-buildroot-sdk}/build/boards/cv180x/cv1800b_milkv_duo_sd/linux/cvitek_cv1800b_milkv_duo_sd_defconfig" "$out"
+    cp "${duo-buildroot-sdk}/build/boards/cv181x/cv1812cp_milkv_duo256m_sd/linux/cvitek_cv1812cp_milkv_duo256m_sd_defconfig" "$out"
     substituteInPlace "$out" \
       --replace CONFIG_BLK_DEV_INITRD=y "" \
       --replace CONFIG_DEBUG_FS=y       "" \
       --replace CONFIG_VECTOR=y         "" \
+      --replace CONFIG_POWER_RESET=y    "" \
+      --replace CONFIG_RTC_CLASS=y      "" \
       --replace CONFIG_ZRAM=m           "" \
       --replace CONFIG_SIGNALFD=n       CONFIG_SIGNALFD=y \
       --replace CONFIG_TIMERFD=n        CONFIG_TIMERFD=y \
@@ -92,9 +108,9 @@ in
     "kernel.pid_max" = 4096 * 8; # PAGE_SIZE * 8
   };
 
-  system.build.dtb = pkgs.runCommand "duo.dtb" { nativeBuildInputs = [ pkgs.dtc ]; } ''
-    dtc -I dts -O dtb -o "$out" ${pkgs.writeText "duo.dts" ''
-      /include/ "${./prebuilt/cv1800b_milkv_duo_sd.dts}"
+  system.build.dtb = pkgs.runCommand "duo256m.dtb" { nativeBuildInputs = [ pkgs.dtc ]; } ''
+    dtc -I dts -O dtb -o "$out" ${pkgs.writeText "duo256m.dts" ''
+      /include/ "${./prebuilt/cv1812cp_milkv_duo256m_sd.dts}"
       / {
         chosen {
           bootargs = "init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}";
@@ -103,7 +119,7 @@ in
     ''}
   '';
 
-  system.build.its = pkgs.writeText "cv180x.its" ''
+  system.build.its = pkgs.writeText "cv181x.its" ''
     /dts-v1/;
 
     / {
@@ -149,8 +165,8 @@ in
       };
 
       configurations {
-        config-cv1800b_milkv_duo_sd {
-          description = "boot cvitek system with board cv1800b_milkv_duo_sd";
+        config-cv1812cp_milkv_duo256m_sd {
+          description = "boot cvitek system with board cv1812cp_milkv_duo256m";
           kernel = "kernel-1";
           ramdisk = "ramdisk-1";
           fdt = "fdt-1";
@@ -184,13 +200,13 @@ in
   nix.enable = false;
   system.nssModules = lib.mkForce [ ];
 
-  environment.systemPackages = with pkgs; [ pfetch ];
+  environment.systemPackages = with pkgs; [ pfetch python311 ];
 
   sdImage = {
     firmwareSize = 64;
     populateRootCommands = "";
     populateFirmwareCommands = ''
-      cp ${./prebuilt/fip.bin}         firmware/fip.bin
+      cp ${./prebuilt/fip-duo256.bin}  firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
     '';
   };

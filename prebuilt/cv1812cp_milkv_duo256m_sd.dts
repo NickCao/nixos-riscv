@@ -1,0 +1,1030 @@
+/dts-v1/;
+
+/memreserve/	0x0000000080000000 0x0000000000080000;
+/ {
+	compatible = "cvitek,cv181x";
+	#size-cells = <0x02>;
+	#address-cells = <0x02>;
+	model = "Milk-V Duo256M";
+
+	top_misc_ctrl@3000000 {
+		compatible = "syscon";
+		reg = <0x00 0x3000000 0x00 0x8000>;
+	};
+
+	clk-reset-controller {
+		#reset-cells = <0x01>;
+		compatible = "cvitek,clk-reset";
+		reg = <0x00 0x3002000 0x00 0x08>;
+	};
+
+	oscillator {
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+		clock-frequency = <0x17d7840>;
+		clock-output-names = "osc";
+		phandle = <0x01>;
+	};
+
+	clock-controller {
+		compatible = "cvitek,cv181x-clk";
+		reg = <0x00 0x3002000 0x00 0x1000>;
+		clocks = <0x01>;
+		#clock-cells = <0x01>;
+		phandle = <0x02>;
+	};
+
+	reset-controller {
+		#reset-cells = <0x01>;
+		compatible = "cvitek,reset";
+		reg = <0x00 0x3003000 0x00 0x10>;
+		phandle = <0x03>;
+	};
+
+	restart-controller {
+		compatible = "cvitek,restart";
+		reg = <0x00 0x5025000 0x00 0x2000>;
+	};
+
+	tpu {
+		compatible = "cvitek,tpu";
+		reg-names = "tdma\0tiu";
+		reg = <0x00 0xc100000 0x00 0x1000 0x00 0xc101000 0x00 0x1000>;
+		clocks = <0x02 0x0f 0x02 0x10>;
+		clock-names = "clk_tpu_axi\0clk_tpu_fab";
+		resets = <0x03 0x07 0x03 0x08 0x03 0x09>;
+		reset-names = "res_tdma\0res_tpu\0res_tpusys";
+		interrupts = <0x4b 0x04 0x4c 0x04>;
+		interrupt-names = "tiu_irq\0tdma_irq";
+		interrupt-parent = <0x04>;
+	};
+
+	mon {
+		compatible = "cvitek,mon";
+		reg-names = "pcmon\0ddr_ctrl\0ddr_phyd\0ddr_aximon\0ddr_top";
+		reg = <0x00 0x1040000 0x00 0x1000 0x00 0x8004000 0x00 0x1000 0x00 0x8006000 0x00 0x1000 0x00 0x8008000 0x00 0x1000 0x00 0x800a000 0x00 0x1000>;
+		interrupts = <0x5d 0x04>;
+		interrupt-names = "mon_irq";
+		interrupt-parent = <0x04>;
+	};
+
+	wiegand0 {
+		compatible = "cvitek,wiegand";
+		reg-names = "wiegand";
+		reg = <0x00 0x3030000 0x00 0x1000>;
+		clocks = <0x02 0x81 0x02 0x82>;
+		clock-names = "clk_wgn\0clk_wgn1";
+		resets = <0x03 0x56>;
+		reset-names = "res_wgn";
+		interrupts = <0x40 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	wiegand1 {
+		compatible = "cvitek,wiegand";
+		reg-names = "wiegand";
+		reg = <0x00 0x3031000 0x00 0x1000>;
+		clocks = <0x02 0x81 0x02 0x83>;
+		clock-names = "clk_wgn\0clk_wgn1";
+		resets = <0x03 0x57>;
+		reset-names = "res_wgn";
+		interrupts = <0x41 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	wiegand2 {
+		compatible = "cvitek,wiegand";
+		reg-names = "wiegand";
+		reg = <0x00 0x3032000 0x00 0x1000>;
+		clocks = <0x02 0x81 0x02 0x84>;
+		clock-names = "clk_wgn\0clk_wgn1";
+		resets = <0x03 0x58>;
+		reset-names = "res_wgn";
+		interrupts = <0x42 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	saradc {
+		compatible = "cvitek,saradc";
+		reg-names = "top_domain_saradc\0rtc_domain_saradc";
+		reg = <0x00 0x30f0000 0x00 0x1000 0x00 0x502c000 0x00 0x1000>;
+		clocks = <0x02 0x15>;
+		clock-names = "clk_saradc";
+		resets = <0x03 0x34>;
+		reset-names = "res_saradc";
+		interrupts = <0x64 0x01>;
+		interrupt-parent = <0x04>;
+	};
+
+	rtc {
+		compatible = "cvitek,rtc";
+		reg = <0x00 0x5026000 0x00 0x1000 0x00 0x5025000 0x00 0x1000>;
+		clocks = <0x02 0x13>;
+		clock-names = "clk_rtc";
+		interrupts = <0x11 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	cvitek-ion {
+		compatible = "cvitek,cvitek-ion";
+
+		heap_carveout@0 {
+			compatible = "cvitek,carveout";
+			memory-region = <0x05>;
+		};
+	};
+
+	sysdma_remap {
+		compatible = "cvitek,sysdma_remap";
+		reg = <0x00 0x3000154 0x00 0x10>;
+		ch-remap = <0x00 0x05 0x02 0x03 0x26 0x26 0x04 0x07>;
+		int_mux_base = <0x3000298>;
+		int_mux = <0x7fc00>;
+	};
+
+	dma@0x4330000 {
+		compatible = "snps,dmac-bm";
+		reg = <0x00 0x4330000 0x00 0x1000>;
+		clock-names = "clk_sdma_axi";
+		clocks = <0x02 0x2c>;
+		dma-channels = [08];
+		#dma-cells = <0x03>;
+		dma-requests = [10];
+		chan_allocation_order = [00];
+		chan_priority = [01];
+		block_size = <0x400>;
+		dma-masters = [02];
+		data-width = <0x04 0x04>;
+		axi_tr_width = <0x04>;
+		block-ts = <0x0f>;
+		interrupts = <0x1d 0x04>;
+		interrupt-parent = <0x04>;
+		phandle = <0x10>;
+	};
+
+	cv-wd@0x3010000 {
+		compatible = "snps,dw-wdt";
+		reg = <0x00 0x3010000 0x00 0x1000>;
+		resets = <0x03 0x30>;
+		clocks = <0x06>;
+		interrupts = <0x3a 0x04>;
+	};
+
+	pwm@3060000 {
+		compatible = "cvitek,cvi-pwm";
+		reg = <0x00 0x3060000 0x00 0x1000>;
+		clocks = <0x02 0x33>;
+		#pwm-cells = <0x01>;
+	};
+
+	pwm@3061000 {
+		compatible = "cvitek,cvi-pwm";
+		reg = <0x00 0x3061000 0x00 0x1000>;
+		clocks = <0x02 0x33>;
+		#pwm-cells = <0x02>;
+	};
+
+	pwm@3062000 {
+		compatible = "cvitek,cvi-pwm";
+		reg = <0x00 0x3062000 0x00 0x1000>;
+		clocks = <0x02 0x33>;
+		#pwm-cells = <0x03>;
+	};
+
+	pwm@3063000 {
+		compatible = "cvitek,cvi-pwm";
+		reg = <0x00 0x3063000 0x00 0x1000>;
+		clocks = <0x02 0x33>;
+		#pwm-cells = <0x04>;
+	};
+
+	pclk {
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+		clock-frequency = <0x17d7840>;
+		phandle = <0x06>;
+	};
+
+	cvi-spif@10000000 {
+		compatible = "cvitek,cvi-spif";
+		bus-num = <0x00>;
+		reg = <0x00 0x10000000 0x00 0x10000000>;
+		reg-names = "spif";
+		sck-div = <0x03>;
+		sck_mhz = <0x12c>;
+		spi-max-frequency = <0x47868c0>;
+		interrupts = <0x5f 0x04>;
+		interrupt-parent = <0x04>;
+
+		spiflash {
+			compatible = "jedec,spi-nor";
+			spi-rx-bus-width = <0x04>;
+			spi-tx-bus-width = <0x04>;
+		};
+	};
+
+	spi0@04180000 {
+		compatible = "snps,dw-apb-ssi";
+		reg = <0x00 0x4180000 0x00 0x10000>;
+		clocks = <0x02 0x71>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		interrupts = <0x36 0x04>;
+		interrupt-parent = <0x04>;
+		status = "disabled";
+		num-cs = <0x01>;
+
+		spidev@0 {
+			compatible = "rohm,dh2228fv";
+			spi-max-frequency = <0xf4240>;
+			reg = <0x00>;
+		};
+	};
+
+	spi1@04190000 {
+		compatible = "snps,dw-apb-ssi";
+		reg = <0x00 0x4190000 0x00 0x10000>;
+		clocks = <0x02 0x71>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		interrupts = <0x37 0x04>;
+		interrupt-parent = <0x04>;
+		status = "disabled";
+		num-cs = <0x01>;
+
+		spidev@0 {
+			compatible = "rohm,dh2228fv";
+			spi-max-frequency = <0xf4240>;
+			reg = <0x00>;
+		};
+	};
+
+	spi2@041A0000 {
+		compatible = "snps,dw-apb-ssi";
+		reg = <0x00 0x41a0000 0x00 0x10000>;
+		clocks = <0x02 0x71>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		interrupts = <0x38 0x04>;
+		interrupt-parent = <0x04>;
+		status = "okay";
+		num-cs = <0x01>;
+
+		spidev@0 {
+			compatible = "rohm,dh2228fv";
+			spi-max-frequency = <0xf4240>;
+			reg = <0x00>;
+			status = "okay";
+		};
+	};
+
+	spi3@041B0000 {
+		compatible = "snps,dw-apb-ssi";
+		reg = <0x00 0x41b0000 0x00 0x10000>;
+		clocks = <0x02 0x71>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		interrupts = <0x39 0x04>;
+		interrupt-parent = <0x04>;
+		status = "okay";
+		num-cs = <0x01>;
+
+		spidev@0 {
+			compatible = "rohm,dh2228fv";
+			spi-max-frequency = <0xf4240>;
+			reg = <0x00>;
+		};
+	};
+
+	serial@04140000 {
+		compatible = "snps,dw-apb-uart";
+		reg = <0x00 0x4140000 0x00 0x1000>;
+		clock-frequency = <0x17d7840>;
+		reg-shift = <0x02>;
+		reg-io-width = <0x04>;
+		status = "okay";
+		interrupts = <0x2c 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	serial@04150000 {
+		compatible = "snps,dw-apb-uart";
+		reg = <0x00 0x4150000 0x00 0x1000>;
+		clock-frequency = <0x17d7840>;
+		reg-shift = <0x02>;
+		reg-io-width = <0x04>;
+		status = "disabled";
+		interrupts = <0x2d 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	serial@04160000 {
+		compatible = "snps,dw-apb-uart";
+		reg = <0x00 0x4160000 0x00 0x1000>;
+		clock-frequency = <0x17d7840>;
+		reg-shift = <0x02>;
+		reg-io-width = <0x04>;
+		status = "disabled";
+		interrupts = <0x2e 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	serial@04170000 {
+		compatible = "snps,dw-apb-uart";
+		reg = <0x00 0x4170000 0x00 0x1000>;
+		clock-frequency = <0x17d7840>;
+		reg-shift = <0x02>;
+		reg-io-width = <0x04>;
+		status = "disabled";
+		interrupts = <0x2f 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	serial@041C0000 {
+		compatible = "snps,dw-apb-uart";
+		reg = <0x00 0x41c0000 0x00 0x1000>;
+		clock-frequency = <0x17d7840>;
+		reg-shift = <0x02>;
+		reg-io-width = <0x04>;
+		status = "disabled";
+		interrupts = <0x30 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	gpio@03020000 {
+		compatible = "snps,dw-apb-gpio";
+		reg = <0x00 0x3020000 0x00 0x1000>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+
+		gpio-controller@0 {
+			compatible = "snps,dw-apb-gpio-port";
+			bank-name = "porta";
+			gpio-controller;
+			#gpio-cells = <0x02>;
+			snps,nr-gpios = <0x20>;
+			reg = <0x00>;
+			interrupt-controller;
+			interrupts = <0x3c 0x04>;
+			interrupt-parent = <0x04>;
+			phandle = <0x07>;
+		};
+	};
+
+	gpio@03021000 {
+		compatible = "snps,dw-apb-gpio";
+		reg = <0x00 0x3021000 0x00 0x1000>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+
+		gpio-controller@1 {
+			compatible = "snps,dw-apb-gpio-port";
+			bank-name = "portb";
+			gpio-controller;
+			#gpio-cells = <0x02>;
+			snps,nr-gpios = <0x20>;
+			reg = <0x00>;
+			interrupt-controller;
+			interrupts = <0x3d 0x04>;
+			interrupt-parent = <0x04>;
+			phandle = <0x08>;
+		};
+	};
+
+	gpio@03022000 {
+		compatible = "snps,dw-apb-gpio";
+		reg = <0x00 0x3022000 0x00 0x1000>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+
+		gpio-controller@2 {
+			compatible = "snps,dw-apb-gpio-port";
+			bank-name = "portc";
+			gpio-controller;
+			#gpio-cells = <0x02>;
+			snps,nr-gpios = <0x20>;
+			reg = <0x00>;
+			interrupt-controller;
+			interrupts = <0x3e 0x04>;
+			interrupt-parent = <0x04>;
+			phandle = <0x09>;
+		};
+	};
+
+	gpio@03023000 {
+		compatible = "snps,dw-apb-gpio";
+		reg = <0x00 0x3023000 0x00 0x1000>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+
+		gpio-controller@3 {
+			compatible = "snps,dw-apb-gpio-port";
+			bank-name = "portd";
+			gpio-controller;
+			#gpio-cells = <0x02>;
+			snps,nr-gpios = <0x20>;
+			reg = <0x00>;
+			interrupt-controller;
+			interrupts = <0x3f 0x04>;
+			interrupt-parent = <0x04>;
+		};
+	};
+
+	gpio@05021000 {
+		compatible = "snps,dw-apb-gpio";
+		reg = <0x00 0x5021000 0x00 0x1000>;
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+
+		gpio-controller@4 {
+			compatible = "snps,dw-apb-gpio-port";
+			bank-name = "porte";
+			gpio-controller;
+			#gpio-cells = <0x02>;
+			snps,nr-gpios = <0x20>;
+			reg = <0x00>;
+			interrupt-controller;
+			interrupts = <0x46 0x04>;
+			interrupt-parent = <0x04>;
+			phandle = <0x11>;
+		};
+	};
+
+	i2c@04000000 {
+		compatible = "snps,designware-i2c";
+		clocks = <0x02 0x72>;
+		reg = <0x00 0x4000000 0x00 0x1000>;
+		clock-frequency = <0x61a80>;
+		#size-cells = <0x00>;
+		#address-cells = <0x01>;
+		resets = <0x03 0x1b>;
+		reset-names = "i2c0";
+		interrupts = <0x31 0x04>;
+		interrupt-parent = <0x04>;
+		scl-pinmux = <0x3001070 0x00 0x03>;
+		sda-pinmux = <0x3001074 0x00 0x03>;
+		scl-gpios = <0x07 0x1c 0x00>;
+		sda-gpios = <0x07 0x1d 0x00>;
+		status = "disabled";
+	};
+
+	i2c@04010000 {
+		compatible = "snps,designware-i2c";
+		clocks = <0x02 0x72>;
+		reg = <0x00 0x4010000 0x00 0x1000>;
+		clock-frequency = <0x61a80>;
+		#size-cells = <0x00>;
+		#address-cells = <0x01>;
+		resets = <0x03 0x1c>;
+		reset-names = "i2c1";
+		interrupts = <0x32 0x04>;
+		interrupt-parent = <0x04>;
+		scl-pinmux = <0x3009408 0x02 0x03>;
+		sda-pinmux = <0x300940c 0x02 0x03>;
+		scl-gpios = <0x08 0x07 0x00>;
+		sda-gpios = <0x08 0x08 0x00>;
+	};
+
+	i2c@04020000 {
+		compatible = "snps,designware-i2c";
+		clocks = <0x02 0x72>;
+		reg = <0x00 0x4020000 0x00 0x1000>;
+		clock-frequency = <0x186a0>;
+		resets = <0x03 0x1d>;
+		reset-names = "i2c2";
+		interrupts = <0x33 0x04>;
+		interrupt-parent = <0x04>;
+		scl-pinmux = <0x30011a0 0x04 0x03>;
+		sda-pinmux = <0x300119c 0x04 0x03>;
+		scl-gpios = <0x09 0x0f 0x00>;
+		sda-gpios = <0x09 0x0e 0x00>;
+	};
+
+	i2c@04030000 {
+		compatible = "snps,designware-i2c";
+		clocks = <0x02 0x72>;
+		reg = <0x00 0x4030000 0x00 0x1000>;
+		clock-frequency = <0x61a80>;
+		resets = <0x03 0x1e>;
+		reset-names = "i2c3";
+		interrupts = <0x34 0x04>;
+		interrupt-parent = <0x04>;
+		scl-pinmux = <0x3001014 0x00 0x03>;
+		sda-pinmux = <0x3001018 0x00 0x03>;
+		scl-gpios = <0x07 0x05 0x00>;
+		sda-gpios = <0x07 0x06 0x00>;
+	};
+
+	i2c@04040000 {
+		compatible = "snps,designware-i2c";
+		clocks = <0x02 0x72>;
+		reg = <0x00 0x4040000 0x00 0x1000>;
+		clock-frequency = <0x61a80>;
+		resets = <0x03 0x1f>;
+		reset-names = "i2c4";
+		interrupts = <0x35 0x04>;
+		interrupt-parent = <0x04>;
+		scl-pinmux = <0x30010f0 0x02 0x03>;
+		sda-pinmux = <0x30010f4 0x02 0x03>;
+		scl-gpios = <0x08 0x01 0x00>;
+		sda-gpios = <0x08 0x02 0x00>;
+		status = "disabled";
+	};
+
+	eth_csrclk {
+		clock-output-names = "eth_csrclk";
+		clock-frequency = <0xee6b280>;
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+		phandle = <0x0a>;
+	};
+
+	eth_ptpclk {
+		clock-output-names = "eth_ptpclk";
+		clock-frequency = <0x2faf080>;
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+		phandle = <0x0b>;
+	};
+
+	stmmac-axi-config {
+		snps,wr_osr_lmt = <0x01>;
+		snps,rd_osr_lmt = <0x02>;
+		snps,blen = <0x04 0x08 0x10 0x00 0x00 0x00 0x00>;
+		phandle = <0x0c>;
+	};
+
+	rx-queues-config {
+		snps,rx-queues-to-use = <0x01>;
+		phandle = <0x0d>;
+
+		queue0 {
+		};
+	};
+
+	tx-queues-config {
+		snps,tx-queues-to-use = <0x01>;
+		phandle = <0x0e>;
+
+		queue0 {
+		};
+	};
+
+	ethernet@4070000 {
+		compatible = "cvitek,ethernet";
+		reg = <0x00 0x4070000 0x00 0x10000>;
+		clock-names = "stmmaceth\0ptp_ref";
+		clocks = <0x0a 0x0b>;
+		tx-fifo-depth = <0x2000>;
+		rx-fifo-depth = <0x2000>;
+		snps,multicast-filter-bins = <0x00>;
+		snps,perfect-filter-entries = <0x01>;
+		snps,txpbl = <0x08>;
+		snps,rxpbl = <0x08>;
+		snps,aal;
+		snps,axi-config = <0x0c>;
+		snps,mtl-rx-config = <0x0d>;
+		snps,mtl-tx-config = <0x0e>;
+		phy-mode = "rmii";
+		interrupt-names = "macirq";
+		interrupts = <0x1f 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	cv-sd@4310000 {
+		compatible = "cvitek,cv181x-sd";
+		reg = <0x00 0x4310000 0x00 0x1000>;
+		reg-names = "core_mem";
+		bus-width = <0x04>;
+		cap-sd-highspeed;
+		cap-mmc-highspeed;
+		sd-uhs-sdr12;
+		sd-uhs-sdr25;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
+		no-sdio;
+		no-mmc;
+		src-frequency = <0x165a0bc0>;
+		min-frequency = <0x61a80>;
+		max-frequency = <0xbebc200>;
+		64_addressing;
+		reset_tx_rx_phy;
+		reset-names = "sdhci";
+		pll_index = <0x06>;
+		pll_reg = <0x3002070>;
+		cvi-cd-gpios = <0x07 0x0d 0x01>;
+		interrupts = <0x24 0x04>;
+		interrupt-parent = <0x04>;
+		no-1-8-v;
+	};
+
+	i2s_mclk {
+		clock-output-names = "i2s_mclk";
+		clock-frequency = <0x1770000>;
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+		phandle = <0x0f>;
+	};
+
+	i2s_subsys {
+		compatible = "cvitek,i2s_tdm_subsys";
+		reg = <0x00 0x4108000 0x00 0x100>;
+		clocks = <0x0f 0x02 0x04 0x02 0x2d 0x02 0x2e 0x02 0x2f 0x02 0x30>;
+		clock-names = "i2sclk\0clk_a0pll\0clk_sdma_aud0\0clk_sdma_aud1\0clk_sdma_aud2\0clk_sdma_aud3";
+		master_base = <0x4110000>;
+	};
+
+	i2s@04100000 {
+		compatible = "cvitek,cv1835-i2s";
+		reg = <0x00 0x4100000 0x00 0x2000>;
+		clocks = <0x0f 0x00>;
+		clock-names = "i2sclk";
+		dev-id = <0x00>;
+		#sound-dai-cells = <0x00>;
+		dmas = <0x10 0x00 0x01 0x01>;
+		dma-names = "rx";
+		capability = "rx";
+		mclk_out = "false";
+		interrupts = <0x28 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	i2s@04130000 {
+		compatible = "cvitek,cv1835-i2s";
+		reg = <0x00 0x4130000 0x00 0x2000>;
+		clocks = <0x0f 0x00>;
+		clock-names = "i2sclk";
+		dev-id = <0x03>;
+		#sound-dai-cells = <0x00>;
+		dmas = <0x10 0x07 0x01 0x01>;
+		dma-names = "tx";
+		capability = "tx";
+		mclk_out = "true";
+		interrupts = <0x2b 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	adc@0300A100 {
+		compatible = "cvitek,cv182xaadc";
+		reg = <0x00 0x300a100 0x00 0x100>;
+		clocks = <0x0f 0x00>;
+		clock-names = "i2sclk";
+		clk_source = <0x4130000>;
+	};
+
+	dac@0300A000 {
+		compatible = "cvitek,cv182xadac";
+		reg = <0x00 0x300a000 0x00 0x100>;
+		clocks = <0x0f 0x00>;
+		clock-names = "i2sclk";
+		mute-gpio-r = <0x11 0x01 0x01>;
+	};
+
+	pdm@0x041D0C00 {
+		compatible = "cvitek,cv1835pdm";
+		reg = <0x00 0x41d0c00 0x00 0x100>;
+		clocks = <0x0f 0x00>;
+		clock-names = "i2sclk";
+	};
+
+	sound_adc {
+		compatible = "cvitek,cv182xa-adc";
+		cvi,model = "CV182XA";
+		cvi,card_name = "cv182xa_adc";
+	};
+
+	sound_dac {
+		compatible = "cvitek,cv182xa-dac";
+		cvi,model = "CV182XA";
+		cvi,card_name = "cv182xa_dac";
+	};
+
+	wifi_pin {
+		compatible = "cvitek,wifi-pin";
+		poweron-gpio = <0x11 0x02 0x00>;
+		wakeup-gpio = <0x11 0x06 0x00>;
+	};
+
+	bt_pin {
+		compatible = "cvitek,bt-pin";
+		poweron-gpio = <0x11 0x09 0x00>;
+	};
+
+	cif {
+		compatible = "cvitek,cif";
+		reg = <0x00 0xa0c2000 0x00 0x2000 0x00 0xa0d0000 0x00 0x1000 0x00 0xa0c4000 0x00 0x2000 0x00 0xa0c6000 0x00 0x2000 0x00 0x3001c30 0x00 0x30>;
+		reg-names = "csi_mac0\0csi_wrap0\0csi_mac1\0csi_mac2\0pad_ctrl";
+		snsr-reset = <0x09 0x11 0x01 0x09 0x11 0x01 0x09 0x11 0x01>;
+		resets = <0x03 0x46 0x03 0x48 0x03 0x47 0x03 0x49>;
+		reset-names = "phy0\0phy1\0phy-apb0\0phy-apb1";
+		clocks = <0x02 0x5b 0x02 0x5c 0x02 0x88 0x02 0x03 0x02 0x05 0x02 0x02>;
+		clock-names = "clk_cam0\0clk_cam1\0clk_sys_2\0clk_mipimpll\0clk_disppll\0clk_fpll";
+		interrupts = <0x1a 0x04 0x1b 0x04>;
+		interrupt-names = "csi0\0csi1";
+		interrupt-parent = <0x04>;
+	};
+
+	mipi_tx {
+		compatible = "cvitek,mipi_tx";
+		clocks = <0x02 0x69 0x02 0x6a>;
+		clock-names = "clk_disp\0clk_dsi";
+	};
+
+	sys {
+		compatible = "cvitek,sys";
+	};
+
+	base {
+		compatible = "cvitek,base";
+		reg = <0x00 0xa0c8000 0x00 0x20>;
+		reg-names = "vip_sys";
+	};
+
+	vi {
+		compatible = "cvitek,vi";
+		reg = <0x00 0xa000000 0x00 0x80000>;
+		clocks = <0x02 0x50 0x02 0x51 0x02 0x88 0x02 0x9a 0x02 0x4f 0x02 0x93 0x02 0x9d 0x02 0x5f 0x02 0x5d 0x02 0x5e 0x02 0x9f>;
+		clock-names = "clk_sys_0\0clk_sys_1\0clk_sys_2\0clk_sys_3\0clk_axi\0clk_csi_be\0clk_raw\0clk_isp_top\0clk_csi_mac0\0clk_csi_mac1\0clk_csi_mac2";
+		clock-freq-vip-sys1 = <0x11e1a300>;
+		interrupts = <0x18 0x04>;
+		interrupt-parent = <0x04>;
+		interrupt-names = "isp";
+	};
+
+	vpss {
+		compatible = "cvitek,vpss";
+		reg = <0x00 0xa080000 0x00 0x10000 0x00 0xa0d1000 0x00 0x100>;
+		reg-names = "sc";
+		clocks = <0x02 0x50 0x02 0x51 0x02 0x88 0x02 0x60 0x02 0x61 0x02 0x62 0x02 0x63 0x02 0x64 0x02 0x65 0x02 0x66>;
+		clock-names = "clk_sys_0\0clk_sys_1\0clk_sys_2\0clk_img_d\0clk_img_v\0clk_sc_top\0clk_sc_d\0clk_sc_v1\0clk_sc_v2\0clk_sc_v3";
+		clock-freq-vip-sys1 = <0x11e1a300>;
+		interrupts = <0x19 0x04>;
+		interrupt-names = "sc";
+		interrupt-parent = <0x04>;
+	};
+
+	ive {
+		compatible = "cvitek,ive";
+		reg = <0x00 0xa0a0000 0x00 0x3100>;
+		reg-names = "ive_base";
+		interrupt-names = "ive_irq";
+		interrupt-parent = <0x04>;
+		interrupts = <0x61 0x04>;
+	};
+
+	vo {
+		compatible = "cvitek,vo";
+		reg = <0x00 0xa080000 0x00 0x10000 0x00 0xa0c8000 0x00 0xa0 0x00 0xa0d1000 0x00 0x100>;
+		reg-names = "sc\0vip_sys\0dphy";
+		clocks = <0x02 0x69 0x02 0x6a 0x02 0x68>;
+		reset-gpio = <0x11 0x02 0x01>;
+		pwm-gpio = <0x11 0x00 0x00>;
+		power-ct-gpio = <0x11 0x01 0x00>;
+		clock-names = "clk_disp\0clk_dsi\0clk_bt";
+	};
+
+	reserved-memory {
+		#size-cells = <0x02>;
+		#address-cells = <0x02>;
+		ranges;
+
+		cvifb {
+			alloc-ranges = <0x00 0x8b13e000 0x00 0x1c2000>;
+			size = <0x00 0x1c2000>;
+			phandle = <0x12>;
+		};
+
+		ion {
+			compatible = "ion-region";
+			size = <0x00 0x4b00000>;
+			phandle = <0x05>;
+		};
+	};
+
+	cvifb {
+		compatible = "cvitek,fb";
+		memory-region = <0x12>;
+		reg = <0x00 0xa088000 0x00 0x1000>;
+		reg-names = "disp";
+	};
+
+	dwa {
+		compatible = "cvitek,dwa";
+		reg = <0x00 0xa0c0000 0x00 0x1000>;
+		reg-names = "dwa";
+		clocks = <0x02 0x50 0x02 0x51 0x02 0x88 0x02 0x9a 0x02 0x9b 0x02 0x67>;
+		clock-names = "clk_sys_0\0clk_sys_1\0clk_sys_2\0clk_sys_3\0clk_sys_4\0clk_dwa";
+		clock-freq-vip-sys1 = <0x11e1a300>;
+		interrupts = <0x1c 0x04>;
+		interrupt-names = "dwa";
+		interrupt-parent = <0x04>;
+	};
+
+	rgn {
+		compatible = "cvitek,rgn";
+	};
+
+	vcodec {
+		compatible = "cvitek,asic-vcodec";
+		reg = <0x00 0xb020000 0x00 0x10000 0x00 0xb010000 0x00 0x10000 0x00 0xb030000 0x00 0x100 0x00 0xb058000 0x00 0x100 0x00 0xb050000 0x00 0x400>;
+		reg-names = "h265\0h264\0vc_ctrl\0vc_sbm\0vc_addr_remap";
+		clocks = <0x02 0x53 0x02 0x55 0x02 0x59 0x02 0x56 0x02 0x5a 0x02 0x54 0x02 0x87 0x02 0x8e 0x02 0x8b>;
+		clock-names = "clk_axi_video_codec\0clk_h264c\0clk_apb_h264c\0clk_h265c\0clk_apb_h265c\0clk_vc_src0\0clk_vc_src1\0clk_vc_src2\0clk_cfg_reg_vc";
+		interrupts = <0x16 0x04 0x15 0x04 0x17 0x04>;
+		interrupt-names = "h265\0h264\0sbm";
+		interrupt-parent = <0x04>;
+	};
+
+	jpu {
+		compatible = "cvitek,asic-jpeg";
+		reg = <0x00 0xb000000 0x00 0x300 0x00 0xb030000 0x00 0x100 0x00 0xb058000 0x00 0x100>;
+		reg-names = "jpeg\0vc_ctrl\0vc_sbm";
+		clocks = <0x02 0x53 0x02 0x57 0x02 0x58 0x02 0x54 0x02 0x87 0x02 0x8e 0x02 0x8b>;
+		clock-names = "clk_axi_video_codec\0clk_jpeg\0clk_apb_jpeg\0clk_vc_src0\0clk_vc_src1\0clk_vc_src2\0clk_cfg_reg_vc";
+		resets = <0x03 0x04>;
+		reset-names = "jpeg";
+		interrupts = <0x14 0x04>;
+		interrupt-names = "jpeg";
+		interrupt-parent = <0x04>;
+	};
+
+	cvi_vc_drv {
+		compatible = "cvitek,cvi_vc_drv";
+		reg = <0x00 0xb030000 0x00 0x100 0x00 0xb058000 0x00 0x100 0x00 0xb050000 0x00 0x400>;
+		reg-names = "vc_ctrl\0vc_sbm\0vc_addr_remap";
+	};
+
+	rtos_cmdqu {
+		compatible = "cvitek,rtos_cmdqu";
+		reg = <0x00 0x1900000 0x00 0x1000>;
+		reg-names = "mailbox";
+		interrupts = <0x65 0x04>;
+		interrupt-names = "mailbox";
+		interrupt-parent = <0x04>;
+	};
+
+	usb@04340000 {
+		compatible = "cvitek,cv182x-usb";
+		reg = <0x00 0x4340000 0x00 0x10000 0x00 0x3006000 0x00 0x58>;
+		dr_mode = "otg";
+		g-use-dma;
+		g-rx-fifo-size = <0x218>;
+		g-np-tx-fifo-size = <0x20>;
+		g-tx-fifo-size = <0x300 0x200 0x200 0x180 0x80 0x80>;
+		clocks = <0x02 0x47 0x02 0x48 0x02 0x49 0x02 0x4a 0x02 0x4b>;
+		clock-names = "clk_axi\0clk_apb\0clk_125m\0clk_33k\0clk_12m";
+		status = "okay";
+		interrupts = <0x1e 0x04>;
+		interrupt-parent = <0x04>;
+	};
+
+	thermal@030E0000 {
+		compatible = "cvitek,cv181x-thermal";
+		reg = <0x00 0x30e0000 0x00 0x10000>;
+		clocks = <0x02 0x14>;
+		clock-names = "clk_tempsen";
+		reset-names = "tempsen";
+		#thermal-sensor-cells = <0x01>;
+		interrupts = <0x10 0x04>;
+		interrupt-names = "tempsen";
+		phandle = <0x13>;
+	};
+
+	thermal-zones {
+
+		soc_thermal_0 {
+			polling-delay-passive = <0x3e8>;
+			polling-delay = <0x3e8>;
+			thermal-sensors = <0x13 0x00>;
+
+			trips {
+
+				soc_thermal_trip_0 {
+					temperature = <0x186a0>;
+					hysteresis = <0x1388>;
+					type = "passive";
+				};
+
+				soc_thermal_trip_1 {
+					temperature = <0x1adb0>;
+					hysteresis = <0x1388>;
+					type = "passive";
+				};
+
+				soc_thermal_crtical_0 {
+					temperature = <0x1fbd0>;
+					hysteresis = <0x00>;
+					type = "critical";
+				};
+			};
+		};
+	};
+
+	cviaudio_core {
+		compatible = "cvitek,audio";
+	};
+
+	audio_clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0x00>;
+		clock-frequency = <0x1770000>;
+	};
+
+	aliases {
+		i2c0 = "/i2c@04000000";
+		i2c1 = "/i2c@04010000";
+		i2c2 = "/i2c@04020000";
+		i2c3 = "/i2c@04030000";
+		i2c4 = "/i2c@04040000";
+		serial0 = "/serial@04140000";
+		serial1 = "/serial@04150000";
+		serial2 = "/serial@04160000";
+		serial3 = "/serial@04170000";
+		serial4 = "/serial@041C0000";
+		ethernet0 = "/ethernet@4070000";
+	};
+
+	chosen {
+		stdout-path = "serial0";
+	};
+
+	cpus {
+		#address-cells = <0x01>;
+		#size-cells = <0x00>;
+		timebase-frequency = <0x17d7840>;
+
+		cpu-map {
+
+			cluster0 {
+
+				core0 {
+					cpu = <0x01>;
+				};
+			};
+		};
+
+		cpu@0 {
+			device_type = "cpu";
+			reg = <0x00>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64imafdvcsu";
+			mmu-type = "riscv,sv39";
+			clock-frequency = <0x17d7840>;
+
+			interrupt-controller {
+				#interrupt-cells = <0x01>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+				phandle = <0x14>;
+			};
+		};
+	};
+
+	soc {
+		#address-cells = <0x02>;
+		#size-cells = <0x02>;
+		compatible = "simple-bus";
+		ranges;
+
+		interrupt-controller@70000000 {
+			riscv,ndev = <0x65>;
+			riscv,max-priority = <0x07>;
+			reg-names = "control";
+			reg = <0x00 0x70000000 0x00 0x4000000>;
+			interrupts-extended = <0x14 0xffffffff 0x14 0x09>;
+			interrupt-controller;
+			compatible = "riscv,plic0";
+			#interrupt-cells = <0x02>;
+			#address-cells = <0x00>;
+			phandle = <0x04>;
+		};
+
+		clint@74000000 {
+			interrupts-extended = <0x14 0x03 0x14 0x07>;
+			reg = <0x00 0x74000000 0x00 0x10000>;
+			compatible = "riscv,clint0";
+			clint,has-no-64bit-mmio;
+		};
+	};
+
+	cv181x_cooling {
+		clocks = <0x02 0x98 0x02 0x0f>;
+		clock-names = "clk_cpu\0clk_tpu_axi";
+		dev-freqs = <0x32a9f880 0x1dcd6500 0x1954fc40 0x165a0bc0 0x1954fc40 0x11e1a300>;
+		compatible = "cvitek,cv181x-cooling";
+		#cooling-cells = <0x02>;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x00 0x80000000 0x00 0xfe00000>;
+	};
+
+	fast_image {
+		compatible = "cvitek,rtos_image";
+		reg-names = "rtos_region";
+		reg = <0x00 0x8fe00000 0x00 0x200000>;
+		ion-size = <0x1600000>;
+	};
+};

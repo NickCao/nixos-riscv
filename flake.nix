@@ -7,6 +7,7 @@
     hydraJobs = with self.nixosConfigurations.qemu;{
       visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
       duo = self.nixosConfigurations.duo.config.system.build.sdImage;
+      duo-256 = self.nixosConfigurations.duo-256.config.system.build.sdImage;
       inherit (pkgs)
         qemu
         opensbi
@@ -30,6 +31,11 @@
       duo = nixpkgs.lib.nixosSystem {
         modules = [
           ./duo.nix
+        ];
+      };
+      duo-256 = nixpkgs.lib.nixosSystem {
+        modules = [
+          ./duo-256.nix
         ];
       };
       visionfive2 = nixpkgs.lib.nixosSystem {
