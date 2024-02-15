@@ -3,7 +3,7 @@
 # currently this fails to boot automatically, but it can be booted manually.
 # if you do this in the U-Boot CLI:
 
-# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/1zwp1xvxgpm1blm0bjhkxbvmp1q7qy59-nixos-system-nixos-24.05.20240215.69c9919/init
+# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/jcqahkhmd59a260i87gibrfjf7ljm0ca-nixos-system-nixos-24.05.20240215.69c9919/init
 # cv181x_c906# boot
 
 # obviously the /nix/store path might be different, but doing
@@ -200,7 +200,7 @@ in
   nix.enable = false;
   system.nssModules = lib.mkForce [ ];
 
-  environment.systemPackages = with pkgs; [ pfetch ];
+  environment.systemPackages = with pkgs; [ pfetch python311 ];
 
   sdImage = {
     firmwareSize = 64;
