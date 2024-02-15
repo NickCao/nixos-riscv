@@ -3,7 +3,7 @@
 # currently this fails to boot automatically, but it can be booted manually.
 # if you do this in the U-Boot CLI:
 
-# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/17nm8d69jwihgp16i5ys60wlklc9443b-nixos-system-nixos-24.05/init
+# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/1zwp1xvxgpm1blm0bjhkxbvmp1q7qy59-nixos-system-nixos-24.05.20240215.69c9919/init
 # cv181x_c906# boot
 
 # obviously the /nix/store path might be different, but doing
@@ -36,7 +36,6 @@ let
     CONFIG_BINFMT_ELF=y
     CONFIG_INOTIFY_USER=y
     CONFIG_CRYPTO_ZSTD=y
-    CONFIG_ZSMALLOC=y
     CONFIG_ZRAM=y
     CONFIG_MAGIC_SYSRQ=y
   '';
@@ -49,6 +48,7 @@ let
       --replace CONFIG_VECTOR=y         "" \
       --replace CONFIG_POWER_RESET=y    "" \
       --replace CONFIG_RTC_CLASS=y      "" \
+      --replace CONFIG_ZRAM=m           "" \
       --replace CONFIG_SIGNALFD=n       CONFIG_SIGNALFD=y \
       --replace CONFIG_TIMERFD=n        CONFIG_TIMERFD=y \
       --replace CONFIG_EPOLL=n          CONFIG_EPOLL=y
