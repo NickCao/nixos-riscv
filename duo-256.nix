@@ -204,7 +204,9 @@ in
 
   sdImage = {
     firmwareSize = 64;
-    populateRootCommands = "";
+    populateRootCommands = ''
+      cp ${config.system.build.toplevel}/init files/init
+    '';
     populateFirmwareCommands = ''
       cp ${./prebuilt/fip-duo256.bin}  firmware/fip.bin
       cp ${config.system.build.bootsd} firmware/boot.sd
