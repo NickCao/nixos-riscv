@@ -1,15 +1,48 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-# currently this fails to boot automatically, but it can be booted manually.
-# if you do this in the U-Boot CLI:
+# The cv1812cp_milkv_duo256m_sd.dtb and fip-duo256.bin (aka fip.bin) files in
+# the prebuilt/ dir used by this module were generated on Ubuntu via "./build.sh
+# lunch" within a fork of Milk V's duo-buildroot-sdk repo at
+# https://github.com/mcdonc/duo-buildroot-sdk/tree/nixos-riscv . The fork is
+# trivial: four lines were changed to allow dynamic kernel params to be passed
+# down to the kernel and to NixOS and to increase available RAM by changing
+# ION_SIZE.  The cv1812cp_milkv_duo256m_sd.dtc file in the prebuilt/ dir was
+# generated from the cv1812cp_milkv_duo256m_sd.dtb using
 
-# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/jcqahkhmd59a260i87gibrfjf7ljm0ca-nixos-system-nixos-24.05.20240215.69c9919/init
+# dtc -I dtb -O dts -o cv1812cp_milkv_duo256m_sd.dts \
+#    -@ linux_5.10/build/cv1812cp_milkv_duo256m_sd/arch/riscv/boot/dts/cvitek/cv1812cp_milkv_duo256m_sd.dtb
+
+# The fip.bin file was taken from fsbl/build/cv1812cp_milkv_duo256m_sd/fip.bin
+#
+# The file prebuilt/duo-256-kernel-config.txt was created by hand by copying the
+# running kernel config from a buildroot-generated duo image and massaging it
+# such that it compiled and had proper support for userspace NixOS bits and
+# networking.  Note that, for whatever reason, ordering of configuration
+# settings *matters* in this file. If you change the ordering of the CONFIG
+# settings, you may get compile time errors.  Also, If comments about "is not
+# set" are removed it may not work properly.
+#
+# You should be able to ssh to the Duo after plugging it in via RNDIS just like
+# the buildroot image at root@192.168.42.1.  It takes about 30 seconds for the
+# ssh server to start after the interface has been recognized by the host, be
+# patient.  The password is "milkv". Native ethernet is untested. GPIO is
+# untested.
+#
+# If stage 2 fails to boot automatically, it can be booted manually. via the
+# U-Boot CLI:
+
+# cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/6qq6m4i6zb153nywy5qwr5v33akbzrxk-nixos-system-nixos-24.05.20240215.69c9919/init
 # cv181x_c906# boot
 
 # obviously the /nix/store path might be different, but doing
+
 # cv181x_c906# setenv othbootargs ${othbootargs} boot.shell_on_fail
 # cv181x_c906# boot
+
 # will let you drop into a prompt to find it in /mnt-root/nix/store
+#
+# See also
+# https://community-milkv-io.translate.goog/t/arch-linux-on-milkv-duo-milkv-duo-arch-linux/329?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp&_x_tr_hist=true
 
 let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
@@ -18,42 +51,13 @@ let
     rev = "0e0b8efb59bf8b9664353323abbfdd11751056a4";
     hash = "sha256-tG4nVVXh1Aq6qeoy+J1LfgsW+J1Yx6KxfB1gjxprlXU=";
   };
+
   version = "5.10.4";
   src = "${duo-buildroot-sdk}/linux_${lib.versions.majorMinor version}";
-  extraconfig = pkgs.writeText "extraconfig" ''
-    CONFIG_CGROUPS=y
-    CONFIG_SYSFS=y
-    CONFIG_PROC_FS=y
-    CONFIG_FHANDLE=y
-    CONFIG_CRYPTO_USER_API_HASH=y
-    CONFIG_CRYPTO_HMAC=y
-    CONFIG_DMIID=y
-    CONFIG_AUTOFS_FS=y
-    CONFIG_TMPFS_POSIX_ACL=y
-    CONFIG_TMPFS_XATTR=y
-    CONFIG_SECCOMP=y
-    CONFIG_BLK_DEV_INITRD=y
-    CONFIG_BINFMT_ELF=y
-    CONFIG_INOTIFY_USER=y
-    CONFIG_CRYPTO_ZSTD=y
-    CONFIG_ZRAM=y
-    CONFIG_MAGIC_SYSRQ=y
-  '';
-  # hack: drop duplicated entries
-  configfile = pkgs.runCommand "config" { } ''
-    cp "${duo-buildroot-sdk}/build/boards/cv181x/cv1812cp_milkv_duo256m_sd/linux/cvitek_cv1812cp_milkv_duo256m_sd_defconfig" "$out"
-    substituteInPlace "$out" \
-      --replace CONFIG_BLK_DEV_INITRD=y "" \
-      --replace CONFIG_DEBUG_FS=y       "" \
-      --replace CONFIG_VECTOR=y         "" \
-      --replace CONFIG_POWER_RESET=y    "" \
-      --replace CONFIG_RTC_CLASS=y      "" \
-      --replace CONFIG_ZRAM=m           "" \
-      --replace CONFIG_SIGNALFD=n       CONFIG_SIGNALFD=y \
-      --replace CONFIG_TIMERFD=n        CONFIG_TIMERFD=y \
-      --replace CONFIG_EPOLL=n          CONFIG_EPOLL=y
-    cat ${extraconfig} >> "$out"
-  '';
+
+  configfile = pkgs.writeText "milkv-duo-256-linux-config"
+    (builtins.readFile ./prebuilt/duo-256-kernel-config.txt);
+
   kernel = (pkgs.linuxManualConfig {
     inherit version src configfile;
     allowImportFromDerivation = true;
@@ -85,8 +89,6 @@ in
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
 
-  # neither boot.kernelParams nor boot.consoleLogLevel have any effect here
-  # due to the way the duo images work
   boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" ];
   boot.consoleLogLevel = 9;
 
@@ -108,7 +110,8 @@ in
     "kernel.pid_max" = 4096 * 8; # PAGE_SIZE * 8
   };
 
-  system.build.dtb = pkgs.runCommand "duo256m.dtb" { nativeBuildInputs = [ pkgs.dtc ]; } ''
+  system.build.dtb = pkgs.runCommand "duo256m.dtb" {
+    nativeBuildInputs = [ pkgs.dtc ]; } ''
     dtc -I dts -O dtb -o "$out" ${pkgs.writeText "duo256m.dts" ''
       /include/ "${./prebuilt/cv1812cp_milkv_duo256m_sd.dts}"
       / {
@@ -190,17 +193,70 @@ in
     };
   };
 
-  users.users.root.initialHashedPassword = "";
+  users.users.root.initialPassword = "milkv";
   services.getty.autologinUser = "root";
 
   services.udev.enable = false;
   services.nscd.enable = false;
-  networking.firewall.enable = false;
-  networking.useDHCP = false;
   nix.enable = false;
   system.nssModules = lib.mkForce [ ];
 
-  environment.systemPackages = with pkgs; [ pfetch python311 ];
+  networking = {
+    interfaces.usb0 = {
+      ipv4.addresses = [
+        {
+          address = "192.168.42.1";
+          prefixLength = 24;
+        }
+      ];
+    };
+    useDHCP = false;
+    hostName = "nixos-duo";
+    firewall.enable = false;
+  };
+
+  systemd.services.rndis-device = {
+    enable = true;
+    description = "Set up usb0 as an RNDIS device";
+    unitConfig = {
+      Type = "oneshot";
+    };
+    serviceConfig = {
+      ExecStart = ''
+        /bin/sh -c "${pkgs.coreutils}/bin/echo device > /proc/cviusb/otg_role"
+      '';
+      ExecStartPost = "${pkgs.coreutils}/bin/sleep 1";
+    };
+    before = [ "network-pre.target" ];
+    wants = [ "network-pre.target" ];
+    wantedBy = [ "network.target" ];
+  };
+
+  services.dnsmasq = {
+    enable = true;
+    settings = {
+      interface = "usb0";
+      dhcp-range = [ "192.168.42.2,192.168.42.2,1h"];
+      dhcp-option = [ "3" "6" ];
+    };
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = true;
+      PermitRootLogin = "yes";
+    };
+  };
+
+  # generating the host key takes a while
+  systemd.services.sshd.serviceConfig ={
+    TimeoutStartSec = 120;
+  };
+
+  environment.systemPackages = with pkgs; [
+    pfetch python311 usbutils inetutils iproute2 vim
+  ];
 
   sdImage = {
     firmwareSize = 64;
