@@ -789,14 +789,14 @@
 		ranges;
 
 		cvifb {
-			alloc-ranges = <0x00 0x8b13e000 0x00 0x1c2000>;
+			alloc-ranges = <0x00 0x8e171000 0x00 0x1c2000>;
 			size = <0x00 0x1c2000>;
 			phandle = <0x12>;
 		};
 
 		ion {
 			compatible = "ion-region";
-			size = <0x00 0x4b00000>;
+			size = <0x00 0x1acd000>;
 			phandle = <0x05>;
 		};
 	};
