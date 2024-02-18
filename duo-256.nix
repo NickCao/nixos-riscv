@@ -28,6 +28,11 @@
 # patient.  The password is "milkv". Native ethernet is untested. GPIO is
 # untested.
 #
+# Currently the Duo will have no NAT access to the larger internet, it will
+# only be able to contact the host machine.  In the future it would be nice to
+# give it access.  So far I've been unsuccessful at that.  See
+# https://xyzdims.com/3d-printers/misc-hardware-notes/iot-milk-v-duo-risc-v-esbc-running-linux/#Static_IP_for_Host_with_RNDIS
+#
 # If stage 2 fails to boot automatically, it can be booted manually. via the
 # U-Boot CLI:
 
