@@ -220,21 +220,11 @@ in
     firewall.enable = false;
   };
 
-  systemd.services.rndis-device = {
-    enable = true;
-    description = "Set up usb0 as an RNDIS device";
-    unitConfig = {
-      Type = "oneshot";
+  # configure usb0 as an RNDIS device
+  systemd.tmpfiles.settings = {
+    "10-cviusb" = {
+      "/proc/cviusb/otg_role".w.argument = "device";
     };
-    serviceConfig = {
-      ExecStart = ''
-        /bin/sh -c "${pkgs.coreutils}/bin/echo device > /proc/cviusb/otg_role"
-      '';
-      ExecStartPost = "${pkgs.coreutils}/bin/sleep 1";
-    };
-    before = [ "network-pre.target" ];
-    wants = [ "network-pre.target" ];
-    wantedBy = [ "network.target" ];
   };
 
   services.dnsmasq = {
