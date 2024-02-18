@@ -94,7 +94,30 @@ in
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
 
-  boot.kernelParams = [ "console=ttyS0,115200" "earlycon=sbi" "riscv.fwsz=0x80000" ];
+  # g_ether.host_addr is meant to cause the machine the Duo is connected to use
+  # its value as the MAC address of its USB RNDIS virtual interface.
+  #
+  # g_ether.dev_addr causes the Duo itself to use its value as the MAC address
+  # of its RNDIS USB virtual interface.
+  #
+  # On observation, frustratingly, sometimes the RNDIS host will generate a
+  # random MAC address for its USB RNDIS virtual interface anyway.  This has
+  # only been observed after rebooting the host: on the first boot, after
+  # plugging the Duo in, the RNDIS interface on the host will be "usb0" and will
+  # have a randomized MAC.  Upon unplugging the Duo and replugging it in,
+  # though, the usb0 interface will disappear and a new host RNDIS interface
+  # named something like "enp0s20f0u7u3u2" will appear and will have the
+  # g_ether.host_addr MAC. Every single disconnect and reconnect will result in
+  # the same situation.  But this quirk causes us to need to tell dnsmasq to
+  # hand out more than a single IP address. :(
+
+  boot.kernelParams = [
+    "console=ttyS0,115200"
+    "earlycon=sbi"
+    "riscv.fwsz=0x80000"
+    "g_ether.host_addr=00:22:82:ff:ff:20"
+    "g_ether.dev_addr=00:22:82:ff:ff:22"
+  ];
   boot.consoleLogLevel = 9;
 
   boot.initrd.includeDefaultModules = false;
@@ -231,7 +254,7 @@ in
     enable = true;
     settings = {
       interface = "usb0";
-      dhcp-range = [ "192.168.42.2,192.168.42.254,1h"];
+      dhcp-range = [ "192.168.42.2,192.168.42.10,1h"];
       dhcp-option = [ "3" "6" ];
     };
   };
