@@ -231,7 +231,7 @@ in
     enable = true;
     settings = {
       interface = "usb0";
-      dhcp-range = [ "192.168.42.2,192.168.42.2,1h"];
+      dhcp-range = [ "192.168.42.2,192.168.42.254,1h"];
       dhcp-option = [ "3" "6" ];
     };
   };
