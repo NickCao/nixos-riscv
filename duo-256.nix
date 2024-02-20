@@ -22,19 +22,8 @@
 # settings, you may get compile time errors.  Also, If comments about "is not
 # set" are removed it may not work properly.
 #
-# You should be able to ssh to the Duo after plugging it in via RNDIS just like
-# the buildroot image at root@192.168.42.1.  It takes about 30 seconds for the
-# ssh server to start after the interface has been recognized by the host, be
-# patient.  The password is "milkv". Native ethernet is untested. GPIO is
-# untested.
-#
-# Currently the Duo will have no NAT access to the larger internet, it will
-# only be able to contact the host machine.  In the future it would be nice to
-# give it access.  So far I've been unsuccessful at that.  See
-# https://xyzdims.com/3d-printers/misc-hardware-notes/iot-milk-v-duo-risc-v-esbc-running-linux/#Static_IP_for_Host_with_RNDIS
-#
-# If stage 2 fails to boot automatically, it can be booted manually. via the
-# U-Boot CLI:
+# If stage 2 of the boot from SD fails to boot automatically, it can be booted
+# manually. via the U-Boot CLI:
 
 # cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/6qq6m4i6zb153nywy5qwr5v33akbzrxk-nixos-system-nixos-24.05.20240215.69c9919/init
 # cv181x_c906# boot
@@ -46,8 +35,49 @@
 
 # will let you drop into a prompt to find it in /mnt-root/nix/store
 #
-# See also
-# https://community-milkv-io.translate.goog/t/arch-linux-on-milkv-duo-milkv-duo-arch-linux/329?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp&_x_tr_hist=true
+#  Native ethernet is untested. GPIO is untested.
+#
+# You should be able to ssh to the Duo after plugging it in via RNDIS just like
+# the buildroot image at root@192.168.42.1.  It takes about 30 seconds for the
+# ssh server to start after the interface has been recognized by the host, be
+# patient.  The password is "milkv".
+#
+# The Duo will have NAT access to the larger internet if you do the following,
+# on the host the Duo is connected to.  The Duo itself needs no extra
+# configuration.
+#
+#   "echo 1 > /proc/sys/net/ipv4/ip_forward"
+#
+# or (in NixOS) via declarative sysctl setup
+#
+#   boot.kernel.sysctl = { "net.ipv4.conf.all.forwarding" = true; };
+
+# Then execute the following nftables script (I was unable to quickly make this
+# work declaratively in my NixOS host config via "networking.nftables.ruleset";
+# it's probably possible) which enables routing packets via masquerade from the
+# Duo to the internet, changing the interface names as necessary.  Once
+# executed, the Duo will be able to communicate with the outside world, using
+# the host as a router. Note that on a NixOS host machine, you do *not* need
+# "networking.firewall.enable = true;" for this to work.
+# "networking.nftables.enable = true;" makes the nft command available.
+
+#    #!/run/current-system/sw/bin/nft -f
+#
+#    # enp1s0 is my ethernet interface, connected to my Internet router.
+#    # enp0s20f0u7u2 is the RNDIS interface created by attaching the Duo to
+#    # USB.  Change as necessary.
+#
+#    table ip duo_table {
+#           chain duo_nat {
+#                   type nat hook postrouting priority 0; policy accept;
+#                   oifname "enp1s0" masquerade
+#           }
+#
+#          chain duo_forward {
+#                   type filter hook forward priority 0; policy accept;
+#                   iifname "enp0s20f0u7u2" oifname "enp1s0" accept
+#           }
+#    }
 
 let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
@@ -57,8 +87,34 @@ let
     hash = "sha256-tG4nVVXh1Aq6qeoy+J1LfgsW+J1Yx6KxfB1gjxprlXU=";
   };
 
+  host_addr = "00:22:82:ff:ff:20";
+  dev_addr  = "00:22:82:ff:ff:22";
+
   version = "5.10.4";
   src = "${duo-buildroot-sdk}/linux_${lib.versions.majorMinor version}";
+
+  route-cmd = "${pkgs.nettools}/bin/route";
+
+  set-default-route = pkgs.writers.writePython3 "set-default-route" {
+    flakeIgnore = [ "E501" ]; } ''
+     # dnsmasq runs this script as root whenever a DHCP event occurs.
+     # We set the default route to whatever IP the RNDIS host winds up with.
+
+     import sys
+     import os
+
+     if len(sys.argv) >= 4:
+
+         op, ip = sys.argv[1], sys.argv[3]
+
+         # If it's a new DHCP lease, set the default route to the IP
+         # address we've handed out (the RNDIS host).
+
+         if op == "add":
+             sys.stderr.write("Setting default gateway to %s\n" % ip)
+             os.system("${route-cmd} del default")
+             os.system("${route-cmd} add default gw %s" % ip)
+  '';
 
   configfile = pkgs.writeText "milkv-duo-256-linux-config"
     (builtins.readFile ./prebuilt/duo-256-kernel-config.txt);
@@ -115,8 +171,8 @@ in
     "console=ttyS0,115200"
     "earlycon=sbi"
     "riscv.fwsz=0x80000"
-    "g_ether.host_addr=00:22:82:ff:ff:20"
-    "g_ether.dev_addr=00:22:82:ff:ff:22"
+    "g_ether.host_addr=${host_addr}"
+    "g_ether.dev_addr=${dev_addr}"
   ];
   boot.consoleLogLevel = 9;
 
@@ -238,6 +294,8 @@ in
         }
       ];
     };
+    # dnsmasq reads /etc/resolv.conf to find 8.8.8.8
+    nameservers =  [ "127.0.0.1" "8.8.8.8" ];
     useDHCP = false;
     hostName = "nixos-duo";
     firewall.enable = false;
@@ -250,12 +308,24 @@ in
     };
   };
 
+  # See also
+  # https://community-milkv-io.translate.goog/t/arch-linux-on-milkv-duo-milkv-duo-arch-linux/329?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp&_x_tr_hist=true
+  # https://www.marcusfolkesson.se/blog/nat-with-linux/
+
   services.dnsmasq = {
     enable = true;
     settings = {
       interface = "usb0";
-      dhcp-range = [ "192.168.42.2,192.168.42.10,1h"];
+      # hand out 192.168.42.2 - 192.168.42.5
+      dhcp-range = [ "192.168.42.2,192.168.42.5,1h"];
+      # 3: default gateway, 6: DNS servers
       dhcp-option = [ "3" "6" ];
+      # when a DHCP event occurs, run the script to set the default route
+      dhcp-script = "${set-default-route}";
+      # do not maintain a persistent leasefile
+      leasefile-ro = true;
+      # always give the same IP to the host
+      dhcp-host = [ "${host_addr},192.168.42.2" ];
     };
   };
 
