@@ -47,7 +47,7 @@
 # will reveal a new Ethernet interface on your host machine something like
 # "enp0s20f0u7u2".  This is the interface that must be configured in order to
 # connect to the Duo. Under KDE, I used the Network Settings "Connections" pane
-# to create a new "Wired Etherernet" connection with the following settings:
+# to create a new "Wired Ethernet" connection with the following settings:
 
 # "Wired"
 #   Restrict to device: enp0s20f0u7u2 (00:22:82:FF:FF:20)
@@ -118,9 +118,6 @@ let
     hash = "sha256-tG4nVVXh1Aq6qeoy+J1LfgsW+J1Yx6KxfB1gjxprlXU=";
   };
 
-  host_addr = "00:22:82:ff:ff:20";
-  dev_addr  = "00:22:82:ff:ff:22";
-
   version = "5.10.4";
   src = "${duo-buildroot-sdk}/linux_${lib.versions.majorMinor version}";
 
@@ -158,18 +155,10 @@ in
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
 
-  # g_ether.host_addr is meant to cause the machine the Duo is connected to use
-  # its value as the MAC address of its USB RNDIS virtual interface.
-  #
-  # g_ether.dev_addr causes the Duo itself to use its value as the MAC address
-  # of its RNDIS USB virtual interface.
-
   boot.kernelParams = [
     "console=ttyS0,115200"
     "earlycon=sbi"
     "riscv.fwsz=0x80000"
-    "g_ether.host_addr=${host_addr}"
-    "g_ether.dev_addr=${dev_addr}"
   ];
   boot.consoleLogLevel = 9;
 
