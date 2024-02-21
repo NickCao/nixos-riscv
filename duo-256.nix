@@ -1,5 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 
+# Native ethernet is untested. GPIO is untested.  RNDIS works.
+
 # The cv1812cp_milkv_duo256m_sd.dtb and fip-duo256.bin (aka fip.bin) files in
 # the prebuilt/ dir used by this module were generated on Ubuntu via "./build.sh
 # lunch" within a fork of Milk V's duo-buildroot-sdk repo at
@@ -22,19 +24,8 @@
 # settings, you may get compile time errors.  Also, If comments about "is not
 # set" are removed it may not work properly.
 #
-# You should be able to ssh to the Duo after plugging it in via RNDIS just like
-# the buildroot image at root@192.168.42.1.  It takes about 30 seconds for the
-# ssh server to start after the interface has been recognized by the host, be
-# patient.  The password is "milkv". Native ethernet is untested. GPIO is
-# untested.
-#
-# Currently the Duo will have no NAT access to the larger internet, it will
-# only be able to contact the host machine.  In the future it would be nice to
-# give it access.  So far I've been unsuccessful at that.  See
-# https://xyzdims.com/3d-printers/misc-hardware-notes/iot-milk-v-duo-risc-v-esbc-running-linux/#Static_IP_for_Host_with_RNDIS
-#
-# If stage 2 fails to boot automatically, it can be booted manually. via the
-# U-Boot CLI:
+# If stage 2 of the boot from SD fails to boot automatically, it can be booted
+# manually. via the U-Boot CLI:
 
 # cv181x_c906# setenv othbootargs ${othbootargs} init=/nix/store/6qq6m4i6zb153nywy5qwr5v33akbzrxk-nixos-system-nixos-24.05.20240215.69c9919/init
 # cv181x_c906# boot
@@ -45,9 +36,79 @@
 # cv181x_c906# boot
 
 # will let you drop into a prompt to find it in /mnt-root/nix/store
+
+# You will be able to ssh to the Duo after configuring a an Ethernet connection
+# that uses the RNDIS interface enabled by plugging the Duo in to your host
+# system.  Unlike the Milk V vendor buildroot image, DHCP is not used by the
+# NixOS image to manage the addresses of the Duo or the host. Instead, you will
+# need to configure the host to use a static IP address.
 #
-# See also
-# https://community-milkv-io.translate.goog/t/arch-linux-on-milkv-duo-milkv-duo-arch-linux/329?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp&_x_tr_hist=true
+# When you plug the Duo in via USB C, an "ifconfig" of the host it's connected
+# will reveal a new Ethernet interface on your host machine something like
+# "enp0s20f0u7u2".  This is the interface that must be configured in order to
+# connect to the Duo. Under KDE, I used the Network Settings "Connections" pane
+# to create a new "Wired Ethernet" connection with the following settings:
+
+# "Wired"
+#   Restrict to device: enp0s20f0u7u2 (00:22:82:FF:FF:20)
+#
+# IPv4:
+#   Method: Manual
+#   Address/Netmask/Gateway: 192.168.58.1/255.255.255.0/0.0.0.0
+
+# You will likely also need to restrict any existing Ethernet interfaces in
+# their "Wired" tabs to the real Ethernet interface on your host machine to
+# prevent the system from trying to use the RNDIS interface to obtain its normal
+# DHCP settings. For me, I had to add "Restrict to Device: enp1s0
+# (A4:BB:6D:9B:37:2D)" in my primary wired Ethernet connection settings.
+#
+# After applying those settings, you should be able to connect to the Duo via
+# "ssh root@192.168.58.2".  The password is "milkv".
+#
+# NB: it takes about 30 seconds after the Duo boots for the ssh server to start
+# after the interface has been recognized by the host, be patient.
+#
+# You can give the Duo access to the larger internet by setting up
+# NAT/masquerading on the host.  You can do the following on the host the Duo is
+# connected to set up NAT.
+#
+#   "echo 1 > /proc/sys/net/ipv4/ip_forward"
+#
+# or (in NixOS) via declarative sysctl setup
+#
+#   boot.kernel.sysctl = { "net.ipv4.conf.all.forwarding" = true; };
+
+# Then execute a variant of the following nftables script (I was unable to
+# quickly make this work declaratively in my NixOS host config via
+# "networking.nftables.ruleset"; it's probably possible) which enables the host
+# to route packets on behalf of the Duo via NAT/masquerade to and from the
+# internet.  Change the interface names as necessary.  Once executed, the Duo
+# will be able to communicate with the outside world, using the host as a
+# router. NB: on a NixOS host machine, you do *not* need
+# "networking.firewall.enable = true;" for this to work but
+# "networking.nftables.enable = true;" makes the nft command available.
+
+#    #!/run/current-system/sw/bin/nft -f
+#
+#    # enp1s0 is my ethernet interface, connected to my Internet router.
+#    # enp0s20f0u7u2 is the RNDIS interface created by attaching the Duo to
+#    # the host via USB.
+#
+#    table ip duo_table { chain duo_nat { type nat hook postrouting priority 0;
+#           policy accept; oifname "enp1s0" masquerade
+#           }
+#
+#          chain duo_forward {
+#                   type filter hook forward priority 0; policy accept;
+#                   iifname "enp0s20f0u7u2" oifname "enp1s0" accept
+#           }
+#    }
+#
+#
+# NB: In order for the Duo to connect to the internet, by default, without
+# changes to this Nix file, the host must be contactable via the IP address
+# "192.168.58.1" because this Nix file hardcodes that IP address as the Duo's
+# default gateway.
 
 let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
@@ -94,29 +155,10 @@ in
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
 
-  # g_ether.host_addr is meant to cause the machine the Duo is connected to use
-  # its value as the MAC address of its USB RNDIS virtual interface.
-  #
-  # g_ether.dev_addr causes the Duo itself to use its value as the MAC address
-  # of its RNDIS USB virtual interface.
-  #
-  # On observation, frustratingly, sometimes the RNDIS host will generate a
-  # random MAC address for its USB RNDIS virtual interface anyway.  This has
-  # only been observed after rebooting the host: on the first boot, after
-  # plugging the Duo in, the RNDIS interface on the host will be "usb0" and will
-  # have a randomized MAC.  Upon unplugging the Duo and replugging it in,
-  # though, the usb0 interface will disappear and a new host RNDIS interface
-  # named something like "enp0s20f0u7u3u2" will appear and will have the
-  # g_ether.host_addr MAC. Every single disconnect and reconnect will result in
-  # the same situation.  But this quirk causes us to need to tell dnsmasq to
-  # hand out more than a single IP address. :(
-
   boot.kernelParams = [
     "console=ttyS0,115200"
     "earlycon=sbi"
     "riscv.fwsz=0x80000"
-    "g_ether.host_addr=00:22:82:ff:ff:20"
-    "g_ether.dev_addr=00:22:82:ff:ff:22"
   ];
   boot.consoleLogLevel = 9;
 
@@ -233,12 +275,16 @@ in
     interfaces.usb0 = {
       ipv4.addresses = [
         {
-          address = "192.168.42.1";
+          address = "192.168.58.2";
           prefixLength = 24;
         }
       ];
     };
+    # dnsmasq reads /etc/resolv.conf to find 8.8.8.8 and 1.1.1.1
+    nameservers =  [ "127.0.0.1" "8.8.8.8" "1.1.1.1"];
     useDHCP = false;
+    dhcpcd.enable = false;
+    defaultGateway = "192.168.58.1";
     hostName = "nixos-duo";
     firewall.enable = false;
   };
@@ -250,14 +296,7 @@ in
     };
   };
 
-  services.dnsmasq = {
-    enable = true;
-    settings = {
-      interface = "usb0";
-      dhcp-range = [ "192.168.42.2,192.168.42.10,1h"];
-      dhcp-option = [ "3" "6" ];
-    };
-  };
+  services.dnsmasq.enable = true;
 
   services.openssh = {
     enable = true;
