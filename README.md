@@ -7,7 +7,7 @@ An ongoing effort porting NixOS to the RISC-V architecture through cross compila
 
 #### Build
 ```bash
-nix build .#hydraJobs.visionfive2
+nix build ".#hydraJobs.visionfive2"
 ```
 
 May have to change
@@ -31,7 +31,7 @@ Drivers for PCIe, USB and GPU (and many other peripherals) are not included yet.
 #### Build
 
 ```bash
-nix build .#hydraJobs.duo
+nix build ".#hydraJobs.duo"
 ```
 
 #### Info
@@ -42,7 +42,7 @@ nix build .#hydraJobs.duo
 
 #### Build
 ```bash
-nix build .#hydraJobs.duo-256
+nix build ".#hydraJobs.duo-256"
 ```
 
 #### Info
