@@ -241,6 +241,8 @@ in
     pfetch python311 usbutils inetutils iproute2 vim
   ];
 
+  programs.less.lessopen = null;
+
   sdImage = {
     firmwareSize = 64;
     populateRootCommands = "";

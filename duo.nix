@@ -186,6 +186,8 @@ in
 
   environment.systemPackages = with pkgs; [ pfetch ];
 
+  programs.less.lessopen = null;
+
   sdImage = {
     firmwareSize = 64;
     populateRootCommands = "";

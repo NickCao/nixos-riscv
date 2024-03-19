@@ -7,6 +7,8 @@
 
   virtualisation.docker.enable = true;
 
+  programs.less.lessopen = null;
+
   environment.systemPackages = with pkgs;[ neofetch iperf3 ];
 
 }

@@ -15,6 +15,8 @@
     generic-extlinux-compatible.enable = true;
   };
 
+  programs.less.lessopen = null;
+
   sdImage = {
     populateFirmwareCommands = "";
     populateRootCommands = ''
