@@ -12,6 +12,7 @@
         qemu
         opensbi
         firefox-unwrapped
+        firefox-esr-unwrapped
         thunderbird-unwrapped
         postgresql_12
         postgresql_13
