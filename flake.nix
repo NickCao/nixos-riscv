@@ -19,6 +19,9 @@
         postgresql_14
         postgresql_15
         postgresql_16
+        nodejs_18
+        nodejs_20
+        nodejs_21
         ;
       qt5 = {
         inherit (pkgs.qt5)
