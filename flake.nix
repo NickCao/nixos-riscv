@@ -21,7 +21,7 @@
         postgresql_16
         nodejs_18
         nodejs_20
-        nodejs_21
+        nodejs_22
         ;
       qt5 = {
         inherit (pkgs.qt5)
