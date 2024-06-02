@@ -11,4 +11,11 @@
 
   environment.systemPackages = with pkgs;[ neofetch iperf3 ];
 
+  nixpkgs.flake = {
+    setNixPath = false;
+    setFlakeRegistry = false;
+  };
+
+  system.installer.channel.enable = false;
+
 }
