@@ -7,6 +7,8 @@
 
   programs.less.lessopen = null;
 
+  services.openssh.enable = true;
+
   environment.systemPackages = with pkgs;[ neofetch iperf3 ];
 
   nixpkgs.flake = {
