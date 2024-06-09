@@ -8,6 +8,7 @@
       visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
       duo = self.nixosConfigurations.duo.config.system.build.sdImage;
       duo-256 = self.nixosConfigurations.duo-256.config.system.build.sdImage;
+      duos = self.nixosConfigurations.duos.config.system.build.sdImage;
       inherit (pkgs)
         qemu
         opensbi
@@ -45,6 +46,11 @@
       duo-256 = nixpkgs.lib.nixosSystem {
         modules = [
           ./duo-256.nix
+        ];
+      };
+      duos = nixpkgs.lib.nixosSystem {
+        modules = [
+          ./duos.nix
         ];
       };
       visionfive2 = nixpkgs.lib.nixosSystem {

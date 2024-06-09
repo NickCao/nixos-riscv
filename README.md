@@ -150,6 +150,14 @@ changes to this Nix file, the host must be contactable via the IP address
 `192.168.58.1` because this Nix file hardcodes that IP address as the Duo's
 default gateway.
 
+### Milk V Duo S 
+
+#### Build
+```bash
+nix build ".#hydraJobs.duos"
+```
+
+#### Info
 
 ## Acknowledgement
 This work is sponsored by PLCT Lab.
