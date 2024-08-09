@@ -50,10 +50,10 @@
 
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.enable = true;
 
   services.gnome.core-utilities.enable = lib.mkForce false;
   services.gnome.core-developer-tools.enable = lib.mkForce false;
-  services.gnome.gnome-settings-daemon.enable = lib.mkForce false;
   services.gnome.gnome-remote-desktop.enable = false;
   services.gnome.gnome-user-share.enable = false;
   services.gnome.gnome-online-miners.enable = lib.mkForce false;
@@ -73,6 +73,18 @@
     pkgs.orca
   ];
 
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "alice";
+  };
+
+  users.users.alice = {
+    isNormalUser = true;
+    description = "Alice Foobar";
+    password = "foobar";
+    uid = 1000;
+  };
+
   system.build.vm =
     let
       qemu-path = "${pkgs.pkgsBuildBuild.qemu}/bin/qemu-system-${pkgs.targetPlatform.qemuArch}";
@@ -87,6 +99,8 @@
         -device virtio-rng-pci \
         -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
         -fsdev local,security_model=passthrough,id=nix-store,path=/nix/store,readonly=on \
-        -device virtio-9p-pci,id=nix-store,fsdev=nix-store,mount_tag=nix-store
+        -device virtio-9p-pci,id=nix-store,fsdev=nix-store,mount_tag=nix-store \
+        -device virtio-gpu-gl \
+        -display gtk,gl=on
     '';
 }
