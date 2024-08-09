@@ -1,4 +1,5 @@
-{ config, modulesPath, ... }: {
+{ config, modulesPath, ... }:
+{
 
   imports = [
     "${modulesPath}/profiles/base.nix"
@@ -8,6 +9,11 @@
   nixpkgs = {
     localSystem.config = "x86_64-unknown-linux-gnu";
     crossSystem.config = "riscv64-unknown-linux-gnu";
+  };
+
+  nixpkgs.flake = {
+    setNixPath = false;
+    setFlakeRegistry = false;
   };
 
   boot.loader = {
