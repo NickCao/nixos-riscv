@@ -52,7 +52,7 @@
   services.xserver.displayManager.gdm.enable = true;
   services.displayManager.enable = true;
 
-  services.gnome.core-utilities.enable = lib.mkForce false;
+  # services.gnome.core-utilities.enable = lib.mkForce false;
   services.gnome.core-developer-tools.enable = lib.mkForce false;
   services.gnome.gnome-remote-desktop.enable = false;
   services.gnome.gnome-user-share.enable = false;
@@ -78,6 +78,11 @@
     user = "alice";
   };
 
+  environment.systemPackages = [
+    pkgs.firefox-unwrapped
+    pkgs.alacritty
+  ];
+
   users.users.alice = {
     isNormalUser = true;
     description = "Alice Foobar";
@@ -101,6 +106,7 @@
         -fsdev local,security_model=passthrough,id=nix-store,path=/nix/store,readonly=on \
         -device virtio-9p-pci,id=nix-store,fsdev=nix-store,mount_tag=nix-store \
         -device virtio-gpu-gl \
-        -display gtk,gl=on
+        -device qemu-xhci -usb -device usb-kbd -device usb-tablet \
+        -display gtk,gl=on,show-cursor=on
     '';
 }
