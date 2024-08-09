@@ -52,7 +52,7 @@
   services.xserver.displayManager.gdm.enable = true;
   services.displayManager.enable = true;
 
-  # services.gnome.core-utilities.enable = lib.mkForce false;
+  services.gnome.core-utilities.enable = lib.mkForce false;
   services.gnome.core-developer-tools.enable = lib.mkForce false;
   services.gnome.gnome-remote-desktop.enable = false;
   services.gnome.gnome-user-share.enable = false;
@@ -79,8 +79,8 @@
   };
 
   environment.systemPackages = [
-    pkgs.firefox-unwrapped
-    pkgs.alacritty
+    pkgs.xterm
+    pkgs.firefox
   ];
 
   users.users.alice = {
