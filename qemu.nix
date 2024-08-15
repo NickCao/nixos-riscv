@@ -54,7 +54,6 @@
 
   services.gnome.core-utilities.enable = lib.mkForce false;
   services.gnome.core-developer-tools.enable = lib.mkForce false;
-  services.gnome.gnome-remote-desktop.enable = false;
   services.gnome.gnome-user-share.enable = false;
   services.gnome.gnome-online-miners.enable = lib.mkForce false;
   services.power-profiles-daemon.enable = false;
