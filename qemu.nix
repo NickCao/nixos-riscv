@@ -67,7 +67,7 @@
   fonts.packages = lib.mkForce [ ];
 
   environment.gnome.excludePackages = [
-    pkgs.gnome.gnome-control-center
+    pkgs.gnome-control-center
     pkgs.gnome-tour
     pkgs.orca
   ];
