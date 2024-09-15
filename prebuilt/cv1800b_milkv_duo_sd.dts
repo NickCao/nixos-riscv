@@ -5,7 +5,7 @@
 	compatible = "cvitek,cv180x";
 	#size-cells = <0x02>;
 	#address-cells = <0x02>;
-	model = "Cvitek. CV180X ASIC. C906.";
+	model = "Milk-V Duo";
 
 	top_misc_ctrl@3000000 {
 		compatible = "syscon";
@@ -313,7 +313,7 @@
 		clock-frequency = <0x17d7840>;
 		reg-shift = <0x02>;
 		reg-io-width = <0x04>;
-		status = "disabled";
+		status = "okay";
 		interrupts = <0x2d 0x04>;
 		interrupt-parent = <0x04>;
 	};
@@ -324,7 +324,7 @@
 		clock-frequency = <0x17d7840>;
 		reg-shift = <0x02>;
 		reg-io-width = <0x04>;
-		status = "disabled";
+		status = "okay";
 		interrupts = <0x2e 0x04>;
 		interrupt-parent = <0x04>;
 	};
@@ -335,7 +335,7 @@
 		clock-frequency = <0x17d7840>;
 		reg-shift = <0x02>;
 		reg-io-width = <0x04>;
-		status = "disabled";
+		status = "okay";
 		interrupts = <0x2f 0x04>;
 		interrupt-parent = <0x04>;
 	};
