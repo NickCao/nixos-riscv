@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NickCao/nixpkgs/riscv";
-    nixos-hardware.url = "github:NickCao/nixos-hardware";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
   outputs =
     {
@@ -48,8 +48,8 @@
         duos = nixpkgs.lib.nixosSystem { modules = [ ./duos.nix ]; };
         visionfive2 = nixpkgs.lib.nixosSystem {
           modules = [
+            ./common.nix
             "${nixos-hardware}/starfive/visionfive/v2/sd-image-installer.nix"
-            ./visionfive2.nix
           ];
         };
       };

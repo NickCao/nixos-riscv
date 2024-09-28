@@ -55,7 +55,6 @@
   services.gnome.core-utilities.enable = lib.mkForce false;
   services.gnome.core-developer-tools.enable = lib.mkForce false;
   services.gnome.gnome-user-share.enable = false;
-  services.gnome.gnome-online-miners.enable = lib.mkForce false;
   services.power-profiles-daemon.enable = false;
   services.gnome.gnome-initial-setup.enable = false;
   services.gnome.evolution-data-server.enable = lib.mkForce false;
