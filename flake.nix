@@ -28,6 +28,7 @@
           nodejs_18
           nodejs_20
           nodejs_22
+          nodejs_23
           ;
         thunderbird = pkgs.thunderbird.unwrapped;
         thunderbird-128 = pkgs.thunderbird-128.unwrapped;
