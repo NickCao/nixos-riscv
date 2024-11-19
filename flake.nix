@@ -20,11 +20,11 @@
           opensbi
           firefox-unwrapped
           firefox-esr-unwrapped
-          postgresql_12
           postgresql_13
           postgresql_14
           postgresql_15
           postgresql_16
+          postgresql_17
           nodejs_18
           nodejs_20
           nodejs_22
