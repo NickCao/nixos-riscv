@@ -79,6 +79,9 @@ in
   nixpkgs = {
     localSystem.config = "x86_64-unknown-linux-gnu";
     crossSystem.config = "riscv64-unknown-linux-gnu";
+    overlays = [(final: super: {
+      makeModulesClosure = x: super.makeModulesClosure (x // {allowMissing = true;});
+    })];
   };
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
