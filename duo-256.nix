@@ -61,6 +61,8 @@ let
                   'KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)_zicsr_zifencei' \
         --replace 'KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)' \
                   'KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)_zicsr_zifencei'
+      substituteInPlace arch/riscv/mm/context.c \
+        --replace sptbr CSR_SATP
     '';
   };
 in
