@@ -1,4 +1,10 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 # The cv1813hXXX_milkv_duos_sd.dtb and fip-duos.bin (aka fip.bin) files in
 # the prebuilt/ dir used by this module were generated on Debian via "./build.sh
@@ -10,7 +16,6 @@
 # generated from the cv1813h_milkv_duos_sd.dtb using
 
 # dtc -I dtb  -O dts -o cv1813h_milkv_duos_sd.dts  -@ ~/duo-buildroot-sdk/linux_5.10/build/cv1813h_milkv_duos_sd/arch/riscv/boot/dts/cvitek/cv1813h_milkv_duos_sd.dtb
-
 
 # The fip.bin file was taken from fsbl/build/cv1813h_milkv_duos_sd/fip.bin
 #
@@ -29,7 +34,6 @@
 
 # will let you drop into a prompt to find it in /mnt-root/nix/store
 
-
 let
   duo-buildroot-sdk = pkgs.fetchFromGitHub {
     owner = "milkv-duo";
@@ -41,24 +45,29 @@ let
   version = "5.10.4";
   src = "${duo-buildroot-sdk}/linux_${lib.versions.majorMinor version}";
 
-  configfile = pkgs.writeText "milkv-duo-256-linux-config"
-    (builtins.readFile ./prebuilt/duo-256-kernel-config.txt);
+  configfile = pkgs.writeText "milkv-duo-256-linux-config" (
+    builtins.readFile ./prebuilt/duo-s-kernel-config.txt
+  );
 
-  kernel = (pkgs.linuxManualConfig {
-    inherit version src configfile;
-    allowImportFromDerivation = true;
-  }).overrideAttrs {
-    preConfigure = ''
-      substituteInPlace arch/riscv/Makefile \
-        --replace '-mno-ldd' "" \
-        --replace 'KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)' \
-                  'KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)_zicsr_zifencei' \
-        --replace 'KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)' \
-                  'KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)_zicsr_zifencei'
-      substituteInPlace arch/riscv/mm/context.c \
-        --replace sptbr CSR_SATP
-    '';
-  };
+  kernel =
+    (pkgs.linuxManualConfig {
+      inherit version src configfile;
+      allowImportFromDerivation = true;
+    }).overrideAttrs
+      {
+        preConfigure = ''
+          substituteInPlace arch/riscv/Makefile \
+            --replace '-mno-ldd' "" \
+            --replace 'KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)' \
+                      'KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)_zicsr_zifencei -fno-asynchronous-unwind-tables -fno-unwind-tables' \
+            --replace 'KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)' \
+                      'KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)_zicsr_zifencei'
+          substituteInPlace arch/riscv/mm/context.c \
+            --replace sptbr CSR_SATP
+        '';
+      };
+  duo_overlay = import ./overlays/duo.nix;
+
 in
 {
 
@@ -73,9 +82,12 @@ in
   nixpkgs = {
     localSystem.config = "x86_64-unknown-linux-gnu";
     crossSystem.config = "riscv64-unknown-linux-gnu";
-    overlays = [(final: super: {
-      makeModulesClosure = x: super.makeModulesClosure (x // {allowMissing = true;});
-    })];
+    overlays = [
+      (final: super: {
+        makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
+      })
+      duo_overlay
+    ];
   };
 
   boot.kernelPackages = pkgs.linuxPackagesFor kernel;
@@ -105,17 +117,28 @@ in
     "kernel.pid_max" = 4096 * 8; # PAGE_SIZE * 8
   };
 
-  system.build.dtb = pkgs.runCommand "duos.dtb" {
-    nativeBuildInputs = [ pkgs.dtc ]; } ''
-    dtc -I dts -O dtb -o "$out" ${pkgs.writeText "duos.dts" ''
-      /include/ "${./prebuilt/cv1813h_milkv_duos_sd.dts}"
-      / {
-        chosen {
-          bootargs = "init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}";
-        };
-      };
-    ''}
-  '';
+  boot.kernelModules = [
+    "aic8800_bsp"
+    "aic8800_fdrv"
+  ];
+
+  system.stateVersion = "25.05";
+
+  system.build.dtb =
+    pkgs.runCommand "duos.dtb"
+      {
+        nativeBuildInputs = [ pkgs.dtc ];
+      }
+      ''
+        dtc -I dts -O dtb -o "$out" ${pkgs.writeText "duos.dts" ''
+          /include/ "${./prebuilt/cv1813h_milkv_duos_sd.dts}"
+          / {
+            chosen {
+              bootargs = "init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}";
+            };
+          };
+        ''}
+      '';
 
   system.build.its = pkgs.writeText "cv181x.its" ''
     /dts-v1/;
@@ -173,12 +196,42 @@ in
     };
   '';
 
-  system.build.bootsd = pkgs.runCommand "boot.sd"
-    {
-      nativeBuildInputs = [ pkgs.ubootTools pkgs.dtc ];
-    } ''
-    mkimage -f ${config.system.build.its} "$out"
-  '';
+  system.build.bootsd =
+    pkgs.runCommand "boot.sd"
+      {
+        nativeBuildInputs = [
+          pkgs.ubootTools
+          pkgs.dtc
+        ];
+      }
+      ''
+        mkimage -f ${config.system.build.its} "$out"
+      '';
+
+  hardware.enableAllFirmware = false;
+
+  hardware.enableAllHardware = lib.mkForce false;
+
+  hardware.enableRedistributableFirmware = false;
+
+  # NOTE: setting hardware.firmwareCompression = "none"is required because the aic8800_fdrv driver module cannot load xz compressed files. If set to xz or zstd, adding the aic8800 firmware to hardware.firmware automatically compresses the files, which in turn will make loading the aic8800_fdrv driver module fail.
+  hardware.firmwareCompression = "none";
+
+  hardware.firmware = [
+    (pkgs.stdenv.mkDerivation {
+      name = "wlan-aic8800-firmware";
+      src = "${duo-buildroot-sdk}/device/milkv-duos-sd/overlay/mnt/system/firmware/aic8800/";
+      installPhase = ''
+        mkdir -p $out/lib/firmware/aic8800
+        cp $src/fw_patch_table_8800d80_u02.bin $out/lib/firmware/aic8800/
+        cp $src/fw_patch_8800d80_u02.bin $out/lib/firmware/aic8800/
+        cp $src/lmacfw_rf_8800d80_u02.bin $out/lib/firmware/aic8800/
+        cp $src/aic_userconfig_8800d80.txt $out/lib/firmware/aic8800/
+        cp $src/fw_adid_8800d80_u02.bin $out/lib/firmware/aic8800/
+        cp $src/fmacfw_8800d80_u02.bin $out/lib/firmware/aic8800/
+      '';
+    })
+  ];
 
   services.zram-generator = {
     enable = true;
@@ -190,6 +243,7 @@ in
 
   users.users.root.initialPassword = "milkv";
   services.getty.autologinUser = "root";
+  users.motd = ''Welcome to the milkv duos!'';
 
   services.udev.enable = false;
   services.nscd.enable = false;
@@ -197,6 +251,13 @@ in
   system.nssModules = lib.mkForce [ ];
 
   networking = {
+    wireless = {
+      enable = true;
+      networks."mySSID1".psk = "password";
+      networks."mySSID2".psk = "password";
+      extraConfig = "ctrl_interface=DIR=/var/run/wpa_supplicant";
+    };
+    # output ends up in /run/wpa_supplicant/wpa_supplicant.conf
     interfaces.usb0 = {
       ipv4.addresses = [
         {
@@ -205,13 +266,37 @@ in
         }
       ];
     };
+    interfaces.end0 = {
+      ipv4.addresses = [
+        {
+          address = "192.168.7.251";
+          prefixLength = 24;
+        }
+      ];
+    };
+    interfaces.wlan0 = {
+      ipv4.addresses = [
+        {
+          address = "192.168.7.250";
+          prefixLength = 24;
+        }
+      ];
+    };
     # dnsmasq reads /etc/resolv.conf to find 8.8.8.8 and 1.1.1.1
-    nameservers =  [ "127.0.0.1" "8.8.8.8" "1.1.1.1"];
+    nameservers = [
+      "127.0.0.1"
+      "8.8.8.8"
+      "1.1.1.1"
+    ];
     useDHCP = false;
     dhcpcd.enable = false;
-    defaultGateway = "192.168.58.1";
-    hostName = "nixos-duo";
+    defaultGateway = {
+      address = "192.168.7.1";
+      interface = "wlan0";
+    };
+    hostName = "nix-prunus";
     firewall.enable = false;
+    networkmanager.enable = false;
   };
 
   # configure usb0 as an RNDIS device
@@ -232,12 +317,24 @@ in
   };
 
   # generating the host key takes a while
-  systemd.services.sshd.serviceConfig ={
+  systemd.services.sshd.serviceConfig = {
     TimeoutStartSec = 120;
   };
 
   environment.systemPackages = with pkgs; [
-    pfetch python311 usbutils inetutils iproute2 vim
+    pfetch
+    python311
+    usbutils
+    inetutils
+    iproute2
+    helix
+    i2c-tools
+    blink-blue-led
+    eza
+    duo-pinmux
+    spidev-test
+    wpa_supplicant
+    wirelesstools
   ];
 
   programs.less.lessopen = null;

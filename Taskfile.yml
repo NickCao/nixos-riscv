@@ -1,0 +1,26 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - "{{.TASK_EXE}} --list"
+    silent: true
+  build:
+    desc: Build the image using nix.
+    cmds:
+      - nom build ".#hydraJobs.duos"
+  decompress:
+    desc: Decompress generated image to
+    cmds:
+      - mkdir -p output
+      - zstd -d result/sd-image/nixos-image-sd-card-25.05.20250328.2cc0d7f-riscv64-linux.img.zst -o output/nixos-image.img
+  flash-sd:
+    desc: Write image to sd card on /dev/sdc.
+    prompt: Writing to /dev/sdc. Do you want to continue?
+    cmds:
+      - dd if=output/nixos-image.img | pv -s 1.6g | sudo dd of=/dev/sdc

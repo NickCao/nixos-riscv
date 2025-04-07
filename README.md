@@ -153,9 +153,28 @@ default gateway.
 ### Milk V Duo S 
 
 #### Build
+
 ```bash
 nix build ".#hydraJobs.duos"
 ```
+
+
+#### What works
+
+Hardware
+
+* [x] ethernet
+* [x] i2c1
+* [x] SPI3 on `/dev/spidev0.0`
+* [x] gpios
+* [x] wlan
+* [ ] emmc
+
+Utilities
+
+* [x] `duo-pinmux`
+* [x] `blink-blue-led`
+* [ ] `spidev_test`: crashs
 
 #### Info
 
