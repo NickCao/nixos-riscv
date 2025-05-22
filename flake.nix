@@ -25,10 +25,9 @@
           postgresql_15
           postgresql_16
           postgresql_17
-          nodejs_18
           nodejs_20
           nodejs_22
-          nodejs_23
+          nodejs_24
           ;
         thunderbird = pkgs.thunderbird.unwrapped;
         thunderbird-128 = pkgs.thunderbird-128.unwrapped;
