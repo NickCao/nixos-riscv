@@ -10,6 +10,7 @@
       nixos-hardware,
     }:
     {
+
       hydraJobs = with self.nixosConfigurations.qemu; {
         visionfive2 = self.nixosConfigurations.visionfive2.config.system.build.sdImage;
         duo = self.nixosConfigurations.duo.config.system.build.sdImage;
@@ -44,8 +45,12 @@
           ];
         };
         duo = nixpkgs.lib.nixosSystem { modules = [ ./duo.nix ]; };
-        duo-256 = nixpkgs.lib.nixosSystem { modules = [ ./duo-256.nix ]; };
-        duos = nixpkgs.lib.nixosSystem { modules = [ ./duos.nix ]; };
+        duo-256 = nixpkgs.lib.nixosSystem {
+          modules = [ ./duo-256.nix ];
+        };
+        duos = nixpkgs.lib.nixosSystem {
+          modules = [ ./duos.nix ];
+        };
         visionfive2 = nixpkgs.lib.nixosSystem {
           modules = [
             ./common.nix
