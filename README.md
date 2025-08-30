@@ -17,8 +17,6 @@ hardware.deviceTree.name = "starfive/jh7110-starfive-visionfive-2-v1.3b.dtb";
 as appropriate if your board is v1.2a
 
 #### Info
-Prebuilt image is available at https://hydra.nichi.co/job/nixos/riscv/visionfive2/latest
-
 The resulting image includes u-boot, see [VisionFive 2 Single Board Computer Quick Start Guide](https://doc.rvspace.org/VisionFive2/Quick_Start_Guide/VisionFive2_SDK_QSG/boot_mode_settings.html) for instructions on booting from sdcard.
 
 #### Known Issues
